@@ -79,11 +79,42 @@ export namespace CoreActions {
       payload
     };
   }
+
+  export const CONNECTED = "CONNECTED";
+  export type ConnectedAction = actions.Core<typeof CONNECTED>;
+  export function connected(): ConnectedAction {
+    return {
+      kind: "Core",
+      type: CONNECTED
+    };
+  }
+
+  export const DISCONNECTED = "DISCONNECTED";
+  export type DisconnectedAction = actions.Core<typeof DISCONNECTED>;
+  export function disconnected(): DisconnectedAction {
+    return {
+      kind: "Core",
+      type: DISCONNECTED
+    };
+  }
+
+  export const ERROR = "ERROR";
+  export type ErrorAction = actions.Core<typeof ERROR, unknown>;
+  export function error(payload: unknown): ErrorAction {
+    return {
+      kind: "Core",
+      type: ERROR,
+      payload
+    };
+  }
 }
 
 export type CoreActions<G extends GameSpec = GameSpec>
   = CoreActions.InitialStateAction<G>
-  | CoreActions.ClientJoinAction;
+  | CoreActions.ClientJoinAction
+  | CoreActions.ConnectedAction
+  | CoreActions.DisconnectedAction
+  | CoreActions.ErrorAction;
 
 export {
   actions,

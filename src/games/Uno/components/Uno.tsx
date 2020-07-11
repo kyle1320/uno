@@ -11,6 +11,7 @@ import CardDefs from './CardDefs';
 import './Uno.scss';
 
 interface Props {
+  connected: boolean;
   cards: CardType[];
   upStackSize: number;
   downStackSize: number;
@@ -22,6 +23,9 @@ interface Props {
 class Uno extends React.PureComponent<Props> {
   render() {
     return <div className="uno-game">
+      <div className="banner">{
+        !this.props.connected ? "Disconnected" : ""
+      }</div>
       <CardDefs />
       <div className="up-stack" onClick={this.props.draw}>
         <Card color="black" value="back" />
@@ -44,6 +48,7 @@ class Uno extends React.PureComponent<Props> {
 
 export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
+    connected: state.connected,
     upStackSize: state.l1.upStackSize,
     downStackSize: state.l1.downStackSize,
     topCard: state.l1.topCard,

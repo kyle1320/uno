@@ -1,11 +1,29 @@
+@import './variables';
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
 .uno-game {
   font-family: Helvetica, Arial, sans-serif;
+}
+
+.banner {
+  padding: 5px 10px;
+  color: $white;
+  font-weight: bold;
+  background-color: $red;
+
+  &:empty {
+    display: none;
+  }
 }
 
 .up-stack, .down-stack {
   display: inline-block;
   position: relative;
-  margin: 5px;
+  margin: 10px;
   line-height: 0;
 
   .number {
@@ -15,10 +33,11 @@
     right: -5px;
     font-weight: bold;
     user-select: none;
-    border-radius: .6em;
-    padding: 2px;
-    background-color: #ED1C24;
-    line-height: 1.2em;
+    border-radius: .7em;
+    padding: 4px;
+    height: 1.4em;
+    background-color: $red;
+    line-height: 1.4em;
     text-align: center;
   }
 

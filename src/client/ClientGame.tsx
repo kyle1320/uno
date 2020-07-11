@@ -44,9 +44,9 @@ export abstract class ClientGame<G extends GameSpec> {
     localStorage.setItem('savedRoomName', roomName);
 
     this.socket = new WebSocket(getWebSocketUrl());
-    // this.socket.onopen = () => this.store.dispatch({ connected: true });
-    // this.socket.onclose = () => this.store.dispatch({ connected: false });
-    // this.socket.onerror = e => this.store.dispatch({ error: e });
+    this.socket.onopen = () => this.store.dispatch(CoreActions.connected());
+    this.socket.onclose = () => this.store.dispatch(CoreActions.disconnected());
+    this.socket.onerror = e => this.store.dispatch(CoreActions.error(e));
     this.socket.onmessage = e => {
       const action = JSON.parse(e.data);
       tagFromServer(action);
@@ -90,6 +90,12 @@ export abstract class ClientGame<G extends GameSpec> {
     switch (action.type) {
       case CoreActions.INITIAL_STATE:
         return { ...state, ...action.payload };
+      case CoreActions.CONNECTED:
+        return { ...state, connected: true };
+      case CoreActions.DISCONNECTED:
+        return { ...state, connected: false };
+      case CoreActions.ERROR:
+        return { ...state, error: action.payload };
       default:
         return state;
     }
