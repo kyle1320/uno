@@ -1,0 +1,18 @@
+.card-wheel {
+  display: flex;
+  width: 100%;
+  height: auto;
+  overflow: auto;
+  padding-left: 44px;
+}
+
+.card-wheel-container {
+  min-height: fit-content;
+}
+
+.card-wheel .card {
+  height: 150px;
+  margin: 2px;
+  margin-left: -40px;
+  z-index: 1;
+}

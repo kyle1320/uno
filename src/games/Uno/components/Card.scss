@@ -1,0 +1,53 @@
+.card {
+  font-family: Helvetica, sans-serif;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 40px;
+  line-height: 1;
+  width: auto;
+  border-radius: 8.3333333333% / 5.55555555%;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  user-select: none;
+}
+
+.card.red    { --color: #ED1C24; }
+.card.yellow { --color: #FFDE00; }
+.card.green  { --color: #00A651; }
+.card.blue   { --color: #0096DA; }
+.card.black  { --color: #000000; }
+
+#card-outline {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 5;
+}
+
+#card-body {
+  fill: var(--color);
+  stroke: none;
+}
+
+.card-ellipse {
+  fill: #ffffff;
+  stroke: none;
+}
+
+.card-small-value, .card-large-value {
+  stroke: #000000;
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+  filter:url(#shadow);
+}
+
+.card-small-value {
+  fill: #ffffff;
+}
+
+.card-large-value {
+  fill: var(--color);
+}
+
+.card-value-wild {
+  stroke: none;
+  filter: none;
+}

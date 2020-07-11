@@ -1,0 +1,28 @@
+.uno-game {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.up-stack, .down-stack {
+  display: inline-block;
+  position: relative;
+  margin: 5px;
+  line-height: 0;
+
+  .number {
+    position: absolute;
+    color: white;
+    top: -5px;
+    right: -5px;
+    font-weight: bold;
+    user-select: none;
+    border-radius: .6em;
+    padding: 2px;
+    background-color: #ED1C24;
+    line-height: 1.2em;
+    text-align: center;
+  }
+
+  .card {
+    height: 150px;
+  }
+}
