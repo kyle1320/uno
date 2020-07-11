@@ -20,4 +20,8 @@ export class GameClient<G extends GameSpec> {
   public send(msg: ClientCoreActions<G>) {
     this.socket.send(JSON.stringify(msg));
   }
+
+  public ping() {
+    this.socket.ping();
+  }
 }

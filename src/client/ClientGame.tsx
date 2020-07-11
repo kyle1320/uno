@@ -43,15 +43,7 @@ export abstract class ClientGame<G extends GameSpec> {
     roomName = roomName.startsWith('/') ? roomName.substring(1) : roomName;
     localStorage.setItem('savedRoomName', roomName);
 
-    this.socket = new WebSocket(getWebSocketUrl());
-    this.socket.onopen = () => this.store.dispatch(CoreActions.connected());
-    this.socket.onclose = () => this.store.dispatch(CoreActions.disconnected());
-    this.socket.onerror = e => this.store.dispatch(CoreActions.error(e));
-    this.socket.onmessage = e => {
-      const action = JSON.parse(e.data);
-      tagFromServer(action);
-      this.store.dispatch(action);
-    };
+    this.initSocket();
 
     this.store = createStore((
       state: state.ClientSide<G>,
@@ -77,8 +69,24 @@ export abstract class ClientGame<G extends GameSpec> {
         case 'Req':
           this.socket.send(JSON.stringify(action));
           break;
+        case 'Core':
+          if (action.type === CoreActions.DISCONNECTED) {
+            this.initSocket();
+          }
       }
     }));
+  }
+
+  private initSocket() {
+    this.socket = new WebSocket(getWebSocketUrl());
+    this.socket.onopen = () => this.store.dispatch(CoreActions.connected());
+    this.socket.onclose = () => this.store.dispatch(CoreActions.disconnected());
+    this.socket.onerror = e => this.store.dispatch(CoreActions.error(e));
+    this.socket.onmessage = e => {
+      const action = JSON.parse(e.data);
+      tagFromServer(action);
+      this.store.dispatch(action);
+    };
   }
 
   protected abstract getInitialState(): PickSubset<G["state"], "l1" | "l2" | "l3" | "l4">;

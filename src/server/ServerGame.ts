@@ -14,7 +14,7 @@ import {
   L3Actions,
   ReqActions,
   CoreActions,
-  PickSubset} from "../types";
+  PickSubset } from "../types";
 
 const originatingClientSymbol = Symbol("Originating Client");
 function tagWithClient<G extends GameSpec>(
@@ -106,6 +106,8 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
           break;
       }
     }));
+
+    setInterval(() => this.clients.forEach(c => c.ping()), 30000);
   }
 
   // TODO: make the typings here allow omitting unused parts of state
