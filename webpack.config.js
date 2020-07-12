@@ -10,7 +10,7 @@ const template = `<!DOCTYPE html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <title>Play Uno</title>
   </head>
   <body>
     <div id="root"></div>
