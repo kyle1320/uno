@@ -1,6 +1,7 @@
 import { ServerGame } from "../../server/ServerGame";
 import { UnoSpec, L0, L1, L2, L3, Req, shuffle } from ".";
 import { Card } from "./common";
+import { CoreActions } from "../../types";
 
 export class UnoServer extends ServerGame<UnoSpec> {
   getInitialState() {
@@ -16,9 +17,12 @@ export class UnoServer extends ServerGame<UnoSpec> {
     return state;
   }
 
-  getInitialClientState() {
+  getInitialClientState(id: string) {
     return {
-      l2: L2.state.initial,
+      l2: {
+        ...L2.state.initial,
+        id
+      },
       l3: L3.state.initial
     };
   }
@@ -35,15 +39,40 @@ export class UnoServer extends ServerGame<UnoSpec> {
           upStackSize: state.upStack.length,
           downStackSize: state.downStack.length
         }))
+        break;
       case L0.actions.DRAW_CARD:
         this.dispatch(L1.actions.update({
           upStackSize: state.upStack.length
         }))
+        break;
       case L0.actions.PLAY_CARD:
         this.dispatch(L1.actions.update({
           topCard: state.downStack[state.downStack.length - 1],
           downStackSize: state.downStack.length
         }))
+        break;
+    }
+  }
+
+  processL2(action: L2.actions.All) {
+    const state = this.store.getState().l2;
+    switch (action.type) {
+      case L2.actions.DRAW_CARD:
+      case L2.actions.PLAY_CARD:
+        this.dispatch(L1.actions.updatePlayer(action.id, {
+          cards: state[action.id].hand.length
+        }));
+        break;
+    }
+  }
+
+  processL3(action: L3.actions.All) {
+    switch (action.type) {
+      case L3.actions.SET_NAME:
+        this.dispatch(L1.actions.updatePlayer(action.id, {
+          name: action.payload
+        }));
+        break;
     }
   }
 
@@ -54,6 +83,18 @@ export class UnoServer extends ServerGame<UnoSpec> {
         break;
       case Req.actions.PLAY_CARD:
         this.dispatch(L0.actions.playCard(this.playCard(action.id, action.payload)));
+    }
+  }
+
+  processCore(action: CoreActions<UnoSpec>) {
+    switch (action.type) {
+      case CoreActions.CLIENT_JOIN:
+        this.dispatch(L1.actions.addPlayer({
+          id: action.payload,
+          name: 'Player', // TODO: get the name from somewhere here?
+          cards: 0
+        }));
+        break;
     }
   }
 

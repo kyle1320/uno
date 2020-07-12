@@ -29,10 +29,12 @@ export namespace actions {
 
 export namespace state {
   export interface State {
-    hand: Card[]
+    id: string;
+    hand: Card[];
   }
 
   export const initial: State = {
+    id: '',
     hand: []
   };
 }

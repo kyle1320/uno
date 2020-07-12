@@ -50,15 +50,15 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
         }};
         case "Core":
           if (action.type === CoreActions.CLIENT_JOIN) {
-            const clientState = this.getInitialClientState() as {
+            const clientState = this.getInitialClientState(action.payload) as {
               l2?: state.L2<G>,
               l3?: state.L3<G>
             };
             const newState = { ...state };
-            if (!state.l2[action.payload] && clientState.l2) {
+            if (clientState.l2) {
               newState.l2[action.payload] = clientState.l2;
             }
-            if (!state.l3[action.payload] && clientState.l3) {
+            if (clientState.l3) {
               newState.l3[action.payload] = clientState.l3;
             }
           }
@@ -87,6 +87,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
           this.clients
             .filter(c => c.id === action.id)
             .forEach(c => c.send(action));
+          this.processL2(action);
           break;
 
         // send to one client (if not from that client)
@@ -102,6 +103,11 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
         case "Req":
           this.processRequest(action);
           break;
+
+        // react to core actions
+        case "Core":
+          this.processCore(action);
+          break;
         default:
           break;
       }
@@ -112,7 +118,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
 
   // TODO: make the typings here allow omitting unused parts of state
   protected abstract getInitialState(): state.ServerSide<G>;
-  protected abstract getInitialClientState(): PickSubset<G["state"], "l2" | "l3">;
+  protected abstract getInitialClientState(id: string): PickSubset<G["state"], "l2" | "l3">;
 
   protected reduceL0(state: state.L0<G>, action: L0Actions<G>): state.L0<G> {
     return state;
@@ -144,12 +150,17 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
   }
 
   protected processL0(action: L0Actions<G>) {}
+  protected processL2(action: L2Actions<G>) {}
   protected processL3(action: L3Actions<G>) {}
   protected processRequest(action: ReqActions<G>) {}
+  protected processCore(action: CoreActions<G>) {}
 
   public join(client: GameClient<G>) {
     this.clients.push(client);
-    this.dispatch(CoreActions.clientJoin(client.id));
+    // TODO: better way to check if client exists
+    if (!(client.id in this.store.getState().l2)) {
+      this.dispatch(CoreActions.clientJoin(client.id));
+    }
     const { l1, l2, l3 } = this.store.getState();
     const state: Partial<state.ClientSide<G>> = {
       l1,

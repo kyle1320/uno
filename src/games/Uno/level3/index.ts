@@ -1,18 +1,18 @@
 import { actions as actionTypes } from "../../../types";
 
 export namespace actions {
-  export const NAME = "NAME";
-  export type NameAction = actionTypes.L3<typeof NAME, string>;
-  export function name(name: string, id: string = ''): NameAction {
+  export const SET_NAME = "NAME";
+  export type SetNameAction = actionTypes.L3<typeof SET_NAME, string>;
+  export function setName(name: string, id: string = ''): SetNameAction {
     return {
       kind: 'L3',
-      type: NAME,
+      type: SET_NAME,
       payload: name,
       id
     };
   }
 
-  export type All = NameAction;
+  export type All = SetNameAction;
 }
 
 export namespace state {
@@ -27,7 +27,7 @@ export namespace state {
 
 export function reduce(state: state.State, action: actions.All): state.State {
   switch (action.type) {
-    case actions.NAME:
+    case actions.SET_NAME:
       return { ...state, name: action.payload };
     default:
       return state;
