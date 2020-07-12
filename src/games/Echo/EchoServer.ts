@@ -4,15 +4,16 @@ import { EchoSpec, L1, L3, Req } from ".";
 export class EchoServer extends ServerGame<EchoSpec> {
   getInitialState() {
     return {
-      l0: undefined,
+      l0: {},
       l1: L1.state.initial,
       l2: {},
-      l3: {},
+      l3: {}
     }
   }
 
   getInitialClientState() {
     return {
+      l2: {},
       l3: L3.state.initial,
     }
   }

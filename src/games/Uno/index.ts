@@ -10,13 +10,15 @@ export interface UnoSpec extends GameSpec {
     l0: L0.state.State,
     l1: L1.state.State,
     l2: L2.state.State,
-    l3: L3.state.State
+    l3: L3.state.State,
+    l4: {}
   },
   actions: {
     l0: L0.actions.All;
     l1: L1.actions.All;
     l2: L2.actions.All;
     l3: L3.actions.All;
+    l4: never;
     req: Req.actions.All;
   }
 }

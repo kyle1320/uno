@@ -3,7 +3,7 @@ import { actions as actionTypes } from "../../../types";
 export namespace actions {
   export const NAME = "NAME";
   export type NameAction = actionTypes.L3<typeof NAME, string>;
-  export function name(name: string, id?: string): NameAction {
+  export function name(name: string, id: string = ''): NameAction {
     return {
       kind: 'L3',
       type: NAME,

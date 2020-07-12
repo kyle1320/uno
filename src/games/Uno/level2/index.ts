@@ -4,7 +4,7 @@ import { Card } from "../common";
 export namespace actions {
   export const DRAW_CARD = "DRAW_CARD";
   export type DrawCardAction = actionTypes.L2<typeof DRAW_CARD, Card>;
-  export function drawCard(payload: Card, id?: string): DrawCardAction {
+  export function drawCard(payload: Card, id: string = ''): DrawCardAction {
     return {
       kind: "L2",
       type: DRAW_CARD,
@@ -15,7 +15,7 @@ export namespace actions {
 
   export const PLAY_CARD = "PLAY_CARD";
   export type PlayCardAction = actionTypes.L2<typeof PLAY_CARD, number>;
-  export function playCard(index: number, id?: string): PlayCardAction {
+  export function playCard(index: number, id: string = ''): PlayCardAction {
     return {
       kind: "L2",
       type: PLAY_CARD,

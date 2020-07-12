@@ -9,7 +9,8 @@ export class UnoClient extends ClientGame<UnoSpec> {
     return {
       l1: L1.state.initial,
       l2: L2.state.initial,
-      l3: L3.state.initial
+      l3: L3.state.initial,
+      l4: {}
     };
   }
 

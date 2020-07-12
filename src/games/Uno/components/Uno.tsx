@@ -2,11 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { state, ClientGameActions } from '../../../types';
-import { UnoSpec, L3, Req } from '..';
+import { UnoSpec, Req } from '..';
 import { Card as CardType } from '../common';
 import CardWheel from './CardWheel';
-import Card from './Card';
-import CardDefs from './CardDefs';
+import { Card, CardDefs } from './Card';
 
 import './Uno.scss';
 
@@ -39,7 +38,11 @@ class Uno extends React.PureComponent<Props> {
       </div>
       <CardWheel>
         {this.props.cards.map((card, i) =>
-          <Card key={i} color={card.color} value={card.value} onClick={this.props.play.bind(null, i)} />
+          <Card
+            key={i}
+            color={card.color}
+            value={card.value}
+            onClick={this.props.play.bind(null, i)} />
         )}
       </CardWheel>
     </div>;

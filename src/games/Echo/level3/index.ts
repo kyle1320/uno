@@ -3,7 +3,7 @@ import { actions as coreActions } from "../../../types";
 export namespace actions {
   export const TYPE = "TYPE";
   export type TypeAction = coreActions.L3<typeof TYPE, string>;
-  export function type(message: string, id?: string): TypeAction {
+  export function type(message: string, id: string = ''): TypeAction {
     return {
       kind: 'L3',
       type: TYPE,

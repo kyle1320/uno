@@ -14,7 +14,7 @@ import { GameSpec } from '../types';
 const CLIENT_ID_COOKIE = 'clientid';
 
 function getRoomName(roomUrl: string) {
-  const path = url.parse(roomUrl).pathname;
+  const path = url.parse(roomUrl).pathname || '';
   if (path.startsWith('/')) return path.substring(1);
   return path;
 }
@@ -45,7 +45,7 @@ export class GameServer<G extends GameSpec> {
     })
 
     wss.on('connection', (ws, req) => {
-      const room = getRoomName(req.url).toLowerCase();
+      const room = getRoomName(req.url || '').toLowerCase();
       const id = (req as any)._clientid as string;
 
       if (!(room in this.rooms)) {

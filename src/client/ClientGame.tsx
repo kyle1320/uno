@@ -35,7 +35,7 @@ function isFromServer(action: any) {
 }
 
 export abstract class ClientGame<G extends GameSpec> {
-  private socket: WebSocket;
+  private socket!: WebSocket;
   private store: Store<state.ClientSide<G>, ClientCoreActions<G>>;
 
   public constructor() {
@@ -46,7 +46,7 @@ export abstract class ClientGame<G extends GameSpec> {
     this.initSocket();
 
     this.store = createStore((
-      state: state.ClientSide<G>,
+      state: state.ClientSide<G> = null!,
       action: ClientCoreActions<G>
     ): state.ClientSide<G> => {
       switch (action.kind) {

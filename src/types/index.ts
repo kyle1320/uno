@@ -7,47 +7,32 @@ export type PickSubset<O, K> = {
 
 export interface GameSpec {
   state: {
-    l0?: object;
-    l1?: object;
-    l2?: object;
-    l3?: object;
-    l4?: object;
+    l0: object;
+    l1: object;
+    l2: object;
+    l3: object;
+    l4: object;
   },
   actions: {
-    l0?: actions.L0;
-    l1?: actions.L1;
-    l2?: actions.L2;
-    l3?: actions.L3;
-    l4?: actions.L4;
-    req?: actions.Req;
+    l0: actions.L0;
+    l1: actions.L1;
+    l2: actions.L2;
+    l3: actions.L3;
+    l4: actions.L4;
+    req: actions.Req;
   }
 }
 
-type Subset<O, K> = O[K extends keyof O ? K : never]
-type ActionSubset<G extends GameSpec, K extends string> = Subset<G["actions"], K>
 export type AllActions<G extends GameSpec = GameSpec>
-  = ActionSubset<G, "l0" | "l1" | "l2" | "l3" | "l4" | "req">
+  = L0Actions<G> | L1Actions<G> | L2Actions<G> | L3Actions<G> | L4Actions<G> | ReqActions<G>
 export type ServerCoreActions<G extends GameSpec = GameSpec>
-  = L0Actions<G>
-  | L1Actions<G>
-  | L2Actions<G>
-  | L3Actions<G>
-  | ReqActions<G>
-  | CoreActions<G>;
+  = L0Actions<G> | L1Actions<G> | L2Actions<G> | L3Actions<G> | ReqActions<G> | CoreActions<G>;
 export type ServerGameActions<G extends GameSpec = GameSpec>
-  = L0Actions<G>
-  | L1Actions<G>
-  | L2Actions<G>
-  | L3Actions<G>;
+  = L0Actions<G> | L1Actions<G> | L2Actions<G> | L3Actions<G>;
 export type ClientCoreActions<G extends GameSpec = GameSpec>
-  = L1Actions<G>
-  | L2Actions<G>
-  | L3Actions<G>
-  | L4Actions<G>
-  | ReqActions<G>
-  | CoreActions<G>;
+  = L1Actions<G> | L2Actions<G> | L3Actions<G> | L4Actions<G> | ReqActions<G> | CoreActions<G>;
 export type ClientGameActions<G extends GameSpec = GameSpec>
-  = ActionSubset<G, "l3" | "l4" | "req">
+  = L3Actions<G> | L4Actions<G> | ReqActions<G>
 export type L0Actions<G extends GameSpec = GameSpec> = G["actions"]["l0"];
 export type L1Actions<G extends GameSpec = GameSpec> = G["actions"]["l1"];
 export type L2Actions<G extends GameSpec = GameSpec> = G["actions"]["l2"];

@@ -7,7 +7,7 @@ interface State {
 }
 
 class Homepage extends React.Component<{}, State> {
-  public constructor(props) {
+  public constructor(props: {}) {
     super(props);
     this.state = { roomName: localStorage.getItem('savedRoomName') || '' };
   }

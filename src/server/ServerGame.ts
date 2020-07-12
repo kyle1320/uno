@@ -36,7 +36,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
 
   public constructor() {
     this.store = createStore((
-      state: state.ServerSide<G>,
+      state: state.ServerSide<G> = null!,
       action: ServerCoreActions<G>
     ): state.ServerSide<G> => {
       switch (action.kind) {
