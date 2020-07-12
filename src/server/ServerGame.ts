@@ -50,7 +50,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
         }};
         case "Core":
           if (action.type === CoreActions.CLIENT_JOIN) {
-            const clientState = this.getInitialClientState(action.payload) as {
+            const clientState = this.getInitialClientState(state, action.payload) as {
               l2?: state.L2<G>,
               l3?: state.L3<G>
             };
@@ -118,7 +118,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
 
   // TODO: make the typings here allow omitting unused parts of state
   protected abstract getInitialState(): state.ServerSide<G>;
-  protected abstract getInitialClientState(id: string): PickSubset<G["state"], "l2" | "l3">;
+  protected abstract getInitialClientState(state: state.ServerSide<G>, id: string): PickSubset<G["state"], "l2" | "l3">;
 
   protected reduceL0(state: state.L0<G>, action: L0Actions<G>): state.L0<G> {
     return state;
@@ -176,6 +176,10 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
 
   protected getClient(action: ServerCoreActions<G>) {
     return getClient(action);
+  }
+
+  protected getL1State() {
+    return this.store.getState().l1;
   }
 
   protected getL2State(id: string | ServerCoreActions<G>) {

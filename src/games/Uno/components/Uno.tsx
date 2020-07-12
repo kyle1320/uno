@@ -19,6 +19,7 @@ interface Props {
 
   setName: (name: string) => void;
   draw: () => void;
+  resetGame: () => void;
 }
 
 class Uno extends React.PureComponent<Props> {
@@ -31,8 +32,11 @@ class Uno extends React.PureComponent<Props> {
       <div className="banner">{
         !this.props.connected ? "Disconnected" : ""
       }</div>
-      <div>
-        Your Name: <input type="text" value={this.props.name} onChange={this.setName} />
+      <div className="infobar">
+        <div>
+          Your Name: <input type="text" value={this.props.name} onChange={this.setName} />
+        </div>
+        <button onClick={this.props.resetGame}>Reset Game</button>
       </div>
       <CardDefs />
       <div className="stacks">
@@ -63,6 +67,7 @@ export default connect(
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     setName: (name: string) => dispatch(L3.actions.setName(name)),
-    draw: () => dispatch(Req.actions.drawCard())
+    draw: () => dispatch(Req.actions.drawCard()),
+    resetGame: () => dispatch(Req.actions.resetGame())
   })
 )(Uno);

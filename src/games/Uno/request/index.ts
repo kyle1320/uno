@@ -22,5 +22,15 @@ export namespace actions {
     };
   }
 
-  export type All = DrawCardAction | PlayCardAction;
+  export const RESET_GAME = "RESET_GAME";
+  export type ResetGameAction = actionTypes.Req<typeof RESET_GAME>;
+  export function resetGame(id: string = ''): ResetGameAction {
+    return {
+      kind: 'Req',
+      type: RESET_GAME,
+      id
+    };
+  }
+
+  export type All = DrawCardAction | PlayCardAction | ResetGameAction;
 }

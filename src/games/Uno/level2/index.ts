@@ -2,12 +2,12 @@ import { actions as actionTypes } from "../../../types";
 import { Card } from "../common";
 
 export namespace actions {
-  export const DRAW_CARD = "DRAW_CARD";
-  export type DrawCardAction = actionTypes.L2<typeof DRAW_CARD, Card>;
-  export function drawCard(payload: Card, id: string = ''): DrawCardAction {
+  export const DRAW_CARDS = "DRAW_CARDS";
+  export type DrawCardsAction = actionTypes.L2<typeof DRAW_CARDS, Card[]>;
+  export function drawCards(payload: Card[], id: string = ''): DrawCardsAction {
     return {
       kind: "L2",
-      type: DRAW_CARD,
+      type: DRAW_CARDS,
       payload,
       id
     };
@@ -24,7 +24,17 @@ export namespace actions {
     };
   }
 
-  export type All = DrawCardAction | PlayCardAction;
+  export const RESET_GAME = "RESET_GAME";
+  export type ResetGameAction = actionTypes.L2<typeof RESET_GAME>;
+  export function resetGame(id: string = ''): ResetGameAction {
+    return {
+      kind: "L2",
+      type: RESET_GAME,
+      id
+    };
+  }
+
+  export type All = DrawCardsAction | PlayCardAction | ResetGameAction;
 }
 
 export namespace state {
@@ -41,12 +51,14 @@ export namespace state {
 
 export function reduce(state: state.State, action: actions.All): state.State {
   switch (action.type) {
-    case actions.DRAW_CARD:
-      return { ...state, hand: [...state.hand, action.payload ]};
+    case actions.DRAW_CARDS:
+      return { ...state, hand: [...state.hand, ...action.payload ]};
     case actions.PLAY_CARD:
       const newHand = state.hand.slice();
       newHand.splice(action.payload, 1);
       return { ...state, hand: newHand };
+    case actions.RESET_GAME:
+      return { ...state, hand: [] };
     default:
       return state;
   }

@@ -32,4 +32,10 @@ export function shuffle(arr: unknown[]) {
   }
 }
 
+export function shuffled<T>(arr: T[]): T[] {
+  const copy = arr.slice();
+  shuffle(copy);
+  return copy;
+}
+
 export { L0, L1, L2, L3, Req };

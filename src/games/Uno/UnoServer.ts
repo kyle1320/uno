@@ -1,7 +1,7 @@
 import { ServerGame } from "../../server/ServerGame";
 import { UnoSpec, L0, L1, L2, L3, Req, shuffle } from ".";
 import { Card } from "./common";
-import { CoreActions } from "../../types";
+import { CoreActions, state } from "../../types";
 
 export class UnoServer extends ServerGame<UnoSpec> {
   getInitialState() {
@@ -17,13 +17,16 @@ export class UnoServer extends ServerGame<UnoSpec> {
     return state;
   }
 
-  getInitialClientState(id: string) {
+  getInitialClientState(state: state.ServerSide<UnoSpec>, id: string) {
     return {
       l2: {
         ...L2.state.initial,
-        id
+        id,
       },
-      l3: L3.state.initial
+      l3: {
+        ...L3.state.initial,
+        name: 'Player ' + (state.l1.turnOrder.length + 1)
+      }
     };
   }
   protected reduceL0 = L0.reduce;
@@ -51,14 +54,31 @@ export class UnoServer extends ServerGame<UnoSpec> {
           downStackSize: state.downStack.length
         }))
         break;
+      case L0.actions.RESET_GAME:
+        this.dispatch(L1.actions.update({
+          topCard: null,
+          upStackSize: state.upStack.length,
+          downStackSize: state.downStack.length
+        }))
+        for (const id of this.getL1State().turnOrder) {
+          this.dispatch(L2.actions.resetGame(id));
+        }
+        // TODO: make this more efficient
+        for (let i = 0; i < 7; i++) {
+          for (const id of this.getL1State().turnOrder) {
+            this.dispatch(L2.actions.drawCards([this.drawCard()], id));
+          }
+        }
+        break;
     }
   }
 
   processL2(action: L2.actions.All) {
     const state = this.store.getState().l2;
     switch (action.type) {
-      case L2.actions.DRAW_CARD:
+      case L2.actions.DRAW_CARDS:
       case L2.actions.PLAY_CARD:
+      case L2.actions.RESET_GAME:
         this.dispatch(L1.actions.updatePlayer(action.id, {
           cards: state[action.id].hand.length
         }));
@@ -79,10 +99,13 @@ export class UnoServer extends ServerGame<UnoSpec> {
   processRequest(action: Req.actions.All) {
     switch (action.type) {
       case Req.actions.DRAW_CARD:
-        this.dispatch(L2.actions.drawCard(this.drawCard(), action.id));
+        this.dispatch(L2.actions.drawCards([this.drawCard()], action.id));
         break;
       case Req.actions.PLAY_CARD:
         this.dispatch(L0.actions.playCard(this.playCard(action.id, action.payload)));
+        break;
+      case Req.actions.RESET_GAME:
+        this.dispatch(L0.actions.resetGame());
     }
   }
 
@@ -91,7 +114,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
       case CoreActions.CLIENT_JOIN:
         this.dispatch(L1.actions.addPlayer({
           id: action.payload,
-          name: 'Player', // TODO: get the name from somewhere here?
+          name: this.store.getState().l3[action.payload].name,
           cards: 0
         }));
         break;
@@ -109,6 +132,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
     return card;
   }
 
+  // TODO: support drawing several cards at once
   private drawCard(): Card {
     let state = this.store.getState();
 

@@ -22,6 +22,15 @@ export namespace actions {
     };
   }
 
+  export const RESET_GAME = "RESET_GAME";
+  export type ResetGameAction = actionTypes.L1<typeof RESET_GAME>
+  export function resetGame(): ResetGameAction {
+    return {
+      kind: 'L1',
+      type: RESET_GAME
+    };
+  }
+
   export const UPDATE_PLAYER = "UPDATE_PLAYER";
   export type UpdatePlayerAction
     = actionTypes.L1<typeof UPDATE_PLAYER, Partial<state.Player>> & { id: string };
@@ -34,7 +43,7 @@ export namespace actions {
     };
   }
 
-  export type All = UpdateAction | AddPlayerAction | UpdatePlayerAction;
+  export type All = UpdateAction | AddPlayerAction | UpdatePlayerAction | ResetGameAction;
 }
 
 export namespace state {
@@ -83,6 +92,8 @@ export function reduce(state: state.State, action: actions.All): state.State {
         ...state.players,
         [action.id]: { ...state.players[action.id], ...action.payload }
       }};
+    case actions.RESET_GAME:
+      return state;
     default:
       return state;
   }

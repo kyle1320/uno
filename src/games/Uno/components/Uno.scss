@@ -39,6 +39,12 @@ html, body {
   }
 }
 
+.infobar {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
 .stacks {
   position: fixed;
   top: 50%;
