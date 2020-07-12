@@ -41,15 +41,7 @@ export namespace state {
   }
 
   export const initial: State = {
-    upStack: [
-      { color: 'red', value: '2' },
-      { color: 'yellow', value: 'skip' },
-      { color: 'black', value: 'draw4' },
-      { color: 'blue', value: 'draw2' },
-      { color: 'red', value: '7' },
-      { color: 'green', value: 'reverse' },
-      { color: 'black', value: 'wild' }
-    ],
+    upStack: [],
     downStack: []
   };
 
