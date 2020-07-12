@@ -5,6 +5,14 @@ import { UnoSpec, L1, L2, L3 } from '.';
 import Uno from './components/Uno';
 
 export class UnoClient extends ClientGame<UnoSpec> {
+
+  public constructor() {
+    super();
+
+    document.addEventListener("touchmove", e => {
+      e.preventDefault();
+    }, { passive: false });
+  }
   protected getInitialState() {
     return {
       l1: L1.state.initial,
