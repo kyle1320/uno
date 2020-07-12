@@ -32,7 +32,7 @@ class Uno extends React.PureComponent<Props> {
         <div className="down-stack">
           {this.props.topCard
             ? <Card {...this.props.topCard} />
-            : <Card color="black" value="back" />}
+            : <Card color="gray" value="empty" />}
           <div className="number"> {this.props.downStackSize}</div>
         </div>
       </div>
