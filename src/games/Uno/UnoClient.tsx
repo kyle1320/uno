@@ -8,9 +8,9 @@ export class UnoClient extends ClientGame<UnoSpec> {
   public constructor() {
     super();
 
-    document.addEventListener("touchmove", e => {
-      e.preventDefault();
-    }, { passive: false });
+    // document.addEventListener("touchmove", e => {
+    //   e.preventDefault();
+    // }, { passive: false });
   }
 
   protected getInitialState() {
