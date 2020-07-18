@@ -87,10 +87,12 @@ export function reduce(state: state.State, action: actions.All): state.State {
         downStack: [...state.downStack, action.payload]
       };
     case actions.RESET_GAME:
+      const newStack = shuffled(baseDeck);
+      const firstCard = newStack.pop()!;
       return {
         ...state,
-        downStack: [],
-        upStack: shuffled(baseDeck)
+        downStack: [firstCard],
+        upStack: newStack
       };
     default:
       return state;

@@ -56,7 +56,9 @@ export class UnoServer extends ServerGame<UnoSpec> {
         break;
       case L0.actions.RESET_GAME:
         this.dispatch(L1.actions.update({
-          topCard: null,
+          topCard: state.downStack.length
+            ? state.downStack[state.downStack.length - 1]
+            : null,
           upStackSize: state.upStack.length,
           downStackSize: state.downStack.length
         }))
