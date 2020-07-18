@@ -1,16 +1,15 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import { connect } from 'react-redux'
 
-import { UnoSpec, L1 } from '..';
-import { state, ClientGameActions } from '../../../types';
+import { UnoSpec } from '..';
+import { state } from '../../../types';
+import Player from './Player';
 
 import './Players.scss';
 
 interface IProps {
   id: string;
   turnOrder: string[];
-  players: { [id: string]: L1.state.Player };
 }
 
 export function Players(props: IProps) {
@@ -21,21 +20,15 @@ export function Players(props: IProps) {
   ]
 
   return <div className="players">
-    {relativeTurnOrder.map(id => {
-      const player = props.players[id];
-      return <div>
-        <b>{player.name}:</b> {player.cards} Card{player.cards === 1 ? '' : 's'}
-      </div>;
-    })}
+    {relativeTurnOrder.map((id, i) =>
+      <Player id={id} angle={Math.PI * 2 * (i+1) / props.turnOrder.length} />
+    )}
   </div>;
 }
 
 export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
     id: state.l2.id,
-    turnOrder: state.l1.turnOrder,
-    players: state.l1.players
-  }),
-  (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
+    turnOrder: state.l1.turnOrder
   })
 )(Players);
