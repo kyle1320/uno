@@ -1,7 +1,33 @@
 .player {
-  position: fixed;
+  position: absolute;
   transform: translate(-50%, -50%);
   max-width: 100px;
   max-height: 100px;
   overflow: hidden;
+  text-align: center;
+
+  &-hand {
+    height: 40px;
+    margin-top: 10px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+
+    .card-wrapper {
+      height: 100%;
+      width: 10px;
+      min-width: 0;
+      overflow: visible;
+
+      &:last-child {
+        width: auto;
+        min-width: auto;
+      }
+    }
+
+    .card {
+      height: 100%;
+      width: auto;
+    }
+  }
 }

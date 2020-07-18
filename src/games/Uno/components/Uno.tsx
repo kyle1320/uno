@@ -38,21 +38,25 @@ class Uno extends React.PureComponent<Props> {
         </div>
         <button onClick={this.props.resetGame}>Reset Game</button>
       </div>
-      <CardDefs />
-      <div className="stacks">
-        <div className="up-stack" onClick={this.props.draw}>
-          <Card turned={true} color="black" value="back" />
-          <div className="number"> {this.props.upStackSize}</div>
+      <div className="table">
+        <CardDefs />
+        <div className="stacks">
+          <div className="down-stack">
+            {this.props.topCard
+              ? <Card {...this.props.topCard} />
+              : <Card color="gray" value="empty" />}
+            <div className="number"> {this.props.downStackSize}</div>
+          </div>
+          <div className="up-stack" onClick={this.props.draw}>
+            <Card turned={true} color="black" value="back" />
+            <div className="number"> {this.props.upStackSize}</div>
+          </div>
         </div>
-        <div className="down-stack">
-          {this.props.topCard
-            ? <Card {...this.props.topCard} />
-            : <Card color="gray" value="empty" />}
-          <div className="number"> {this.props.downStackSize}</div>
-        </div>
+        <Players />
       </div>
-      <Players />
-      <CardWheel />
+      <div className="hand">
+        <CardWheel />
+      </div>
     </div>;
   }
 }

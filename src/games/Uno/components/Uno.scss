@@ -26,6 +26,18 @@ html, body {
   background-size: 150px;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+
+  .table {
+    position: relative;
+    flex-grow: 1;
+  }
+
+  .hand {
+    position: relative;
+    flex: 0 0 auto;
+  }
 }
 
 .banner {
@@ -46,16 +58,18 @@ html, body {
 }
 
 .stacks {
-  position: fixed;
-  top: 50%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  position: absolute;
+  top: 60%;
   left: 50%;
-  width: 0;
-  height: 0;
+  transform: translate(-50%, -50%);
 }
 
 .up-stack, .down-stack {
   display: inline-block;
-  position: absolute;
+  position: relative;
   line-height: 0;
 
   .number {
@@ -72,19 +86,13 @@ html, body {
 }
 
 .up-stack {
-  top: 10px;
-  left: 0;
-  transform: translate(-50%);
-
   .card {
     width: min(125px, 25vmin)
   }
 }
 
 .down-stack {
-  left: 0;
-  bottom: 0;
-  transform: translateX(-50%);
+  margin-bottom: 10px;
 
   .card {
     height: min(150px, 30vmin)
