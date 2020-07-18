@@ -15,12 +15,15 @@ interface IProps {
 }
 
 export function CardWheel(props: IProps) {
-  return <div className="card-wheel">{
-    props.cards.map((card, i) =>
-    <PlayableCard
-      card={card}
-      play={props.play.bind(null, i)} />
-  )}</div>;
+  return <div className="card-wheel">
+    <div className="card-wheel-container">
+    {props.cards.map((card, i) =>
+      <PlayableCard
+        card={card}
+        play={props.play.bind(null, i)} />
+    )}
+    </div>
+  </div>;
 }
 
 export default connect(
