@@ -16,7 +16,6 @@
     "cookie": "^0.4.1",
     "express": "^4.17.1",
     "redux": "^4.0.5",
-    "source-map-support": "^0.5.19",
     "uuid": "^8.2.0",
     "ws": "^7.3.0"
   },
@@ -44,6 +43,7 @@
     "react-transition-group": "^4.4.1",
     "sass": "^1.26.10",
     "sass-loader": "^8.0.2",
+    "source-map-support": "^0.5.19",
     "style-loader": "^1.2.1",
     "ts-loader": "^7.0.5",
     "typescript": "^3.9.5",

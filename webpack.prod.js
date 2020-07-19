@@ -87,7 +87,7 @@ const client = {
 };
 
 const server = {
-  mode: 'development',
+  mode: 'production',
   entry: './src/server/index.ts',
   devtool: 'source-map',
   module: {
@@ -100,13 +100,6 @@ const server = {
     extensions: [".ts", ".tsx", ".js"]
   },
   externals: [nodeExternals()],
-  plugins: [
-    new webpack.BannerPlugin({
-      banner: 'require("source-map-support").install();',
-      raw: true,
-      entryOnly: false
-    })
-  ],
   output: {
     filename: 'server.js',
     path: path.resolve(__dirname, 'dist'),
