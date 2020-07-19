@@ -54,6 +54,15 @@ export class GameServer<G extends GameSpec> {
       new GameClient(ws, id, this.rooms[room]);
     });
 
+    app.use((req, res, next) => {
+      let id = getClientIdCookie(req);
+      if (!id) {
+        id = uuid.v4();
+        res.setHeader('Set-Cookie', cookie.serialize(CLIENT_ID_COOKIE, id));
+      };
+      next();
+    });
+
     app.use(Express.static('public'));
     app.use('*', (req, res) => {
       res.sendFile(path.resolve('./public/gameroom.html'));
