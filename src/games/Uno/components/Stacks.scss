@@ -3,9 +3,10 @@
   flex-flow: column nowrap;
   align-items: center;
   position: absolute;
-  top: 60%;
+  top: 65%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: min(150px, 18vh);
 }
 
 .up-stack, .down-stack {
@@ -35,13 +36,13 @@
 }
 
 .up-stack {
-  width: min(150px, 18vh);
+  width: 100%;
   padding-top: 66.6666666666%;
 }
 
 .down-stack {
-  width: min(125px, 15vh);
-  padding-top: 150%;
+  width: 80%;
+  padding-top: 120%;
   margin-bottom: 10px;
 }
 

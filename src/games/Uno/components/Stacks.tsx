@@ -20,8 +20,8 @@ interface IProps {
 }
 
 export function Stacks(props: IProps) {
-  const x = props.placementAngle === null ? 0 : -100 * Math.sin(props.placementAngle);
-  const y = props.placementAngle === null ? 0 : 100 * Math.cos(props.placementAngle);
+  const x = props.placementAngle === null ? 0 : -25 * Math.sin(props.placementAngle);
+  const y = props.placementAngle === null ? 0 : 25 * Math.cos(props.placementAngle);
   return <div className="stacks">
     <div className="down-stack">
       <TransitionGroup>
@@ -30,7 +30,7 @@ export function Stacks(props: IProps) {
             key={props.topCard?.id || ''}
             classNames="place-card"
             onEnter={(node: HTMLElement) => {
-              node.style.transform=`translate(${x}%, ${y}%)`;
+              node.style.transform=`translate(${x}vw, ${y}vh)`;
             }}
             onEntering={(node: HTMLElement) => {
               node.style.transform='';
