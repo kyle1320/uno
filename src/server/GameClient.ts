@@ -1,4 +1,4 @@
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 
 import { ServerGame } from './ServerGame';
 import { GameSpec, ServerCoreActions, ClientCoreActions } from '../types';

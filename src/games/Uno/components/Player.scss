@@ -1,14 +1,13 @@
 .player {
   position: absolute;
   transform: translate(-50%, -50%);
+  overflow: visible;
   max-width: 100px;
-  max-height: 100px;
-  overflow: hidden;
-  text-align: center;
 
   &-hand {
     height: 40px;
-    margin: 10px 4px 4px;
+    max-width: 100px;
+    margin-top: 10px;
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
@@ -28,6 +27,18 @@
     .card {
       height: 100%;
       width: auto;
+    }
+  }
+
+  &-name {
+    text-align: center;
+    font-weight: bold;
+    max-height: 100px;
+    overflow: hidden;
+    line-height: 1;
+
+    &.large {
+      font-size: 56px;
     }
   }
 }

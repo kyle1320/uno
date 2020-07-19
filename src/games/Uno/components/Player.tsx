@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import emojiRegex from 'emoji-regex';
 
 import { UnoSpec } from '..';
 import { state } from '../../../types';
@@ -14,6 +15,11 @@ interface IProps {
   cards: number;
 }
 
+function isSingleEmoji(s: string) {
+  const match = s.match(emojiRegex());
+  return match && match[0] === s;
+}
+
 export function Player(props: IProps) {
   // angles are relative to bottom, clockwise
   const x = 30 * Math.sin(props.angle);
@@ -22,7 +28,9 @@ export function Player(props: IProps) {
     top: `calc(60% + ${y}vh)`,
     left: `calc(50% - ${x}vw)`
   }}>
-    <b>{props.name}</b>
+    <div className={`player-name${isSingleEmoji(props.name) ? ' large' : ''}`}>
+      {props.name}
+    </div>
     <div className="player-hand">
       {new Array(props.cards).fill(<div className="card-wrapper"><Card value="back" color="black" /></div>)}
     </div>

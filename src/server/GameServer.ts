@@ -2,8 +2,8 @@ import * as http from 'http';
 import * as path from 'path';
 import * as url from 'url';
 
-import * as Express from 'express';
-import * as WebSocket from 'ws';
+import Express from 'express';
+import WebSocket from 'ws';
 import * as cookie from 'cookie';
 import * as uuid from 'uuid';
 
