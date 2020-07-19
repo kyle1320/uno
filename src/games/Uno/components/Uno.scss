@@ -41,9 +41,11 @@ html, body {
 }
 
 .banner {
+  min-height: 45px;
   font-size: 16px;
   font-weight: bold;
-  line-height: 45px;
+  line-height: 25px;
+  padding: 10px;
   color: $white;
   background-color: $red;
   z-index: 100;
