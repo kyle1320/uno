@@ -67,16 +67,24 @@
     display: block;
     font-size: 14px;
     font-weight: bold;
-    background-color: $red;
-    color: white;
+    background-color: #CCC;
     border: none;
 
     &:active {
-      background-color: darken($red, 10);
+      background-color: darken(#CCC, 10);
+    }
+
+    &.primary {
+      background-color: $red;
+      color: white;
+
+      &:active {
+        background-color: darken($red, 10);
+      }
     }
   }
 
-  .bottom {
+  .spacer {
     margin-top: auto;
   }
 

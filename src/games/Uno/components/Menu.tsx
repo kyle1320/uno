@@ -6,6 +6,7 @@ import { UnoSpec, L3, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
 
 import './Menu.scss';
+import FullscreenToggle from './FullscreenToggle';
 
 interface IProps {
   name: string;
@@ -32,7 +33,9 @@ export function Menu(props: IProps) {
             [props.setName]
           )} />
       </div>
-      <button className="bottom" onClick={props.resetGame}>New Game</button>
+      <div className="spacer" />
+      <FullscreenToggle />
+      <button className="primary" onClick={props.resetGame}>New Game</button>
     </div>
   </div>;
 }
