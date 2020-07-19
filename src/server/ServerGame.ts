@@ -121,7 +121,6 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
             }
 
             state = this.store.getState();
-            console.log(state.l3, action.id);
             const clientState: Partial<state.ClientSide<G>> = {
               l1: state.l1,
               l2: state.l2[action.id],
