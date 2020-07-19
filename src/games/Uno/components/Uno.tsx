@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import { state } from '../../../types';
 import { UnoSpec } from '..';
-import { Card as CardType } from '../common';
 import CardWheel from './CardWheel';
 import { CardDefs } from './Card';
 import Menu from './Menu';
@@ -14,6 +13,7 @@ import './Uno.scss';
 
 interface Props {
   connected: boolean;
+  error: any;
 }
 
 class Uno extends React.PureComponent<Props> {
@@ -21,7 +21,11 @@ class Uno extends React.PureComponent<Props> {
     return <div className="uno-game">
       <Menu />
       <div className="banner">{
-        !this.props.connected ? "Disconnected" : ""
+        !this.props.connected
+          ? "Disconnected"
+          : this.props.error
+            ? "An error occured. Try refreshing the page."
+            : ""
       }</div>
       <div className="table">
         <CardDefs />
@@ -37,6 +41,7 @@ class Uno extends React.PureComponent<Props> {
 
 export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
-    connected: state.connected
+    connected: state.connected,
+    error: state.error
   })
 )(Uno);

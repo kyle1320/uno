@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
 
 import { ServerGame } from './ServerGame';
-import { GameSpec, ServerCoreActions, ClientCoreActions } from '../types';
+import { GameSpec, ServerCoreActions, ClientCoreActions, CoreActions } from '../types';
 
 export class GameClient<G extends GameSpec> {
   public constructor(
@@ -12,7 +12,13 @@ export class GameClient<G extends GameSpec> {
     // TODO: handle onerror and onclose events
     socket.onmessage = e => {
       const action = JSON.parse(e.data as string) as ServerCoreActions<G>;
-      this.room.handleMessage(this, action);
+
+      try {
+        this.room.handleMessage(this, action);
+      } catch (e) {
+        console.log(e);
+        this.send(CoreActions.error(e));
+      }
     };
     room.join(this);
   }
