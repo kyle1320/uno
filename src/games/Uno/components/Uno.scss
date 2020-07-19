@@ -41,13 +41,25 @@ html, body {
 }
 
 .banner {
-  padding: 5px 10px;
-  color: $white;
+  font-size: 16px;
   font-weight: bold;
+  line-height: 45px;
+  color: $white;
   background-color: $red;
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding-left: 45px;
+  transition: padding .5s;
 
   &:empty {
     display: none;
+  }
+
+  .menu-container.open + & {
+    padding-left: 295px;
   }
 }
 
@@ -87,7 +99,7 @@ html, body {
 
 .up-stack {
   .card {
-    width: min(125px, 25vmin)
+    width: min(125px, 15vmin);
   }
 }
 
@@ -95,6 +107,6 @@ html, body {
   margin-bottom: 10px;
 
   .card {
-    height: min(150px, 30vmin)
+    height: min(150px, 18vmin);
   }
 }
