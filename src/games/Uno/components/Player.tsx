@@ -7,6 +7,7 @@ import { state } from '../../../types';
 
 import './Player.scss';
 import Card from './Card';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 interface IProps {
   id: string;
@@ -31,9 +32,18 @@ export function Player(props: IProps) {
     <div className={`player-name${isSingleEmoji(props.name) ? ' large' : ''}`}>
       {props.name}
     </div>
-    <div className="player-hand">
-      {new Array(props.cards).fill(<div className="card-wrapper"><Card value="back" color="black" /></div>)}
-    </div>
+    <TransitionGroup className="player-hand">
+      {new Array(props.cards).fill(
+        <CSSTransition
+          classNames="card-slide"
+          timeout={{
+            enter: 300,
+            exit: 0
+          }}>
+          <div className="card-wrapper"><Card value="back" color="black" /></div>
+        </CSSTransition>
+      )}
+    </TransitionGroup>
   </div>;
 }
 
