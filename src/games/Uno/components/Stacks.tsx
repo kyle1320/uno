@@ -20,7 +20,7 @@ interface IProps {
 }
 
 export function Stacks(props: IProps) {
-  const x = props.placementAngle === null ? 0 : 100 * Math.sin(props.placementAngle);
+  const x = props.placementAngle === null ? 0 : -100 * Math.sin(props.placementAngle);
   const y = props.placementAngle === null ? 0 : 100 * Math.cos(props.placementAngle);
   return <div className="stacks">
     <div className="down-stack">

@@ -13,6 +13,8 @@ interface IState {
 }
 
 export default class PlayableCard extends React.PureComponent<IProps, IState> {
+  private ref = React.createRef<HTMLDivElement>();
+
   public constructor(props: IProps) {
     super(props);
     this.state = {
@@ -26,8 +28,16 @@ export default class PlayableCard extends React.PureComponent<IProps, IState> {
     this.props.play();
   }
 
+  componentDidMount() {
+    this.ref.current?.scrollIntoView({
+      behavior: "smooth",
+      inline: "nearest"
+    });
+  }
+
   render() {
     return <div
+      ref={this.ref}
       className={`playable-card${this.state.focused ? ' focus' : ''}`}
       onClick={this.play}>
       <Card {...this.props.card} onClick={this.play} />
