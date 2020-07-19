@@ -11,7 +11,8 @@ import {
   L4Actions,
   ClientCoreActions,
   PickSubset,
-  CoreActions } from '../types';
+  CoreActions,
+  ClientPreActions} from '../types';
 
 function getWebSocketUrl(): string {
   var loc = window.location, new_uri;
@@ -37,13 +38,12 @@ function isFromServer(action: any) {
 export abstract class ClientGame<G extends GameSpec> {
   private socket!: WebSocket;
   private store: Store<state.ClientSide<G>, ClientCoreActions<G>>;
+  private actionQueue: ClientPreActions<G>[] = [];
 
   public constructor() {
     let roomName = location.pathname;
     roomName = roomName.startsWith('/') ? roomName.substring(1) : roomName;
     localStorage.setItem('savedRoomName', roomName);
-
-    this.initSocket();
 
     this.store = createStore((
       state: state.ClientSide<G> = null!,
@@ -63,17 +63,41 @@ export abstract class ClientGame<G extends GameSpec> {
     }, applyMiddleware(() => next => (action: ClientCoreActions<G>) => {
       next(action);
       switch (action.kind) {
+        case 'L1':
+          this.processL1(action);
+          break;
+        case 'L2':
+          this.processL2(action);
+          break;
         case 'L3':
+          this.processL3(action);
           if (isFromServer(action)) break;
         case 'Req':
-          this.socket.send(JSON.stringify(action));
+          if (this.socket?.readyState === WebSocket.OPEN) {
+            this.socket.send(JSON.stringify(action));
+          } else {
+            this.actionQueue.push(action);
+          }
           break;
         case 'Core':
           if (action.type === CoreActions.DISCONNECTED) {
             this.initSocket();
+          } else if (action.type === CoreActions.CONNECTED) {
+            const actions = this.actionQueue;
+            this.actionQueue = [];
+            this.socket.send(JSON.stringify(CoreActions.clientJoin(actions)));
           }
+          this.processCore(action);
       }
     }));
+
+    this.setup();
+
+    this.initSocket();
+  }
+
+  protected setup() {
+    // any preliminary work like setting default state values should happen here
   }
 
   private initSocket() {
@@ -124,11 +148,20 @@ export abstract class ClientGame<G extends GameSpec> {
     return state;
   }
 
+  protected processL1(action: L1Actions<G>) {}
+  protected processL2(action: L2Actions<G>) {}
+  protected processL3(action: L3Actions<G>) {}
+  protected processCore(action: CoreActions<G>) {}
+
   protected abstract getRootElement(): React.ReactElement;
 
   mount(container: Element) {
     render(<Provider store={this.store}>
       {this.getRootElement()}
     </Provider>, container);
+  }
+
+  protected dispatch(action: ClientCoreActions<G>) {
+    this.store.dispatch(action);
   }
 }

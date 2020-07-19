@@ -49,18 +49,19 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
           [action.id]: this.reduceL3(state.l3[action.id], action)
         }};
         case "Core":
-          if (action.type === CoreActions.CLIENT_JOIN) {
-            const clientState = this.getInitialClientState(state, action.payload) as {
+          if (action.type === CoreActions.NEW_CLIENT) {
+            const clientState = this.getInitialClientState(state, action.id) as {
               l2?: state.L2<G>,
               l3?: state.L3<G>
             };
             const newState = { ...state };
             if (clientState.l2) {
-              newState.l2[action.payload] = clientState.l2;
+              newState.l2 = { ...newState.l2, [action.id]: clientState.l2 };
             }
             if (clientState.l3) {
-              newState.l3[action.payload] = clientState.l3;
+              newState.l3 = { ...newState.l3, [action.id]: clientState.l3 };
             }
+            return newState;
           }
         default:  return state;
       }
@@ -106,6 +107,28 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
 
         // react to core actions
         case "Core":
+          if (action.type === CoreActions.CLIENT_JOIN) {
+            let state = this.store.getState();
+
+            // TODO: better way to check if client exists
+            if (state.l2 && !(action.id in state.l2)) {
+              this.store.dispatch(CoreActions.newClient(action.id));
+            }
+
+            for (const act of action.payload) {
+              const client = getClient(action);
+              this.handleMessage(client, act);
+            }
+
+            state = this.store.getState();
+            console.log(state.l3, action.id);
+            const clientState: Partial<state.ClientSide<G>> = {
+              l1: state.l1,
+              l2: state.l2[action.id],
+              l3: state.l3[action.id]
+            };
+            getClient(action).send(CoreActions.initialState(clientState));
+          }
           this.processCore(action);
           break;
         default:
@@ -141,7 +164,8 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
     switch (action.kind) {
       case "L3":
       case "Req":
-        action.id = client.id;
+      case "Core":
+        (action as any).id = client.id;
         this.store.dispatch(action);
         break;
       default:
@@ -157,17 +181,6 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
 
   public join(client: GameClient<G>) {
     this.clients.push(client);
-    // TODO: better way to check if client exists
-    if (!(client.id in this.store.getState().l2)) {
-      this.dispatch(CoreActions.clientJoin(client.id));
-    }
-    const { l1, l2, l3 } = this.store.getState();
-    const state: Partial<state.ClientSide<G>> = {
-      l1,
-      l2: l2[client.id],
-      l3: l3[client.id]
-    };
-    client.send(CoreActions.initialState(state));
   }
 
   public leave(client: GameClient<G>) {

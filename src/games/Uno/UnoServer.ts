@@ -120,10 +120,10 @@ export class UnoServer extends ServerGame<UnoSpec> {
 
   processCore(action: CoreActions<UnoSpec>) {
     switch (action.type) {
-      case CoreActions.CLIENT_JOIN:
+      case CoreActions.NEW_CLIENT:
         this.dispatch(L1.actions.addPlayer({
-          id: action.payload,
-          name: this.store.getState().l3[action.payload].name,
+          id: action.id,
+          name: this.store.getState().l3[action.id].name,
           cards: 0
         }));
         break;

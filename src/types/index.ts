@@ -33,6 +33,8 @@ export type ClientCoreActions<G extends GameSpec = GameSpec>
   = L1Actions<G> | L2Actions<G> | L3Actions<G> | L4Actions<G> | ReqActions<G> | CoreActions<G>;
 export type ClientGameActions<G extends GameSpec = GameSpec>
   = L3Actions<G> | L4Actions<G> | ReqActions<G>
+  export type ClientPreActions<G extends GameSpec = GameSpec>
+    = L3Actions<G> | ReqActions<G>
 export type L0Actions<G extends GameSpec = GameSpec> = G["actions"]["l0"];
 export type L1Actions<G extends GameSpec = GameSpec> = G["actions"]["l1"];
 export type L2Actions<G extends GameSpec = GameSpec> = G["actions"]["l2"];
@@ -43,12 +45,26 @@ export type ReqActions<G extends GameSpec = GameSpec> = G["actions"]["req"];
 // TODO: move core actions somewhere else?
 export namespace CoreActions {
   export const CLIENT_JOIN = "CLIENT_JOIN";
-  export type ClientJoinAction = actions.Core<typeof CLIENT_JOIN, string>;
-  export function clientJoin(id: string): ClientJoinAction {
+  export type ClientJoinAction<G extends GameSpec>
+    = actions.Core<typeof CLIENT_JOIN, ClientPreActions<G>[]> & { id: string };
+  export function clientJoin<G extends GameSpec>(
+    payload: ClientPreActions<G>[],
+    id: string = ''
+  ): ClientJoinAction<G> {
     return {
       kind: "Core",
       type: CLIENT_JOIN,
-      payload: id
+      payload,
+      id
+    };
+  }
+  export const NEW_CLIENT = "NEW_CLIENT";
+  export type NewClientAction = actions.Core<typeof NEW_CLIENT> & { id: string };
+  export function newClient(id: string): NewClientAction {
+    return {
+      kind: "Core",
+      type: NEW_CLIENT,
+      id
     };
   }
 
@@ -96,10 +112,11 @@ export namespace CoreActions {
 
 export type CoreActions<G extends GameSpec = GameSpec>
   = CoreActions.InitialStateAction<G>
-  | CoreActions.ClientJoinAction
+  | CoreActions.ClientJoinAction<G>
   | CoreActions.ConnectedAction
   | CoreActions.DisconnectedAction
-  | CoreActions.ErrorAction;
+  | CoreActions.ErrorAction
+  | CoreActions.NewClientAction;
 
 export {
   actions,

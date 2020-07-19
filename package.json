@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --watch",
+    "watch": "webpack --watch --config webpack.dev.js",
     "start": "cd dist && node server.js"
   },
   "author": "",
