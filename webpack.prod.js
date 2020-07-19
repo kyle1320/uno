@@ -67,7 +67,7 @@ const client = {
       background_color: '#ED1C24',
       start_url: '/',
       orientation: 'any',
-      display: 'standalone'
+      display: 'fullscreen'
     })
   ],
   output: {
