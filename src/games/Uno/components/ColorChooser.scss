@@ -1,0 +1,30 @@
+.color-chooser {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+
+  font-size: 28px;
+  font-style: italic;
+  font-weight: bold;
+
+  svg {
+    height: 50%;
+  }
+}
+
+.color-chooser-color {
+  fill: white;
+  fill-opacity: 0;
+
+  &:hover {
+    fill-opacity: 0.4;
+  }
+}

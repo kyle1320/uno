@@ -1,6 +1,6 @@
 import { ServerGame } from "../../server/ServerGame";
 import { UnoSpec, L0, L1, L2, L3, Req } from ".";
-import { Card, shuffled } from "./common";
+import { Card, shuffled, Color } from "./common";
 import { CoreActions, state } from "../../types";
 
 export class UnoServer extends ServerGame<UnoSpec> {
@@ -108,7 +108,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
         break;
       case Req.actions.PLAY_CARD:
         this.dispatch(L0.actions.playCard(
-          this.playCard(action.id, action.payload),
+          this.playCard(action.id, action.payload.index, action.payload.color),
           action.id
         ));
         break;
@@ -129,13 +129,16 @@ export class UnoServer extends ServerGame<UnoSpec> {
     }
   }
 
-  private playCard(clientId: string, index: number): Card {
+  private playCard(clientId: string, index: number, color?: Color): Card {
     const state = this.store.getState().l2[clientId];
     const card = state.hand[index];
 
     this.dispatch(L2.actions.playCard(index, clientId));
 
-    // TODO: update card counts
+    // apply selected color to wild & draw4 cards
+    if (color && (card.value === 'draw4' || card.value === 'wild')) {
+      return { ...card, color } as Card;
+    }
 
     return card;
   }

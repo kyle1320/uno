@@ -1,4 +1,5 @@
 import { actions as actionTypes } from "../../../types";
+import { Color } from "../common";
 
 export namespace actions {
   export const DRAW_CARD = "DRAW_CARD";
@@ -12,12 +13,16 @@ export namespace actions {
   }
 
   export const PLAY_CARD = "PLAY_CARD";
-  export type PlayCardAction = actionTypes.Req<typeof PLAY_CARD, number>;
-  export function playCard(index: number, id: string = ''): PlayCardAction {
+  export type PlayCardPayload = {
+    index: number;
+    color?: Color;
+  }
+  export type PlayCardAction = actionTypes.Req<typeof PLAY_CARD, PlayCardPayload>;
+  export function playCard(index: number, color?: Color, id: string = ''): PlayCardAction {
     return {
       kind: 'Req',
       type: PLAY_CARD,
-      payload: index,
+      payload: { index, color },
       id
     };
   }
