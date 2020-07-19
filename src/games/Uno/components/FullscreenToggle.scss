@@ -3,3 +3,9 @@
     margin-right: 8px;
   }
 }
+
+@media (display-mode: standalone) {
+  .fullscreen-toggle {
+    display: none;
+  }
+}
