@@ -6,6 +6,7 @@ import { UnoSpec, Req, L3 } from '..';
 import { Card as CardType } from '../common';
 import CardWheel from './CardWheel';
 import { Card, CardDefs } from './Card';
+import Menu from './Menu';
 
 import './Uno.scss';
 import Players from './Players';
@@ -15,29 +16,17 @@ interface Props {
   upStackSize: number;
   downStackSize: number;
   topCard: CardType | null;
-  name: string;
 
-  setName: (name: string) => void;
   draw: () => void;
-  resetGame: () => void;
 }
 
 class Uno extends React.PureComponent<Props> {
-  private setName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.props.setName(e.target.value);
-  }
-
   render() {
     return <div className="uno-game">
+      <Menu />
       <div className="banner">{
         !this.props.connected ? "Disconnected" : ""
       }</div>
-      <div className="infobar">
-        <div>
-          Your Name: <input type="text" value={this.props.name} onChange={this.setName} />
-        </div>
-        <button onClick={this.props.resetGame}>Reset Game</button>
-      </div>
       <div className="table">
         <CardDefs />
         <div className="stacks">
@@ -66,12 +55,9 @@ export default connect(
     connected: state.connected,
     upStackSize: state.l1.upStackSize,
     downStackSize: state.l1.downStackSize,
-    topCard: state.l1.topCard,
-    name: state.l3.name
+    topCard: state.l1.topCard
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
-    setName: (name: string) => dispatch(L3.actions.setName(name)),
-    draw: () => dispatch(Req.actions.drawCard()),
-    resetGame: () => dispatch(Req.actions.resetGame())
+    draw: () => dispatch(Req.actions.drawCard())
   })
 )(Uno);
