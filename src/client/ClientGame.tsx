@@ -62,7 +62,6 @@ export abstract class ClientGame<G extends GameSpec> {
       ...this.getInitialState() as any
     }, applyMiddleware(() => next => (action: ClientCoreActions<G>) => {
       next(action);
-      console.log(action);
       switch (action.kind) {
         case 'L3':
           if (isFromServer(action)) break;
