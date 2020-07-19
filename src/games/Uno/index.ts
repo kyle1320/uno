@@ -23,19 +23,4 @@ export interface UnoSpec extends GameSpec {
   }
 }
 
-export function shuffle(arr: unknown[]) {
-  for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = arr[i];
-      arr[i] = arr[j];
-      arr[j] = temp;
-  }
-}
-
-export function shuffled<T>(arr: T[]): T[] {
-  const copy = arr.slice();
-  shuffle(copy);
-  return copy;
-}
-
 export { L0, L1, L2, L3, Req };

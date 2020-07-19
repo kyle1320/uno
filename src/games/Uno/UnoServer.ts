@@ -1,20 +1,19 @@
 import { ServerGame } from "../../server/ServerGame";
-import { UnoSpec, L0, L1, L2, L3, Req, shuffle } from ".";
-import { Card } from "./common";
+import { UnoSpec, L0, L1, L2, L3, Req } from ".";
+import { Card, shuffled } from "./common";
 import { CoreActions, state } from "../../types";
 
 export class UnoServer extends ServerGame<UnoSpec> {
   getInitialState() {
-    const state = {
-      l0: L0.state.initial,
+    return {
+      l0: {
+        ...L0.state.initial,
+        upStack: shuffled(L0.state.initial.upStack)
+      },
       l1: L1.state.initial,
       l2: {},
       l3: {},
-    }
-    const deck = state.l0.upStack.slice();
-    shuffle(deck);
-    state.l0.upStack = deck;
-    return state;
+    };
   }
 
   getInitialClientState(state: state.ServerSide<UnoSpec>, id: string) {

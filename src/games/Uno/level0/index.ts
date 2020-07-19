@@ -1,6 +1,5 @@
 import { actions as actionTypes } from "../../../types";
-import { Card } from "../common";
-import { shuffle, shuffled } from "..";
+import { Card, shuffled } from "../common";
 
 export namespace actions {
   export const DRAW_CARD = "DRAW_CARD";
@@ -76,12 +75,13 @@ export namespace state {
 export function reduce(state: state.State, action: actions.All): state.State {
   switch (action.type) {
     case actions.SHUFFLE:
-      const extras = state.downStack.slice(0, state.downStack.length - 1);
-      shuffle(extras);
       return {
         ...state,
         downStack: state.downStack.slice(state.downStack.length - 1),
-        upStack: [...extras, ...state.upStack]
+        upStack: [
+          ...shuffled(state.downStack.slice(0, state.downStack.length - 1)),
+          ...state.upStack
+        ]
       };
     case actions.DRAW_CARD:
       return {

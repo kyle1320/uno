@@ -17,3 +17,23 @@ export namespace selectors {
     ];
   }
 }
+
+function shuffle(arr: unknown[]) {
+  for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = temp;
+  }
+}
+
+export function shuffled(arr: Card[]): Card[] {
+  const copy = arr.map(c => {
+    if (c.value === 'draw4' || c.value === 'wild') {
+      return { ...c, color: 'black' } as Card;
+    }
+    return c;
+  });
+  shuffle(copy);
+  return copy;
+}
