@@ -54,7 +54,7 @@
 .place-card-enter-active {
   transform: translate(0);
   opacity: 1;
-  transition: all 250ms;
+  transition: all 300ms ease-in-out;
 }
 
 .place-card-leave {

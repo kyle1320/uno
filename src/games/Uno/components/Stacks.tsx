@@ -35,7 +35,7 @@ export function Stacks(props: IProps) {
             onEntering={(node: HTMLElement) => {
               node.style.transform='';
             }}
-            timeout={250}>
+            timeout={300}>
             {props.topCard
               ? <Card {...props.topCard} />
               : <Card color="gray" value="empty" />}
