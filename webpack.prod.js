@@ -4,6 +4,8 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const WorkboxPlugin = require('workbox-webpack-plugin');
+var WebpackPwaManifest = require('webpack-pwa-manifest')
 
 const template = `<!DOCTYPE html>
 <html>
@@ -54,6 +56,18 @@ const client = {
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: "[id].css"
+    }),
+    new WorkboxPlugin.GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true,
+    }),
+    new WebpackPwaManifest({
+      name: 'Uno',
+      theme_color: '#ED1C24',
+      background_color: '#ED1C24',
+      start_url: '/',
+      orientation: 'any',
+      display: 'standalone'
     })
   ],
   output: {
