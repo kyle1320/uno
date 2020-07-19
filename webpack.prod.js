@@ -5,7 +5,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WorkboxPlugin = require('workbox-webpack-plugin');
-var WebpackPwaManifest = require('webpack-pwa-manifest')
+var WebpackPwaManifest = require('webpack-pwa-manifest');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 const template = `<!DOCTYPE html>
 <html>
@@ -67,8 +68,16 @@ const client = {
       background_color: '#ED1C24',
       start_url: '/',
       orientation: 'any',
-      display: 'fullscreen'
-    })
+      display: 'fullscreen',
+      icons: [
+        {
+          src: path.resolve('./assets/icon.png'),
+          sizes: [96, 128, 192, 256, 384, 512],
+          destination: 'icons'
+        }
+      ]
+    }),
+    new FaviconsWebpackPlugin('./assets/icon.svg')
   ],
   output: {
     filename: '[name].js',
