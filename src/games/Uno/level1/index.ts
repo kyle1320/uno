@@ -58,6 +58,7 @@ export namespace state {
     direction: "CW" | "CCW",
     currentPlayer: number;
     topCard: Card | null;
+    lastPlayBy: string | null;
     upStackSize: number;
     downStackSize: number;
     turnOrder: string[];
@@ -69,6 +70,7 @@ export namespace state {
     direction: "CW",
     currentPlayer: 0,
     topCard: null,
+    lastPlayBy: null,
     upStackSize: 108,
     downStackSize: 0,
     turnOrder: [],
@@ -93,7 +95,9 @@ export function reduce(state: state.State, action: actions.All): state.State {
         [action.id]: { ...state.players[action.id], ...action.payload }
       }};
     case actions.RESET_GAME:
-      return state;
+      return { ...state,
+        lastPlayBy: null
+      };
     default:
       return state;
   }

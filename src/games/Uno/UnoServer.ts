@@ -51,7 +51,8 @@ export class UnoServer extends ServerGame<UnoSpec> {
       case L0.actions.PLAY_CARD:
         this.dispatch(L1.actions.update({
           topCard: state.downStack[state.downStack.length - 1],
-          downStackSize: state.downStack.length
+          downStackSize: state.downStack.length,
+          lastPlayBy: action.id
         }))
         break;
       case L0.actions.RESET_GAME:
@@ -68,7 +69,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
         // TODO: make this more efficient
         for (let i = 0; i < 7; i++) {
           for (const id of this.getL1State().turnOrder) {
-            this.dispatch(L2.actions.drawCards([this.drawCard()], id));
+            this.dispatch(L2.actions.drawCards([this.drawCard(id)], id));
           }
         }
         break;
@@ -101,10 +102,16 @@ export class UnoServer extends ServerGame<UnoSpec> {
   processRequest(action: Req.actions.All) {
     switch (action.type) {
       case Req.actions.DRAW_CARD:
-        this.dispatch(L2.actions.drawCards([this.drawCard()], action.id));
+        this.dispatch(L2.actions.drawCards(
+          [this.drawCard(action.id)],
+          action.id
+        ));
         break;
       case Req.actions.PLAY_CARD:
-        this.dispatch(L0.actions.playCard(this.playCard(action.id, action.payload)));
+        this.dispatch(L0.actions.playCard(
+          this.playCard(action.id, action.payload),
+          action.id
+        ));
         break;
       case Req.actions.RESET_GAME:
         this.dispatch(L0.actions.resetGame());
@@ -135,7 +142,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
   }
 
   // TODO: support drawing several cards at once
-  private drawCard(): Card {
+  private drawCard(id: string): Card {
     let state = this.store.getState();
 
     if (!state.l0.upStack.length) {
@@ -145,7 +152,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
     const upStack = state.l0.upStack;
     const card = upStack[upStack.length - 1];
 
-    this.dispatch(L0.actions.drawCard());
+    this.dispatch(L0.actions.drawCard(id));
 
     // action is dispatched synchronously, but we are still looking at old state
     if (upStack.length < 2) this.dispatch(L0.actions.shuffle());

@@ -21,12 +21,12 @@ export function Card(props: IProps) {
       <g transform={turned ? "rotate(-90, 30, 30)" : ""}>
         <use xlinkHref="#card-body" x="0" y="0" />
         {value === 'empty'
-          ? null : [
+          ? null : <>
           <use xlinkHref="#card-ellipse" x="30" y="45" className="card-ellipse" />,
           <use x="35" y="40" xlinkHref={smallEl} transform="scale(0.3)" />,
           <use x="165" y="260" xlinkHref={smallEl} transform="scale(0.3) rotate(180, 165, 260)" />,
           <use x="30" y="45" xlinkHref={largeEl} />
-        ]}
+        </>}
         <use xlinkHref="#card-outline" x="2" y="2" />
       </g>
     </svg>

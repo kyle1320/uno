@@ -4,21 +4,23 @@ import { shuffle, shuffled } from "..";
 
 export namespace actions {
   export const DRAW_CARD = "DRAW_CARD";
-  export type DrawCardAction = actionTypes.L0<typeof DRAW_CARD>;
-  export function drawCard(): DrawCardAction {
+  export type DrawCardAction = actionTypes.L0<typeof DRAW_CARD> & { id: string };
+  export function drawCard(id: string): DrawCardAction {
     return {
       kind: "L0",
-      type: DRAW_CARD
+      type: DRAW_CARD,
+      id
     };
   }
 
   export const PLAY_CARD = "PLAY_CARD";
-  export type PlayCardAction = actionTypes.L0<typeof PLAY_CARD, Card>;
-  export function playCard(payload: Card): PlayCardAction {
+  export type PlayCardAction = actionTypes.L0<typeof PLAY_CARD, Card> & { id: string };
+  export function playCard(payload: Card, id: string): PlayCardAction {
     return {
       kind: "L0",
       type: PLAY_CARD,
-      payload
+      payload,
+      id
     };
   }
 
@@ -45,13 +47,18 @@ export namespace actions {
 
 const baseDeck: Card[] = [];
 
+let _cardId = 0;
+function getId() {
+  return String(_cardId++);
+}
+
 for (const color of (["red", "yellow", "green", "blue"] as const)) {
   for (const value of (["0", "1", "1", "2", "2", "3", "3", "4", "4", "5", "5", "6", "6", "7", "7", "8", "8", "9", "9", "reverse", "reverse", "skip", "skip", "draw2", "draw2"] as const)) {
-    baseDeck.push({ color, value });
+    baseDeck.push({ color, value, id: getId() });
   }
 }
 for (const value of (["wild", "wild", "wild", "wild", "draw4", "draw4", "draw4", "draw4"] as const)) {
-  baseDeck.push({ color: "black", value });
+  baseDeck.push({ color: "black", value, id: getId() });
 }
 
 export namespace state {

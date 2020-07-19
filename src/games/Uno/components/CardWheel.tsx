@@ -19,6 +19,7 @@ export function CardWheel(props: IProps) {
     <div className="card-wheel-container">
     {props.cards.map((card, i) =>
       <PlayableCard
+        key={card.id}
         card={card}
         play={props.play.bind(null, i)} />
     )}

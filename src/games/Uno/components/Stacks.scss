@@ -9,7 +9,7 @@
 }
 
 .up-stack, .down-stack {
-  display: inline-block;
+  display: block;
   position: relative;
   line-height: 0;
 
@@ -24,18 +24,38 @@
     left: 100%;
     padding-left: 4px;
   }
+
+  .card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
 }
 
 .up-stack {
-  .card {
-    width: min(125px, 15vh);
-  }
+  width: min(150px, 18vh);
+  padding-top: 66.6666666666%;
 }
 
 .down-stack {
+  width: min(125px, 15vh);
+  padding-top: 150%;
   margin-bottom: 10px;
+}
 
-  .card {
-    height: min(150px, 18vh);
-  }
+.place-card-enter {
+  opacity: 0;
+  z-index: 1;
+}
+
+.place-card-enter-active {
+  transform: translate(0);
+  opacity: 1;
+  transition: all 250ms;
+}
+
+.place-card-leave {
+  z-index: -1;
 }
