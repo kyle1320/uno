@@ -51,19 +51,19 @@ export default class Homepage extends React.Component<IProps, IState> {
         <div className="row label">
           Room Name
         </div>
-        <div className="row">
-          <button className="randomize-btn" onClick={this.randomize}>
-            <FontAwesomeIcon icon={ faDice } />
-          </button>
+        <div className="row room-name">
           <input
             className="homepage-input"
             value={this.state.roomName}
             onChange={this.setRoomName}
             onKeyDown={this.inputKeyDown} />
+          <button className="randomize-btn" onClick={this.randomize}>
+            <FontAwesomeIcon icon={ faDice } />
+          </button>
         </div>
         <div className="row submit">
           <button
-            className="primary homepage-go-btn"
+            className="highlight homepage-go-btn"
             onClick={this.buttonPress}
             disabled={!this.state.roomName}>Play</button>
         </div>

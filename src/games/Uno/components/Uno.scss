@@ -18,10 +18,12 @@ input, button {
   outline: none;
   padding: 5px;
   margin: 5px;
+  font-size: inherit;
 }
 
 input:not([type="checkbox"]) {
   flex-grow: 1;
+  padding: 5px 8px;
 }
 
 input {
@@ -54,6 +56,15 @@ button {
       background-color: darken($red, 10);
     }
   }
+
+  &.highlight {
+    background-color: $yellow;
+    color: #333;
+
+    &:active {
+      background-color: darken($yellow, 10);
+    }
+  }
 }
 
 #root {
@@ -71,15 +82,17 @@ button {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  padding-top: 10vh;
+  justify-content: center;
+  height: 100%;
 
   &-title {
-    font-size: 56px;
+    font-size: 80px;
     font-weight: bold;
     text-transform: uppercase;
     margin-bottom: 20px;
-    color: $red;
+    color: $yellow;
     -webkit-text-stroke: 2px white;
+    text-shadow: black .05em .03em 0;
   }
 
   &-go-btn {
@@ -90,6 +103,11 @@ button {
   }
 
   &-navigator {
+    width: 80%;
+    max-width: 300px;
+    font-size: 18px;
+    margin-bottom: 60px;
+
     .row {
       display: flex;
       flex-flow: row nowrap;
@@ -97,16 +115,17 @@ button {
     }
 
     .label {
-      font-size: 10px;
+      font-size: .7em;
       margin-bottom: 3px;
     }
 
-    .randomize-btn {
-      font-size: 12px;
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
+    .room-name {
+      & > :not(:last-child) {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
 
-      & + input {
+      & > :not(:first-child) {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
       }
@@ -114,11 +133,11 @@ button {
 
     .submit {
       margin-top: 10px;
-      font-size: 14px;
+      font-size: .8em;
 
       button {
         flex-grow: 1;
-        height: 26px;
+        height: 2em;
       }
     }
 
