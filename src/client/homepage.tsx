@@ -23,13 +23,21 @@ export default class Homepage extends React.Component<IProps, IState> {
     this.setState({ roomName: e.target.value });
   }
 
-  submit = () => {
-    window.location.href = this.state.roomName;
+  submit = (name = this.state.roomName) => {
+    this.props.history.push(`/${name}`);
   }
 
+  buttonPress = () => this.submit();
+
   inputKeyDown = (e: React.KeyboardEvent) => {
-    if (e.keyCode === 13) {
-      this.props.history.push(`/${this.state.roomName}`);
+    if (e.keyCode === 13) this.submit();
+  }
+
+  newRoom = async () => {
+    const res = await fetch('/newroom', { method: 'POST' });
+    if (res.ok) {
+      const name = await res.text();
+      this.submit(name);
     }
   }
 
@@ -40,17 +48,24 @@ export default class Homepage extends React.Component<IProps, IState> {
         Uno
       </div>
       <div className="homepage-navigator">
-        <input
-          className="homepage-input"
-          placeholder="Room Name"
-          value={this.state.roomName}
-          onChange={this.setRoomName}
-          onKeyDown={this.inputKeyDown} />
-        <Link
-          className="homepage-go-btn"
-          to={`/${this.state.roomName}`}>
-          <FontAwesomeIcon icon={ faArrowRight } />
-        </Link>
+        <div className="row label">
+          Room Name
+        </div>
+        <div className="row">
+          <input
+            className="homepage-input"
+            value={this.state.roomName}
+            onChange={this.setRoomName}
+            onKeyDown={this.inputKeyDown} />
+          <button
+            className="primary homepage-go-btn"
+            onClick={this.buttonPress}>
+            <FontAwesomeIcon icon={ faArrowRight } />
+          </button>
+        </div>
+        <div className="row newroom">
+          <button onClick={this.newRoom}>New Random Room</button>
+        </div>
       </div>
     </div>;
   }

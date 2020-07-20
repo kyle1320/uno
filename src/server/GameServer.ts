@@ -11,6 +11,7 @@ import * as uuid from 'uuid';
 import { GameClient } from './GameClient';
 import { ServerGame } from './ServerGame';
 import { GameSpec } from '../types';
+import nouns from './nounlist.json';
 
 const CLIENT_ID_COOKIE = 'clientid';
 
@@ -68,6 +69,7 @@ export class GameServer<G extends GameSpec> {
     });
 
     app.use(Express.static('public'));
+    app.post('/newroom', (_, res) => res.end(this.getRandomRoom()));
     app.use('*', (req, res) => {
       res.sendFile(path.resolve('./public/index.html'));
     });
@@ -77,5 +79,13 @@ export class GameServer<G extends GameSpec> {
     this.server.listen(process.env.PORT || 3000, () => {
       console.log('Server started');
     });
+  }
+
+  private getRandomRoom() {
+    let room: string;
+    do {
+      room = nouns[Math.floor(Math.random() * nouns.length)]
+    } while (room in this.rooms);
+    return room;
   }
 }

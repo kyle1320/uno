@@ -31,10 +31,11 @@ input {
 
 button {
   display: block;
-  font-size: 14px;
+  font-size: inherit;
   font-weight: bold;
   background-color: #CCC;
   border: none;
+  cursor: pointer;
 
   &:active {
     background-color: darken(#CCC, 10);
@@ -84,9 +85,33 @@ button {
   }
 
   &-navigator {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
+    .row {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+    }
+
+    .label {
+      font-size: 10px;
+      margin-bottom: 3px;
+    }
+
+    .newroom {
+      font-size: 10px;
+      margin-top: 15px;
+
+      button {
+        flex-grow: 1;
+      }
+    }
+
+    input, button {
+      margin: 0;
+    }
+
+    input {
+      margin-right: 5px;
+    }
   }
 }
 
