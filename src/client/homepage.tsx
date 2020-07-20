@@ -1,13 +1,20 @@
 
 import * as React from 'react';
-import { render } from 'react-dom';
+import { Link } from 'react-router-dom';
+import { History } from 'history';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
-interface State {
+interface IProps {
+  history: History;
+}
+
+interface IState {
   roomName: string;
 }
 
-class Homepage extends React.Component<{}, State> {
-  public constructor(props: {}) {
+export default class Homepage extends React.Component<IProps, IState> {
+  public constructor(props: IProps) {
     super(props);
     this.state = { roomName: localStorage.getItem('savedRoomName') || '' };
   }
@@ -20,30 +27,31 @@ class Homepage extends React.Component<{}, State> {
     window.location.href = this.state.roomName;
   }
 
+  inputKeyDown = (e: React.KeyboardEvent) => {
+    if (e.keyCode === 13) {
+      this.props.history.push(`/${this.state.roomName}`);
+    }
+  }
+
   render() {
-    return <div>
-      <div>Play UNO</div>
-      <div>
+    return <div className="homepage">
+      <div className="homepage-title">
+        {/* TODO: extract this */}
+        Uno
+      </div>
+      <div className="homepage-navigator">
         <input
+          className="homepage-input"
           placeholder="Room Name"
           value={this.state.roomName}
-          onChange={this.setRoomName} />
-        <button onClick={this.submit}>Go</button>
+          onChange={this.setRoomName}
+          onKeyDown={this.inputKeyDown} />
+        <Link
+          className="homepage-go-btn"
+          to={`/${this.state.roomName}`}>
+          <FontAwesomeIcon icon={ faArrowRight } />
+        </Link>
       </div>
     </div>;
-  }
-}
-
-render(<Homepage />, document.getElementById('root'));
-
-if (process.env.NODE_ENV === 'production') {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js').then(registration => {
-        console.log('SW registered: ', registration);
-      }).catch(registrationError => {
-        console.log('SW registration failed: ', registrationError);
-      });
-    });
   }
 }

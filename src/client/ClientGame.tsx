@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { render } from 'react-dom';
 import { createStore, Store, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+
 import {
   state,
   GameSpec,
@@ -36,12 +36,14 @@ function isFromServer(action: any) {
   return !!action[serverTagSymbol];
 }
 
-export abstract class ClientGame<G extends GameSpec> {
+export abstract class ClientGame<G extends GameSpec> extends React.PureComponent {
   private socket!: WebSocket;
   private store: Store<state.ClientSide<G>, ClientCoreActions<G>>;
   private actionQueue: ClientPreActions<G>[] = [];
 
-  public constructor() {
+  public constructor(props: {}) {
+    super(props);
+
     let roomName = location.pathname;
     roomName = roomName.startsWith('/') ? roomName.substring(1) : roomName;
     localStorage.setItem('savedRoomName', roomName);
@@ -94,8 +96,6 @@ export abstract class ClientGame<G extends GameSpec> {
           this.processCore(action);
       }
     }));
-
-    this.initSocket();
   }
 
   protected setup() {
@@ -162,14 +162,18 @@ export abstract class ClientGame<G extends GameSpec> {
     return this.store.getState().l4;
   }
 
-  mount(container: Element) {
-    this.setup();
-    render(<Provider store={this.store}>
-      {this.getRootElement()}
-    </Provider>, container);
-  }
-
   protected dispatch(action: ClientGameActions<G>) {
     this.store.dispatch(action);
+  }
+
+  componentDidMount() {
+    this.setup();
+    this.initSocket();
+  }
+
+  render() {
+    return <Provider store={this.store}>
+      {this.getRootElement()}
+    </Provider>;
   }
 }

@@ -49,48 +49,10 @@
   align-items: stretch;
   font-size: 12px;
 
-  input, button {
-    background-color: $white;
-    border-radius: 6px;
-    outline: none;
-    padding: 5px;
-    margin: 5px;
-  }
-
-  input:not([type="checkbox"]) {
-    flex-grow: 1;
-  }
-
-  input {
-    border: none;
-    box-shadow: 0 0 3px inset rgba(0, 0, 0, 0.4);
-  }
-
   hr {
     margin: 10px 0;
     height: 1px;
     background-color: #A0A0A0;
-  }
-
-  button {
-    display: block;
-    font-size: 14px;
-    font-weight: bold;
-    background-color: #CCC;
-    border: none;
-
-    &:active {
-      background-color: darken(#CCC, 10);
-    }
-
-    &.primary {
-      background-color: $red;
-      color: white;
-
-      &:active {
-        background-color: darken($red, 10);
-      }
-    }
   }
 
   .spacer {

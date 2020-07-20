@@ -65,7 +65,7 @@ export class GameServer<G extends GameSpec> {
 
     app.use(Express.static('public'));
     app.use('*', (req, res) => {
-      res.sendFile(path.resolve('./public/gameroom.html'));
+      res.sendFile(path.resolve('./public/index.html'));
     });
   }
 

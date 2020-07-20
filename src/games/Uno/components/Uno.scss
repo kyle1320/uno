@@ -12,18 +12,85 @@ html, body {
   height: 100%;
 }
 
-#root {
-  width: 100%;
-  height: 100%;
+input, button {
+  background-color: $white;
+  border-radius: 6px;
+  outline: none;
+  padding: 5px;
+  margin: 5px;
 }
 
-.uno-game {
+input:not([type="checkbox"]) {
+  flex-grow: 1;
+}
+
+input {
+  border: none;
+  box-shadow: 0 0 3px inset rgba(0, 0, 0, 0.4);
+}
+
+button {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #CCC;
+  border: none;
+
+  &:active {
+    background-color: darken(#CCC, 10);
+  }
+
+  &.primary {
+    background-color: $red;
+    color: white;
+
+    &:active {
+      background-color: darken($red, 10);
+    }
+  }
+}
+
+#root {
   font-family: Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #ed1c24;
   background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-dark.png");
   background-size: 150px;
+  width: 100%;
+  height: 100%;
+}
+
+.homepage {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  padding-top: 10vh;
+
+  &-title {
+    font-size: 56px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    color: $red;
+    -webkit-text-stroke: 2px white;
+  }
+
+  &-go-btn {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 0;
+  }
+
+  &-navigator {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+  }
+}
+
+.uno-game {
   width: 100%;
   height: 100%;
   display: flex;

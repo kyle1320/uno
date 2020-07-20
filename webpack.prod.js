@@ -22,10 +22,7 @@ const template = `<!DOCTYPE html>
 
 const client = {
   mode: 'production',
-  entry: {
-    homepage: './src/client/homepage.tsx',
-    gameroom: './src/client/gameroom.tsx'
-  },
+  entry: './src/client/index.tsx',
   devtool: 'source-map',
   module: {
     rules: [
@@ -45,13 +42,7 @@ const client = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      chunks: ['homepage'],
       filename: 'index.html',
-      templateContent: template
-    }),
-    new HtmlWebpackPlugin({
-      chunks: ['gameroom'],
-      filename: 'gameroom.html',
       templateContent: template
     }),
     new MiniCssExtractPlugin({

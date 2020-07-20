@@ -8,14 +8,6 @@ const NAME_STORAGE_KEY = 'preferredName';
 const PREFERENCES_STORAGE_KEY = 'localPreferences';
 
 export class UnoClient extends ClientGame<UnoSpec> {
-  public constructor() {
-    super();
-
-    // document.addEventListener("touchmove", e => {
-    //   e.preventDefault();
-    // }, { passive: false });
-  }
-
   protected getInitialState() {
     return {
       l1: L1.state.initial,
@@ -25,7 +17,7 @@ export class UnoClient extends ClientGame<UnoSpec> {
     };
   }
 
-  protected setup() {
+  protected init() {
     const name = localStorage.getItem(NAME_STORAGE_KEY);
     if (name) {
       this.dispatch(L3.actions.setName(name));
