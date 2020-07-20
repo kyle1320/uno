@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { History } from 'history';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faDice } from '@fortawesome/free-solid-svg-icons';
 
 interface IProps {
   history: History;
@@ -33,11 +33,11 @@ export default class Homepage extends React.Component<IProps, IState> {
     if (e.keyCode === 13) this.submit();
   }
 
-  newRoom = async () => {
+  randomize = async () => {
     const res = await fetch('/newroom', { method: 'POST' });
     if (res.ok) {
-      const name = await res.text();
-      this.submit(name);
+      const roomName = await res.text();
+      this.setState({ roomName });
     }
   }
 
@@ -52,6 +52,9 @@ export default class Homepage extends React.Component<IProps, IState> {
           Room Name
         </div>
         <div className="row">
+          <button className="randomize-btn" onClick={this.randomize}>
+            <FontAwesomeIcon icon={ faDice } />
+          </button>
           <input
             className="homepage-input"
             value={this.state.roomName}
@@ -62,9 +65,6 @@ export default class Homepage extends React.Component<IProps, IState> {
             onClick={this.buttonPress}>
             <FontAwesomeIcon icon={ faArrowRight } />
           </button>
-        </div>
-        <div className="row newroom">
-          <button onClick={this.newRoom}>New Random Room</button>
         </div>
       </div>
     </div>;

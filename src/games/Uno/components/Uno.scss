@@ -88,7 +88,7 @@ button {
     .row {
       display: flex;
       flex-flow: row nowrap;
-      align-items: center;
+      align-items: stretch;
     }
 
     .label {
@@ -96,12 +96,14 @@ button {
       margin-bottom: 3px;
     }
 
-    .newroom {
-      font-size: 10px;
-      margin-top: 15px;
+    .randomize-btn {
+      font-size: 12px;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
 
-      button {
-        flex-grow: 1;
+      & + input {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
       }
     }
 
