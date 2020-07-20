@@ -4,7 +4,7 @@ import { Card, shuffled, Color } from "./common";
 import { CoreActions, state } from "../../types";
 
 export class UnoServer extends ServerGame<UnoSpec> {
-  getInitialState() {
+  createInitialState() {
     return {
       l0: {
         ...L0.state.initial,
@@ -16,7 +16,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
     };
   }
 
-  getInitialClientState(state: state.ServerSide<UnoSpec>, id: string) {
+  createInitialClientState(state: state.ServerSide<UnoSpec>, id: string) {
     return {
       l2: {
         ...L2.state.initial,

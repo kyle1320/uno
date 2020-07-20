@@ -50,7 +50,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
         }};
         case "Core":
           if (action.type === CoreActions.NEW_CLIENT) {
-            const clientState = this.getInitialClientState(state, action.id) as {
+            const clientState = this.createInitialClientState(state, action.id) as {
               l2?: state.L2<G>,
               l3?: state.L3<G>
             };
@@ -66,7 +66,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
         default:  return state;
       }
     }, {
-      ...this.getInitialState() as any
+      ...this.createInitialState() as any
     }, applyMiddleware(() => next => (action: ServerCoreActions<G>) => {
       // console.log(this.store.getState());
       // console.log(action);
@@ -139,8 +139,8 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
   }
 
   // TODO: make the typings here allow omitting unused parts of state
-  protected abstract getInitialState(): state.ServerSide<G>;
-  protected abstract getInitialClientState(state: state.ServerSide<G>, id: string): PickSubset<G["state"], "l2" | "l3">;
+  protected abstract createInitialState(): state.ServerSide<G>;
+  protected abstract createInitialClientState(state: state.ServerSide<G>, id: string): PickSubset<G["state"], "l2" | "l3">;
 
   protected reduceL0(state: state.L0<G>, action: L0Actions<G>): state.L0<G> {
     return state;

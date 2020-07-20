@@ -5,7 +5,7 @@ import { EchoSpec, L1, L3 } from '.';
 import Echo from './components/Echo';
 
 export class EchoClient extends ClientGame<EchoSpec> {
-  protected getInitialState() {
+  protected createInitialState() {
     return {
       l1: L1.state.initial,
       l2: {},

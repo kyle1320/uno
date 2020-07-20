@@ -62,7 +62,7 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
       }
     }, {
       connected: false,
-      ...this.getInitialState() as any
+      ...this.createInitialState() as any
     }, applyMiddleware(() => next => (action: ClientCoreActions<G>) => {
       next(action);
       switch (action.kind) {
@@ -114,7 +114,7 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
     };
   }
 
-  protected abstract getInitialState(): PickSubset<G["state"], "l1" | "l2" | "l3" | "l4">;
+  protected abstract createInitialState(): PickSubset<G["state"], "l1" | "l2" | "l3" | "l4">;
 
   protected reduceCore(
     state: state.ClientSide<G>,
