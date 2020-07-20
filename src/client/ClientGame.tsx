@@ -12,7 +12,8 @@ import {
   ClientCoreActions,
   PickSubset,
   CoreActions,
-  ClientPreActions} from '../types';
+  ClientPreActions,
+  ClientGameActions} from '../types';
 
 function getWebSocketUrl(): string {
   var loc = window.location, new_uri;
@@ -69,6 +70,9 @@ export abstract class ClientGame<G extends GameSpec> {
         case 'L2':
           this.processL2(action);
           break;
+        case 'L4':
+          this.processL4(action);
+          break;
         case 'L3':
           this.processL3(action);
           if (isFromServer(action)) break;
@@ -90,8 +94,6 @@ export abstract class ClientGame<G extends GameSpec> {
           this.processCore(action);
       }
     }));
-
-    this.setup();
 
     this.initSocket();
   }
@@ -151,17 +153,23 @@ export abstract class ClientGame<G extends GameSpec> {
   protected processL1(action: L1Actions<G>) {}
   protected processL2(action: L2Actions<G>) {}
   protected processL3(action: L3Actions<G>) {}
+  protected processL4(action: L4Actions<G>) {}
   protected processCore(action: CoreActions<G>) {}
 
   protected abstract getRootElement(): React.ReactElement;
 
+  protected getL4State(): state.L4<G> {
+    return this.store.getState().l4;
+  }
+
   mount(container: Element) {
+    this.setup();
     render(<Provider store={this.store}>
       {this.getRootElement()}
     </Provider>, container);
   }
 
-  protected dispatch(action: ClientCoreActions<G>) {
+  protected dispatch(action: ClientGameActions<G>) {
     this.store.dispatch(action);
   }
 }
