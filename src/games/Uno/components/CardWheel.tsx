@@ -6,9 +6,10 @@ import { Card as CardType, Color } from '../common';
 import { UnoSpec, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
 import PlayableCard from './PlayableCard';
+import ColorChooser from './ColorChooser';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import './CardWheel.scss';
-import ColorChooser from './ColorChooser';
 
 interface IProps {
   cards: CardType[];
@@ -50,14 +51,21 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
       : this.props.cards;
     console.log(cards);
     return <div className="card-wheel">
-      <div className="card-wheel-container">
-      {cards.map(card =>
-        <PlayableCard
-          key={card.id}
-          card={card}
-          play={this.play.bind(this, card.id)} />
-      )}
-      </div>
+      <TransitionGroup className="card-wheel-container">
+        {cards.map(card =>
+          <CSSTransition
+            key={card.id}
+            classNames="card-pickup"
+            timeout={{
+              enter: 3000,
+              exit: 0
+            }}>
+            <PlayableCard
+              card={card}
+              play={this.play.bind(this, card.id)} />
+          </CSSTransition>
+        )}
+      </TransitionGroup>
       { this.state.colorChooserId !== null
         ? <ColorChooser onSelect={this.playColor} />
         : null

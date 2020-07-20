@@ -1,6 +1,12 @@
+@import './variables';
+
 .card-wheel {
   display: flex;
   justify-content: center;
+  position: relative;
+  height: 30vh;
+  max-height: 150px;
+  align-items: flex-end;
 
   .playable-card {
     height: 100%;
@@ -35,8 +41,18 @@
     justify-content: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
-    z-index: 0;
     height: 30vh;
     max-height: 150px;
+    box-sizing: content-box;
+    padding: 150px 0 0;
   }
+}
+
+.card-pickup-enter .card {
+  transform: translateY(-50%);
+}
+
+.card-pickup-enter-active .card {
+  transform: translateY(0);
+  transition: transform 3s cubic-bezier(0,1,0,1);
 }
