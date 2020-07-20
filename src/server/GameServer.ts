@@ -1,6 +1,7 @@
 import * as http from 'http';
 import * as path from 'path';
 import * as url from 'url';
+import * as crypto from 'crypto';
 
 import Express from 'express';
 import WebSocket from 'ws';
@@ -46,12 +47,15 @@ export class GameServer<G extends GameSpec> {
 
     wss.on('connection', (ws, req) => {
       const room = getRoomName(req.url || '').toLowerCase();
-      const id = (req as any)._clientid as string;
+      const privateId = (req as any)._clientid as string;
 
       if (!(room in this.rooms)) {
         this.rooms[room] = new game();
       }
-      new GameClient(ws, id, this.rooms[room]);
+
+      // don't leak the private client id as it could be used by anyone
+      const publicId = crypto.createHash('md5').update(privateId).digest("hex");
+      new GameClient(ws, publicId, this.rooms[room]);
     });
 
     app.use((req, res, next) => {
