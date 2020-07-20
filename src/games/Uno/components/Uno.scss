@@ -37,6 +37,11 @@ button {
   border: none;
   cursor: pointer;
 
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   &:active {
     background-color: darken(#CCC, 10);
   }
@@ -107,12 +112,18 @@ button {
       }
     }
 
-    input, button {
-      margin: 0;
+    .submit {
+      margin-top: 10px;
+      font-size: 14px;
+
+      button {
+        flex-grow: 1;
+        height: 26px;
+      }
     }
 
-    input {
-      margin-right: 5px;
+    input, button {
+      margin: 0;
     }
   }
 }

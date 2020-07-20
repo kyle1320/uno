@@ -60,11 +60,12 @@ export default class Homepage extends React.Component<IProps, IState> {
             value={this.state.roomName}
             onChange={this.setRoomName}
             onKeyDown={this.inputKeyDown} />
+        </div>
+        <div className="row submit">
           <button
             className="primary homepage-go-btn"
-            onClick={this.buttonPress}>
-            <FontAwesomeIcon icon={ faArrowRight } />
-          </button>
+            onClick={this.buttonPress}
+            disabled={!this.state.roomName}>Play</button>
         </div>
       </div>
     </div>;
