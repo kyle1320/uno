@@ -14,15 +14,15 @@ export namespace actions {
 
   export const PLAY_CARD = "PLAY_CARD";
   export type PlayCardPayload = {
-    index: number;
+    cardId: number;
     color?: Color;
   }
   export type PlayCardAction = actionTypes.Req<typeof PLAY_CARD, PlayCardPayload>;
-  export function playCard(index: number, color?: Color, id: string = ''): PlayCardAction {
+  export function playCard(cardId: number, color?: Color, id: string = ''): PlayCardAction {
     return {
       kind: 'Req',
       type: PLAY_CARD,
-      payload: { index, color },
+      payload: { cardId, color },
       id
     };
   }

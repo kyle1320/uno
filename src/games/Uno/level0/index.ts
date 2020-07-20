@@ -48,7 +48,7 @@ const baseDeck: Card[] = [];
 
 let _cardId = 0;
 function getId() {
-  return String(_cardId++);
+  return ++_cardId;
 }
 
 for (const color of (["red", "yellow", "green", "blue"] as const)) {

@@ -5,7 +5,7 @@ export type Color = "red" | "green" | "blue" | "yellow";
 export interface Card {
   value: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "reverse" | "skip" | "wild" | "draw2" | "draw4";
   color: Color | "black";
-  id: string;
+  id: number;
 }
 
 export namespace selectors {

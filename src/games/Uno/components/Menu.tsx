@@ -2,14 +2,16 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { UnoSpec, L3, Req } from '..';
+import { UnoSpec, L3, Req, L4 } from '..';
 import { state, ClientGameActions } from '../../../types';
+import FullscreenToggle from './FullscreenToggle';
 
 import './Menu.scss';
-import FullscreenToggle from './FullscreenToggle';
 
 interface IProps {
   name: string;
+  sortCards: boolean;
+  setSortCards: (sortCards: boolean) => void;
   setName: (name: string) => void;
   resetGame: () => void;
 }
@@ -24,7 +26,7 @@ export function Menu(props: IProps) {
         <div className="line2" />
         <div className="line3" />
       </div>
-      <div className="row">
+      <label className="row">
         Name <input
           type="text"
           value={props.name}
@@ -32,7 +34,18 @@ export function Menu(props: IProps) {
             e => props.setName(e.target.value),
             [props.setName]
           )} />
-      </div>
+      </label>
+      <hr />
+      <label className="row">
+        <input
+          type="checkbox"
+          checked={props.sortCards}
+          onChange={React.useCallback(
+            e => props.setSortCards(e.target.checked),
+            [props.setSortCards]
+          )} />
+        Sort Cards
+      </label>
       <div className="spacer" />
       <FullscreenToggle />
       <button className="primary" onClick={props.resetGame}>New Game</button>
@@ -42,10 +55,12 @@ export function Menu(props: IProps) {
 
 export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
-    name: state.l3.name
+    name: state.l3.name,
+    sortCards: state.l4.sortCards
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     setName: (name: string) => dispatch(L3.actions.setName(name)),
+    setSortCards: (sortCards: boolean) => dispatch(L4.actions.update({ sortCards })),
     resetGame: () => dispatch(Req.actions.resetGame())
   })
 )(Menu);

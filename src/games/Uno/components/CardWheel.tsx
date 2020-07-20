@@ -12,46 +12,53 @@ import ColorChooser from './ColorChooser';
 
 interface IProps {
   cards: CardType[];
-  play: (index: number, color?: Color) => void;
+  sort: boolean;
+  play: (cardId: number, color?: Color) => void;
 }
 
 interface IState {
-  colorChooserIndex: number | null;
+  colorChooserId: number | null;
 }
 
 export class CardWheel extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      colorChooserIndex: null
+      colorChooserId: null
     };
   }
 
-  play = (index: number) => {
-    const card = this.props.cards[index];
+  play = (id: number) => {
+    const card = this.props.cards.find(c => c.id === id);
+    if (!card) return;
+
     if (card.value === 'wild' || card.value === 'draw4') {
-      this.setState({ colorChooserIndex: index });
+      this.setState({ colorChooserId: id });
     } else {
-      this.props.play(index);
+      this.props.play(id);
     }
   }
 
   playColor = (color: Color) => {
-    this.props.play(this.state.colorChooserIndex as number, color);
-    this.setState({ colorChooserIndex: null });
+    this.props.play(this.state.colorChooserId as number, color);
+    this.setState({ colorChooserId: null });
   }
 
   render() {
+    const cards = this.props.sort
+      ? this.props.cards.slice().sort((a, b) => a.id - b.id)
+      : this.props.cards;
+    console.log(cards);
     return <div className="card-wheel">
       <div className="card-wheel-container">
-      {this.props.cards.map((card, i) =>
+      {cards.map(card =>
         <PlayableCard
           key={card.id}
           card={card}
-          play={this.play.bind(this, i)} />
+          play={this.play.bind(this, card.id)} />
       )}
       </div>
-      { this.state.colorChooserIndex !== null
+      { this.state.colorChooserId !== null
         ? <ColorChooser onSelect={this.playColor} />
         : null
       }
@@ -61,9 +68,10 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
 
 export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
-    cards: state.l2.hand
+    cards: state.l2.hand,
+    sort: state.l4.sortCards
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
-    play: (index: number, color?: Color) => dispatch(Req.actions.playCard(index, color))
+    play: (cardId: number, color?: Color) => dispatch(Req.actions.playCard(cardId, color))
   })
 )(CardWheel);

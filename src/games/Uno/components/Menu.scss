@@ -57,10 +57,19 @@
     margin: 5px;
   }
 
+  input:not([type="checkbox"]) {
+    flex-grow: 1;
+  }
+
   input {
     border: none;
     box-shadow: 0 0 3px inset rgba(0, 0, 0, 0.4);
-    flex-grow: 1;
+  }
+
+  hr {
+    margin: 10px 0;
+    height: 1px;
+    background-color: #A0A0A0;
   }
 
   button {

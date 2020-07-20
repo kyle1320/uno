@@ -40,7 +40,7 @@ export default class PlayableCard extends React.PureComponent<IProps, IState> {
       ref={this.ref}
       className={`playable-card${this.state.focused ? ' focus' : ''}`}
       onClick={this.play}>
-      <Card {...this.props.card} onClick={this.play} />
+      <Card color={this.props.card.color} value={this.props.card.value} onClick={this.play} />
     </div>;
   }
 }

@@ -37,7 +37,7 @@ export function Stacks(props: IProps) {
             }}
             timeout={300}>
             {props.topCard
-              ? <Card {...props.topCard} />
+              ? <Card color={props.topCard.color} value={props.topCard.value} />
               : <Card color="gray" value="empty" />}
           </CSSTransition>
         ]}

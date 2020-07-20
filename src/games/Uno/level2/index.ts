@@ -15,11 +15,11 @@ export namespace actions {
 
   export const PLAY_CARD = "PLAY_CARD";
   export type PlayCardAction = actionTypes.L2<typeof PLAY_CARD, number>;
-  export function playCard(index: number, id: string = ''): PlayCardAction {
+  export function playCard(cardId: number, id: string = ''): PlayCardAction {
     return {
       kind: "L2",
       type: PLAY_CARD,
-      payload: index,
+      payload: cardId,
       id
     };
   }
@@ -55,7 +55,8 @@ export function reduce(state: state.State, action: actions.All): state.State {
       return { ...state, hand: [...state.hand, ...action.payload ]};
     case actions.PLAY_CARD:
       const newHand = state.hand.slice();
-      newHand.splice(action.payload, 1);
+      const index = newHand.findIndex(c => c.id === action.payload);
+      newHand.splice(index, 1);
       return { ...state, hand: newHand };
     case actions.RESET_GAME:
       return { ...state, hand: [] };
