@@ -49,7 +49,6 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
     const cards = this.props.sort
       ? this.props.cards.slice().sort((a, b) => a.id - b.id)
       : this.props.cards;
-    console.log(cards);
     return <div className="card-wheel">
       <TransitionGroup className="card-wheel-container">
         {cards.map(card =>

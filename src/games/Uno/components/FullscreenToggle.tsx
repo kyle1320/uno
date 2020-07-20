@@ -15,7 +15,6 @@ export default class FullscreenToggle extends React.PureComponent {
 
   update = () => this.forceUpdate();
   toggle = () => {
-    console.log(document.fullscreenElement);
     if (document.fullscreenElement) {
       document.exitFullscreen();
     } else {
