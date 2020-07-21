@@ -1,5 +1,5 @@
 import { actions as actionTypes } from "../../../types";
-import { Card } from "../common";
+import { Card, rules } from "../common";
 
 export namespace actions {
   export const UPDATE = "UPDATE";
@@ -47,16 +47,33 @@ export namespace actions {
 }
 
 export namespace state {
+  export interface Rules {
+    stackDraw2: boolean;
+    stackDraw4: boolean;
+    stackDraw4OnDraw2: boolean;
+    stackDraw2OnDraw4: boolean;
+    drawTillYouPlay: boolean;
+  }
+
   export interface Player {
     id: string;
     name: string;
     cards: number;
   }
 
+  export type RuleState
+    = { type: "normal" }
+    | { type: "draw2"; count: number }
+    | { type: "draw4"; count: number }
+    | { type: "draw"; count: number }
+    | { type: "maybePlay" }
+
   export interface State {
     status: "pregame" | "started" | "finished",
     direction: "CW" | "CCW",
     currentPlayer: number;
+    ruleState: RuleState;
+    rules: Rules;
     topCard: Card | null;
     lastPlayBy: string | null;
     upStackSize: number;
@@ -69,6 +86,14 @@ export namespace state {
     status: "pregame",
     direction: "CW",
     currentPlayer: 0,
+    ruleState: { type: "normal" },
+    rules: {
+      stackDraw2: false,
+      stackDraw4: false,
+      stackDraw4OnDraw2: false,
+      stackDraw2OnDraw4: false,
+      drawTillYouPlay: false,
+    },
     topCard: null,
     lastPlayBy: null,
     upStackSize: 108,

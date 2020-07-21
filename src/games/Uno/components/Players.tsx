@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { UnoSpec } from '..';
 import { state } from '../../../types';
 import Player from './Player';
-import { selectors } from '../common';
+import { clientSelectors } from '../common';
 
 import './Players.scss';
 
@@ -27,6 +27,6 @@ export function Players(props: IProps) {
 
 export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
-    relativeTurnOrder: selectors.relativeTurnOrder(state)
+    relativeTurnOrder: clientSelectors.relativeTurnOrder(state)
   })
 )(Players);

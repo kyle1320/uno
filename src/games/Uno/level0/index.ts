@@ -1,5 +1,5 @@
 import { actions as actionTypes } from "../../../types";
-import { Card, shuffled } from "../common";
+import { Card, shuffled, baseDeck } from "../common";
 
 export namespace actions {
   export const DRAW_CARD = "DRAW_CARD";
@@ -44,26 +44,10 @@ export namespace actions {
   export type All = ShuffleAction | DrawCardAction | PlayCardAction | ResetGameAction;
 }
 
-const baseDeck: Card[] = [];
-
-let _cardId = 0;
-function getId() {
-  return ++_cardId;
-}
-
-for (const color of (["red", "yellow", "green", "blue"] as const)) {
-  for (const value of (["0", "1", "1", "2", "2", "3", "3", "4", "4", "5", "5", "6", "6", "7", "7", "8", "8", "9", "9", "reverse", "reverse", "skip", "skip", "draw2", "draw2"] as const)) {
-    baseDeck.push({ color, value, id: getId() });
-  }
-}
-for (const value of (["wild", "wild", "wild", "wild", "draw4", "draw4", "draw4", "draw4"] as const)) {
-  baseDeck.push({ color: "black", value, id: getId() });
-}
-
 export namespace state {
   export interface State {
-    upStack: Card[],
-    downStack: Card[]
+    upStack: readonly Card[],
+    downStack: readonly Card[]
   }
 
   export const initial: State = {

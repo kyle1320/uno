@@ -1,6 +1,6 @@
 import { ServerGame } from "../../server/ServerGame";
 import { UnoSpec, L0, L1, L2, L3, Req } from ".";
-import { Card, shuffled, Color } from "./common";
+import { Card, shuffled, Color, serverSelectors, rules } from "./common";
 import { CoreActions, state } from "../../types";
 
 export class UnoServer extends ServerGame<UnoSpec> {
@@ -76,14 +76,31 @@ export class UnoServer extends ServerGame<UnoSpec> {
   }
 
   processL2(action: L2.actions.All) {
-    const state = this.store.getState().l2;
+    const state = this.store.getState();
     switch (action.type) {
       case L2.actions.DRAW_CARDS:
-      case L2.actions.PLAY_CARD:
-      case L2.actions.RESET_GAME:
         this.dispatch(L1.actions.updatePlayer(action.id, {
-          cards: state[action.id].hand.length
+          cards: state.l2[action.id].hand.length
         }));
+        break;
+      case L2.actions.DRAW_CARD:
+        this.dispatch(L1.actions.updatePlayer(action.id, {
+          cards: state.l2[action.id].hand.length
+        }));
+        this.dispatch(L1.actions.update(
+          rules.getStateAfterDraw(action.payload.id, state.l1)
+        ));
+        break;
+      case L2.actions.PLAY_CARD:
+        this.dispatch(L1.actions.updatePlayer(action.id, {
+          cards: state.l2[action.id].hand.length
+        }));
+        this.dispatch(L1.actions.update(
+          rules.getStateAfterPlay(action.payload, state.l1)
+        ));
+        break;
+      case L2.actions.RESET_GAME:
+        this.dispatch(L1.actions.resetGame());
         break;
     }
   }
@@ -100,14 +117,20 @@ export class UnoServer extends ServerGame<UnoSpec> {
 
   processRequest(action: Req.actions.All) {
     let card;
+    const state = this.store.getState();
+
     switch (action.type) {
       case Req.actions.DRAW_CARD:
-        card = this.drawCard(action.id);
-        if (card) this.dispatch(L2.actions.drawCards([card], action.id));
+        if (serverSelectors.canDraw(state, action.id)) {
+          card = this.drawCard(action.id);
+          if (card) this.dispatch(L2.actions.drawCard(card, action.id));
+        }
         break;
       case Req.actions.PLAY_CARD:
-        card = this.playCard(action.id, action.payload.cardId, action.payload.color);
-        if (card) this.dispatch(L0.actions.playCard(card, action.id));
+        if (serverSelectors.canPlay(state, action.id, action.payload.cardId)) {
+          card = this.playCard(action.id, action.payload.cardId, action.payload.color);
+          if (card) this.dispatch(L0.actions.playCard(card, action.id));
+        }
         break;
       case Req.actions.RESET_GAME:
         this.dispatch(L0.actions.resetGame());

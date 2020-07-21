@@ -5,13 +5,14 @@ type IProps = {
   color: "red" | "green" | "yellow" | "blue" | "black" | "gray";
   value: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "reverse" | "skip" | "draw2" | "draw4" | "wild" | "back" | "empty";
   turned?: boolean;
+  disabled?: boolean;
 } & React.SVGProps<SVGElement>
 
 export function Card(props: IProps) {
-  const { color, value, turned, ref, className, ...throughProps } = props;
+  const { color, value, turned, disabled, ref, className, ...throughProps } = props;
   const smallEl = "#card-value-small-" + props.value;
   const largeEl = "#card-value-large-" + props.value;
-  let cls = `card ${color}${turned ? ' turned' : ''} ${className || ''}`;
+  let cls = `card ${color}${turned ? ' turned' : ''}${disabled ? ' disabled' : ''} ${className || ''}`;
   return (
     <svg
       {...throughProps}
@@ -118,6 +119,9 @@ export function CardDefs() {
 
         <filter id="shadow">
           <feDropShadow dx="0.8" dy="0.8" stdDeviation="0"/>
+        </filter>
+        <filter id="darken">
+          <feColorMatrix values="0.3 0 0 0 0 0 0.3 0 0 0 0 0 0.3 0 0 0 0 0 1 0"/>
         </filter>
       </defs>
     </svg>

@@ -5,7 +5,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { UnoSpec, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
-import { Card as CardType } from '../common';
+import { Card as CardType, clientSelectors } from '../common';
 import { Card } from './Card';
 
 import './Stacks.scss';
@@ -15,6 +15,7 @@ interface IProps {
   downStackSize: number;
   topCard: CardType | null;
   placementAngle: number | null;
+  canDraw: boolean;
 
   draw: () => void;
 }
@@ -45,7 +46,7 @@ export function Stacks(props: IProps) {
       <div className="number"> {props.downStackSize}</div>
     </div>
     <div className="up-stack" onClick={props.draw}>
-      <Card turned={true} color="black" value="back" />
+      <Card turned={true} color="black" value="back" disabled={!props.canDraw} />
       <div className="number"> {props.upStackSize}</div>
     </div>
   </div>;
@@ -64,7 +65,8 @@ export default connect(
       return Math.PI * 2
         * ((placementIndex - myIndex + turnOrder.length) % turnOrder.length)
         / turnOrder.length;
-    }())
+    }()),
+    canDraw: clientSelectors.canDraw(state)
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     draw: () => dispatch(Req.actions.drawCard())

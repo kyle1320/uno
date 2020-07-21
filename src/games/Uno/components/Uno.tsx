@@ -8,6 +8,7 @@ import { CardDefs } from './Card';
 import Menu from './Menu';
 import Players from './Players';
 import Stacks from './Stacks';
+import Info from './Info';
 
 import './Uno.scss';
 
@@ -31,6 +32,7 @@ class Uno extends React.PureComponent<Props> {
         <CardDefs />
         <Stacks />
         <Players />
+        <Info />
       </div>
       <div className="hand">
         <CardWheel />

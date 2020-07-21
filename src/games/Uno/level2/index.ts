@@ -2,12 +2,25 @@ import { actions as actionTypes } from "../../../types";
 import { Card } from "../common";
 
 export namespace actions {
+  // when cards are dealt automatically
   export const DRAW_CARDS = "DRAW_CARDS";
   export type DrawCardsAction = actionTypes.L2<typeof DRAW_CARDS, Card[]>;
   export function drawCards(payload: Card[], id: string = ''): DrawCardsAction {
     return {
       kind: "L2",
       type: DRAW_CARDS,
+      payload,
+      id
+    };
+  }
+
+  // when the player picks up a card during the game
+  export const DRAW_CARD = "DRAW_CARD";
+  export type DrawCardAction = actionTypes.L2<typeof DRAW_CARD, Card>;
+  export function drawCard(payload: Card, id: string = ''): DrawCardAction {
+    return {
+      kind: "L2",
+      type: DRAW_CARD,
       payload,
       id
     };
@@ -34,18 +47,20 @@ export namespace actions {
     };
   }
 
-  export type All = DrawCardsAction | PlayCardAction | ResetGameAction;
+  export type All = DrawCardsAction | DrawCardAction | PlayCardAction | ResetGameAction;
 }
 
 export namespace state {
   export interface State {
     id: string;
     hand: Card[];
+    lastDrawnCard: number | null;
   }
 
   export const initial: State = {
     id: '',
-    hand: []
+    hand: [],
+    lastDrawnCard: null
   };
 }
 
@@ -53,6 +68,11 @@ export function reduce(state: state.State, action: actions.All): state.State {
   switch (action.type) {
     case actions.DRAW_CARDS:
       return { ...state, hand: [...state.hand, ...action.payload ]};
+    case actions.DRAW_CARD:
+      return { ...state,
+        hand: [...state.hand, action.payload ],
+        lastDrawnCard: action.payload.id
+      };
     case actions.PLAY_CARD:
       const newHand = state.hand.slice();
       const index = newHand.findIndex(c => c.id === action.payload);

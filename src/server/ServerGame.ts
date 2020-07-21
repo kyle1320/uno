@@ -68,44 +68,46 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
     }, {
       ...this.createInitialState() as any
     }, applyMiddleware(() => next => (action: ServerCoreActions<G>) => {
+      const from = getClient(action);
+      switch (action.kind) {
+        case "L1": // send to all clients
+          this.clients.forEach(c => c.send(action));
+          break;
+        case "L2": // send to one client
+          this.clients
+            .filter(c => c.id === action.id)
+            .forEach(c => c.send(action));
+          break;
+        case "L3": // send to one client (if not from that client)
+          this.clients
+            .filter(c => c.id === action.id && c !== from)
+            .forEach(c => c.send(action));
+          break;
+        default:
+          break;
+      }
+
       // console.log(this.store.getState());
       // console.log(action);
       next(action);
       // console.log(this.store.getState());
-      const from = getClient(action);
+
       switch (action.kind) {
         case "L0":
           this.processL0(action);
           break;
-
-        // send to all clients
         case "L1":
-          this.clients.forEach(c => c.send(action));
+          this.processL1(action);
           break;
-
-        // send to one client
         case "L2":
-          this.clients
-            .filter(c => c.id === action.id)
-            .forEach(c => c.send(action));
           this.processL2(action);
           break;
-
-        // send to one client (if not from that client)
-        // react to client L3 action
         case "L3":
-          this.clients
-            .filter(c => c.id === action.id && c !== from)
-            .forEach(c => c.send(action));
           this.processL3(action);
           break;
-
-        // react to client Request action
         case "Req":
           this.processRequest(action);
           break;
-
-        // react to core actions
         case "Core":
           if (action.type === CoreActions.CLIENT_JOIN) {
             let state = this.store.getState();
@@ -173,6 +175,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
   }
 
   protected processL0(action: L0Actions<G>) {}
+  protected processL1(action: L1Actions<G>) {}
   protected processL2(action: L2Actions<G>) {}
   protected processL3(action: L3Actions<G>) {}
   protected processRequest(action: ReqActions<G>) {}

@@ -8,9 +8,14 @@
   border-radius: 8.3333333333% / 5.55555555%;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
   user-select: none;
+  position: relative;
 
   &.turned {
     border-radius: 5.55555555% / 8.3333333333%;
+  }
+
+  &.disabled {
+    filter:url(#darken);
   }
 }
 
