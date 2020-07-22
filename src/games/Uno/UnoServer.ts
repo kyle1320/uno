@@ -122,8 +122,10 @@ export class UnoServer extends ServerGame<UnoSpec> {
     switch (action.type) {
       case Req.actions.DRAW_CARD:
         if (serverSelectors.canDraw(state, action.id)) {
-          card = this.drawCard(action.id);
-          if (card) this.dispatch(L2.actions.drawCard(card, action.id));
+          do {
+            card = this.drawCard(action.id);
+            if (card) this.dispatch(L2.actions.drawCard(card, action.id));
+          } while (this.getL1State().ruleState.type === 'draw');
         }
         break;
       case Req.actions.PLAY_CARD:
