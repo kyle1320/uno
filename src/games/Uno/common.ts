@@ -80,7 +80,7 @@ export namespace rules {
           || (l1.rules.stackDraw4OnDraw2 && card.value === 'draw4')
       case "draw4":
         return (l1.rules.stackDraw4 && card.value === 'draw4')
-          || (l1.rules.stackDraw2OnDraw4 && card.value === 'draw2')
+          || (l1.rules.stackDraw2OnDraw4 && card.value === 'draw2' && cardMatches(card, l1.topCard))
       case "draw":
         return false;
       case "maybePlay":
