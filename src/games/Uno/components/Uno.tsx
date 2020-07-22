@@ -23,7 +23,7 @@ class Uno extends React.PureComponent<Props> {
       <Menu />
       <div className="banner">{
         !this.props.connected
-          ? "Disconnected"
+          ? "Connecting..."
           : this.props.error
             ? "An error occured. Try refreshing the page."
             : ""

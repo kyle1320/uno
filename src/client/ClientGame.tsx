@@ -106,7 +106,7 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
     this.socket = new WebSocket(getWebSocketUrl());
     this.socket.onopen = () => this.store.dispatch(CoreActions.connected());
     this.socket.onclose = () => this.store.dispatch(CoreActions.disconnected());
-    this.socket.onerror = e => this.store.dispatch(CoreActions.error(e));
+    // this.socket.onerror = e => this.store.dispatch(CoreActions.error(e));
     this.socket.onmessage = e => {
       const action = JSON.parse(e.data);
       tagFromServer(action);
