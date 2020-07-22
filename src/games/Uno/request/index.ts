@@ -1,5 +1,6 @@
 import { actions as actionTypes } from "../../../types";
 import { Color } from "../common";
+import { L1 } from "..";
 
 export namespace actions {
   export const DRAW_CARD = "DRAW_CARD";
@@ -8,6 +9,17 @@ export namespace actions {
     return {
       kind: 'Req',
       type: DRAW_CARD,
+      id
+    };
+  }
+
+  export const UPDATE_RULES = "UPDATE_RULES";
+  export type UpdateRulesAction = actionTypes.Req<typeof UPDATE_RULES, Partial<L1.state.Rules>>;
+  export function updateRules(payload: Partial<L1.state.Rules>, id: string = ''): UpdateRulesAction {
+    return {
+      kind: 'Req',
+      type: UPDATE_RULES,
+      payload,
       id
     };
   }
@@ -37,5 +49,5 @@ export namespace actions {
     };
   }
 
-  export type All = DrawCardAction | PlayCardAction | ResetGameAction;
+  export type All = DrawCardAction | UpdateRulesAction | PlayCardAction | ResetGameAction;
 }

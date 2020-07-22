@@ -1,5 +1,5 @@
 import { actions as actionTypes } from "../../../types";
-import { Card, rules } from "../common";
+import { Card } from "../common";
 
 export namespace actions {
   export const UPDATE = "UPDATE";
@@ -8,6 +8,16 @@ export namespace actions {
     return {
       kind: 'L1',
       type: UPDATE,
+      payload
+    };
+  }
+
+  export const UPDATE_RULES = "UPDATE_RULES";
+  export type UpdateRulesAction = actionTypes.L1<typeof UPDATE_RULES, Partial<state.Rules>>;
+  export function updateRules(payload: Partial<state.Rules>): UpdateRulesAction {
+    return {
+      kind: 'L1',
+      type: UPDATE_RULES,
       payload
     };
   }
@@ -43,7 +53,8 @@ export namespace actions {
     };
   }
 
-  export type All = UpdateAction | AddPlayerAction | UpdatePlayerAction | ResetGameAction;
+  export type All = UpdateAction | UpdateRulesAction | AddPlayerAction
+    | UpdatePlayerAction | ResetGameAction;
 }
 
 export namespace state {
@@ -107,6 +118,8 @@ export function reduce(state: state.State, action: actions.All): state.State {
   switch (action.type) {
     case actions.UPDATE:
       return { ...state, ...action.payload };
+    case actions.UPDATE_RULES:
+      return { ...state, rules: { ...state.rules, ...action.payload } };
     case actions.ADD_PLAYER:
       return { ...state, turnOrder: [
         ...state.turnOrder, action.payload.id

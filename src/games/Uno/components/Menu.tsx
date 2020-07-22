@@ -2,11 +2,75 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { UnoSpec, L3, Req, L4 } from '..';
+import { UnoSpec, L1, L3, L4, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
 import FullscreenToggle from './FullscreenToggle';
 
 import './Menu.scss';
+
+type RulesProps = {
+  update: (rules: Partial<L1.state.Rules>) => void;
+} & L1.state.Rules;
+
+const Rules = connect(
+  (state: state.ClientSide<UnoSpec>) => state.l1.rules,
+  (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
+    update: (rules: Partial<L1.state.Rules>) => dispatch(Req.actions.updateRules(rules))
+  })
+)(function (props: RulesProps) {
+  return <>
+    <label className="row">
+      <input
+        type="checkbox"
+        checked={props.stackDraw2}
+        onChange={React.useCallback(
+          e => props.update({ stackDraw2: e.target.checked }),
+          [props.update]
+        )} />
+      Stack Draw 2s
+    </label>
+    <label className="row">
+      <input
+        type="checkbox"
+        checked={props.stackDraw4}
+        onChange={React.useCallback(
+          e => props.update({ stackDraw4: e.target.checked }),
+          [props.update]
+        )} />
+      Stack Draw 4s
+    </label>
+    <label className="row">
+      <input
+        type="checkbox"
+        checked={props.stackDraw4OnDraw2}
+        onChange={React.useCallback(
+          e => props.update({ stackDraw4OnDraw2: e.target.checked }),
+          [props.update]
+        )} />
+      Stack Draw 4s On Draw 2s
+    </label>
+    <label className="row">
+      <input
+        type="checkbox"
+        checked={props.stackDraw2OnDraw4}
+        onChange={React.useCallback(
+          e => props.update({ stackDraw2OnDraw4: e.target.checked }),
+          [props.update]
+        )} />
+        Stack Draw 2s On Draw 4s
+    </label>
+    <label className="row">
+      <input
+        type="checkbox"
+        checked={props.drawTillYouPlay}
+        onChange={React.useCallback(
+          e => props.update({ drawTillYouPlay: e.target.checked }),
+          [props.update]
+        )} />
+        Draw 'till You Play
+    </label>
+  </>;
+});
 
 interface IProps {
   name: string;
@@ -46,6 +110,8 @@ export function Menu(props: IProps) {
           )} />
         Sort Cards
       </label>
+      <hr />
+      <Rules />
       <div className="spacer" />
       <FullscreenToggle />
       <button className="primary" onClick={props.resetGame}>New Game</button>
