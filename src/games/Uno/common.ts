@@ -57,10 +57,17 @@ export namespace rules {
       case "draw2":
       case "draw4":
       case "draw":
-        return true;
+        return !l1.rules.drawTillYouPlay || !canPlayAny(l1, l2);
       case "maybePlay":
         return l1.rules.drawTillYouPlay && !canPlay(l2.lastDrawnCard!, l1, l2);
     }
+  }
+
+  export function canPlayAny(l1: L1.state.State, l2: L2.state.State) {
+    for (const card of l2.hand) {
+      if (canPlay(card.id, l1, l2)) return true;
+    }
+    return false;
   }
 
   export function canPlay(
