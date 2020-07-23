@@ -58,12 +58,15 @@ export class UnoServer extends ServerGame<UnoSpec> {
         const topCard = state.downStack.length
           ? state.downStack[state.downStack.length - 1]
           : null;
+        const turnOrder = this.getL1State().turnOrder.slice();
+        turnOrder.push(turnOrder.shift()!);
         this.dispatch(L1.actions.resetGame());
         this.dispatch(L1.actions.update({
           topCard,
           upStackSize: state.upStack.length,
-          downStackSize: state.downStack.length
-        }))
+          downStackSize: state.downStack.length,
+          turnOrder
+        }));
         for (const id of this.getL1State().turnOrder) {
           this.dispatch(L2.actions.resetGame(id));
           this.dispatch(L2.actions.drawCards(this.drawCards(id, 7) || [], id));

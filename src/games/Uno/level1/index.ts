@@ -102,7 +102,7 @@ export namespace state {
   export const initial: State = {
     status: GameStatus.Pregame,
     direction: "CW",
-    currentPlayer: 0,
+    currentPlayer: -1,
     ruleState: { type: "normal" },
     rules: {
       stackDraw2: false,
