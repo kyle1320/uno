@@ -95,7 +95,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
         const cards = state.l2[action.id].hand.length;
         this.dispatch(L1.actions.updatePlayer(action.id, { cards }));
         if (cards === 0) this.dispatch(L1.actions.update({
-          status: 'finished'
+          status: L1.state.GameStatus.Finished
         }));
         else this.dispatch(L1.actions.update(
           rules.getStateAfterPlay(action.payload, state.l1)
