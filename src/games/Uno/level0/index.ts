@@ -79,7 +79,11 @@ export function reduce(state: state.State, action: actions.All): state.State {
       };
     case actions.RESET_GAME:
       const newStack = shuffled(baseDeck);
-      const firstCard = newStack.pop()!;
+      let firstCard = newStack.pop()!;
+      while (firstCard.value === 'wild' || firstCard.value === 'draw4') {
+        newStack.splice(Math.floor(Math.random() * newStack.length), 0, firstCard);
+        firstCard = newStack.pop()!;
+      }
       return {
         ...state,
         downStack: [firstCard],
