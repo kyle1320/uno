@@ -8,12 +8,14 @@ import { state } from '../../../types';
 import './Player.scss';
 import Card from './Card';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { clientSelectors } from '../common';
 
 interface IProps {
   id: string;
   angle: number;
   name: string;
   cards: number;
+  isTurn: boolean;
 }
 
 function isSingleEmoji(s: string) {
@@ -25,7 +27,7 @@ export function Player(props: IProps) {
   // angles are relative to bottom, clockwise
   const x = 30 * Math.sin(props.angle);
   const y = 30 * Math.cos(props.angle);
-  return <div className="player" style={{
+  return <div className={`player${props.isTurn ? ' active' : ''}`} style={{
     top: `calc(60% + ${y}vh)`,
     left: `calc(50% - ${x}vw)`
   }}>
@@ -50,6 +52,7 @@ export function Player(props: IProps) {
 export default connect(
   (state: state.ClientSide<UnoSpec>, props: { id: string }) => ({
     name: state.l1.players[props.id].name,
-    cards: state.l1.players[props.id].cards
+    cards: state.l1.players[props.id].cards,
+    isTurn: clientSelectors.currentPlayer(state) === props.id
   })
 )(Player);
