@@ -79,8 +79,14 @@ export namespace state {
     | { type: "draw"; count: number }
     | { type: "maybePlay" }
 
+  export enum GameStatus {
+    Pregame = "pregame",
+    Started = "started",
+    Finished = "finished"
+  }
+
   export interface State {
-    status: "pregame" | "started" | "finished",
+    status: GameStatus;
     direction: "CW" | "CCW",
     currentPlayer: number;
     ruleState: RuleState;
@@ -94,7 +100,7 @@ export namespace state {
   }
 
   export const initial: State = {
-    status: "pregame",
+    status: GameStatus.Pregame,
     direction: "CW",
     currentPlayer: 0,
     ruleState: { type: "normal" },
@@ -114,31 +120,32 @@ export namespace state {
   };
 }
 
-export function reduce(state: state.State, action: actions.All): state.State {
+export function reduce(_state: state.State, action: actions.All): state.State {
   switch (action.type) {
     case actions.UPDATE:
-      return { ...state, ...action.payload };
+      return { ..._state, ...action.payload };
     case actions.UPDATE_RULES:
-      return { ...state, rules: { ...state.rules, ...action.payload } };
+      return { ..._state, rules: { ..._state.rules, ...action.payload } };
     case actions.ADD_PLAYER:
-      return { ...state, turnOrder: [
-        ...state.turnOrder, action.payload.id
+      return { ..._state, turnOrder: [
+        ..._state.turnOrder, action.payload.id
       ], players: {
-        ...state.players,
+        ..._state.players,
         [action.payload.id]: action.payload
       }};
     case actions.UPDATE_PLAYER:
-      return { ...state, players: {
-        ...state.players,
-        [action.id]: { ...state.players[action.id], ...action.payload }
+      return { ..._state, players: {
+        ..._state.players,
+        [action.id]: { ..._state.players[action.id], ...action.payload }
       }};
     case actions.RESET_GAME:
-      return { ...state,
+      return { ..._state,
+        status: state.GameStatus.Started,
         lastPlayBy: null,
         direction: 'CW',
         currentPlayer: -1
       };
     default:
-      return state;
+      return _state;
   }
 }

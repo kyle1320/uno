@@ -52,6 +52,8 @@ export namespace serverSelectors {
 
 export namespace rules {
   export function canDraw(l1: L1.state.State, l2: L2.state.State) {
+    if (l1.status !== 'started') return false;
+
     switch (l1.ruleState.type) {
       case "normal":
       case "draw2":
@@ -64,6 +66,8 @@ export namespace rules {
   }
 
   export function canPlayAny(l1: L1.state.State, l2: L2.state.State) {
+    if (l1.status !== 'started') return false;
+
     for (const card of l2.hand) {
       if (canPlay(card.id, l1, l2)) return true;
     }
@@ -75,6 +79,8 @@ export namespace rules {
     l1: L1.state.State,
     l2: L2.state.State
   ) {
+    if (l1.status !== 'started') return false;
+
     const card = getCardFromId(cardId);
 
     if (!card) return false;

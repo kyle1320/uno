@@ -92,10 +92,12 @@ export class UnoServer extends ServerGame<UnoSpec> {
         ));
         break;
       case L2.actions.PLAY_CARD:
-        this.dispatch(L1.actions.updatePlayer(action.id, {
-          cards: state.l2[action.id].hand.length
+        const cards = state.l2[action.id].hand.length;
+        this.dispatch(L1.actions.updatePlayer(action.id, { cards }));
+        if (cards === 0) this.dispatch(L1.actions.update({
+          status: 'finished'
         }));
-        this.dispatch(L1.actions.update(
+        else this.dispatch(L1.actions.update(
           rules.getStateAfterPlay(action.payload, state.l1)
         ));
         break;
@@ -118,6 +120,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
     switch (action.type) {
       case Req.actions.DRAW_CARD:
         if (serverSelectors.canDraw(state, action.id)) {
+          // TODO: make this use drawCards() to draw multiple at once
           do {
             const cards = this.drawCards(action.id);
             if (cards) this.dispatch(L2.actions.drawCard(cards[0], action.id));
