@@ -12,7 +12,7 @@ import {
   ClientCoreActions,
   PickSubset,
   CoreActions,
-  ClientPreActions,
+  ClientSentActions,
   ClientGameActions} from '../types';
 
 function getWebSocketUrl(): string {
@@ -39,7 +39,7 @@ function isFromServer(action: any) {
 export abstract class ClientGame<G extends GameSpec> extends React.PureComponent {
   private socket!: WebSocket;
   private store: Store<state.ClientSide<G>, ClientCoreActions<G>>;
-  private actionQueue: ClientPreActions<G>[] = [];
+  private actionQueue: ClientSentActions<G>[] = [];
 
   public constructor(props: {}) {
     super(props);
@@ -92,6 +92,10 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
             const actions = this.actionQueue;
             this.actionQueue = [];
             this.socket.send(JSON.stringify(CoreActions.clientJoin(actions)));
+          } else if (action.type === CoreActions.MULTI_ACTION) {
+            for (const act of action.payload) {
+              this.store.dispatch(act);
+            }
           }
           this.processCore(action);
       }

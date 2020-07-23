@@ -24,7 +24,7 @@ export interface GameSpec {
 }
 
 export type AllActions<G extends GameSpec = GameSpec>
-  = L0Actions<G> | L1Actions<G> | L2Actions<G> | L3Actions<G> | L4Actions<G> | ReqActions<G>
+  = L0Actions<G> | L1Actions<G> | L2Actions<G> | L3Actions<G> | L4Actions<G> | ReqActions<G>;
 export type ServerCoreActions<G extends GameSpec = GameSpec>
   = L0Actions<G> | L1Actions<G> | L2Actions<G> | L3Actions<G> | ReqActions<G> | CoreActions<G>;
 export type ServerGameActions<G extends GameSpec = GameSpec>
@@ -32,9 +32,11 @@ export type ServerGameActions<G extends GameSpec = GameSpec>
 export type ClientCoreActions<G extends GameSpec = GameSpec>
   = L1Actions<G> | L2Actions<G> | L3Actions<G> | L4Actions<G> | ReqActions<G> | CoreActions<G>;
 export type ClientGameActions<G extends GameSpec = GameSpec>
-  = L3Actions<G> | L4Actions<G> | ReqActions<G>
-  export type ClientPreActions<G extends GameSpec = GameSpec>
-    = L3Actions<G> | ReqActions<G>
+  = L3Actions<G> | L4Actions<G> | ReqActions<G>;
+export type ClientSentActions<G extends GameSpec = GameSpec>
+  = L3Actions<G> | ReqActions<G>;
+export type ServerSentActions<G extends GameSpec = GameSpec>
+  = L1Actions<G> | L2Actions<G> | L3Actions<G>;
 export type L0Actions<G extends GameSpec = GameSpec> = G["actions"]["l0"];
 export type L1Actions<G extends GameSpec = GameSpec> = G["actions"]["l1"];
 export type L2Actions<G extends GameSpec = GameSpec> = G["actions"]["l2"];
@@ -44,11 +46,24 @@ export type ReqActions<G extends GameSpec = GameSpec> = G["actions"]["req"];
 
 // TODO: move core actions somewhere else?
 export namespace CoreActions {
+  export const MULTI_ACTION = "MULTI_ACTION";
+  export type MultiAction<G extends GameSpec>
+    = actions.Core<typeof MULTI_ACTION, ServerSentActions<G>[]>;
+  export function multiAction<G extends GameSpec>(
+    payload: ServerSentActions<G>[]
+  ): MultiAction<G> {
+    return {
+      kind: "Core",
+      type: MULTI_ACTION,
+      payload
+    };
+  }
+
   export const CLIENT_JOIN = "CLIENT_JOIN";
   export type ClientJoinAction<G extends GameSpec>
-    = actions.Core<typeof CLIENT_JOIN, ClientPreActions<G>[]> & { id: string };
+    = actions.Core<typeof CLIENT_JOIN, ClientSentActions<G>[]> & { id: string };
   export function clientJoin<G extends GameSpec>(
-    payload: ClientPreActions<G>[],
+    payload: ClientSentActions<G>[],
     id: string = ''
   ): ClientJoinAction<G> {
     return {
@@ -58,6 +73,7 @@ export namespace CoreActions {
       id
     };
   }
+
   export const NEW_CLIENT = "NEW_CLIENT";
   export type NewClientAction = actions.Core<typeof NEW_CLIENT> & { id: string };
   export function newClient(id: string): NewClientAction {
@@ -113,6 +129,7 @@ export namespace CoreActions {
 export type CoreActions<G extends GameSpec = GameSpec>
   = CoreActions.InitialStateAction<G>
   | CoreActions.ClientJoinAction<G>
+  | CoreActions.MultiAction<G>
   | CoreActions.ConnectedAction
   | CoreActions.DisconnectedAction
   | CoreActions.ErrorAction

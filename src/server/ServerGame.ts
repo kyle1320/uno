@@ -7,6 +7,7 @@ import { GameClient } from "./GameClient";
 import {
   GameSpec,
   ServerCoreActions,
+  ServerSentActions,
   state,
   L0Actions,
   L1Actions,
@@ -35,6 +36,14 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
   protected store: Store<state.ServerSide<G>, ServerCoreActions<G>>;
 
   public constructor() {
+    let depth = 0;
+    const actions: Map<GameClient<G>, ServerSentActions<G>[]> = new Map();
+
+    function pushAction(client: GameClient<G>, action: ServerSentActions<G>) {
+      if (actions.has(client)) actions.get(client)!.push(action);
+      else actions.set(client, [action]);
+    }
+
     this.store = createStore((
       state: state.ServerSide<G> = null!,
       action: ServerCoreActions<G>
@@ -68,20 +77,21 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
     }, {
       ...this.createInitialState() as any
     }, applyMiddleware(() => next => (action: ServerCoreActions<G>) => {
+      depth++;
       const from = getClient(action);
       switch (action.kind) {
         case "L1": // send to all clients
-          this.clients.forEach(c => c.send(action));
+          this.clients.forEach(c => pushAction(c, action));
           break;
         case "L2": // send to one client
           this.clients
             .filter(c => c.id === action.id)
-            .forEach(c => c.send(action));
+            .forEach(c => pushAction(c, action));
           break;
         case "L3": // send to one client (if not from that client)
           this.clients
             .filter(c => c.id === action.id && c !== from)
-            .forEach(c => c.send(action));
+            .forEach(c => pushAction(c, action));
           break;
         default:
           break;
@@ -134,6 +144,14 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
           break;
         default:
           break;
+      }
+
+      depth--;
+      if (depth == 0) {
+        for (const client of actions.keys()) {
+          client.send(CoreActions.multiAction(actions.get(client)!));
+        }
+        actions.clear();
       }
     }));
 
