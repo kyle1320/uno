@@ -111,7 +111,7 @@ export namespace rules {
   }
 
   export function getNextTurnReverse(l1: L1.state.State) {
-    if (l1.turnOrder.length == 2) return l1.currentPlayer;
+    if (l1.turnOrder.length == 2) return getSkipTurn(l1);
 
     return getNextTurn(l1, getReverseDirection(l1));
   }

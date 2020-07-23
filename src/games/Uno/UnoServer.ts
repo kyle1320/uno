@@ -55,10 +55,12 @@ export class UnoServer extends ServerGame<UnoSpec> {
         }))
         break;
       case L0.actions.RESET_GAME:
+        const topCard = state.downStack.length
+          ? state.downStack[state.downStack.length - 1]
+          : null;
+        this.dispatch(L1.actions.resetGame());
         this.dispatch(L1.actions.update({
-          topCard: state.downStack.length
-            ? state.downStack[state.downStack.length - 1]
-            : null,
+          topCard,
           upStackSize: state.upStack.length,
           downStackSize: state.downStack.length
         }))
@@ -71,6 +73,9 @@ export class UnoServer extends ServerGame<UnoSpec> {
             this.dispatch(L2.actions.drawCards([this.drawCard(id)!], id));
           }
         }
+        topCard && this.dispatch(L1.actions.update(
+          rules.getStateAfterPlay(topCard.id, this.getL1State())
+        ));
         break;
     }
   }
@@ -98,9 +103,6 @@ export class UnoServer extends ServerGame<UnoSpec> {
         this.dispatch(L1.actions.update(
           rules.getStateAfterPlay(action.payload, state.l1)
         ));
-        break;
-      case L2.actions.RESET_GAME:
-        this.dispatch(L1.actions.resetGame());
         break;
     }
   }

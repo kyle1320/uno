@@ -134,7 +134,9 @@ export function reduce(state: state.State, action: actions.All): state.State {
       }};
     case actions.RESET_GAME:
       return { ...state,
-        lastPlayBy: null
+        lastPlayBy: null,
+        direction: 'CW',
+        currentPlayer: -1
       };
     default:
       return state;
