@@ -16,6 +16,7 @@ interface IProps {
   topCard: CardType | null;
   placementAngle: number | null;
   canDraw: boolean;
+  mustDraw: boolean;
 
   draw: () => void;
 }
@@ -45,8 +46,12 @@ export function Stacks(props: IProps) {
       </TransitionGroup>
       <div className="number"> {props.downStackSize}</div>
     </div>
-    <div className="up-stack" onClick={props.draw}>
-      <Card turned={true} color="black" value="back" disabled={!props.canDraw} />
+    <div className={`up-stack${props.mustDraw ? ' highlight' : ''}`} onClick={props.draw}>
+      <Card
+        turned={true}
+        color="black"
+        value="back"
+        className={!props.canDraw ? 'disabled' : ''} />
       <div className="number"> {props.upStackSize}</div>
     </div>
   </div>;
@@ -66,7 +71,8 @@ export default connect(
         * ((placementIndex - myIndex + turnOrder.length) % turnOrder.length)
         / turnOrder.length;
     }()),
-    canDraw: clientSelectors.canDraw(state)
+    canDraw: clientSelectors.canDraw(state),
+    mustDraw: clientSelectors.mustDraw(state)
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     draw: () => dispatch(Req.actions.drawCard())

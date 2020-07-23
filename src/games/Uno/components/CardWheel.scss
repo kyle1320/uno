@@ -11,7 +11,7 @@
   .playable-card {
     height: 100%;
     min-width: 40px;
-    transition: transform .2s;
+    transition: transform .3s;
     z-index: 0;
     margin: 2px;
 
@@ -26,6 +26,10 @@
     &:last-child {
       min-width: auto;
       padding-right: 15px;
+    }
+
+    &.enabled {
+      transform: translateY(-10px);
     }
   }
 

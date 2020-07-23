@@ -23,7 +23,8 @@ export namespace clientSelectors {
   }
 
   export function isYourTurn(state: state.ClientSide<UnoSpec>) {
-    return currentPlayer(state) === state.l2.id;
+    return state.l1.status === L1.state.GameStatus.Started
+      && currentPlayer(state) === state.l2.id;
   }
 
   export function canDraw(state: state.ClientSide<UnoSpec>) {
@@ -32,6 +33,10 @@ export namespace clientSelectors {
 
   export function canPlay(state: state.ClientSide<UnoSpec>, cardId: number) {
     return isYourTurn(state) && rules.canPlay(cardId, state.l1, state.l2);
+  }
+
+  export function mustDraw(state: state.ClientSide<UnoSpec>) {
+    return isYourTurn(state) && !rules.canPlayAny(state.l1, state.l2);
   }
 }
 
