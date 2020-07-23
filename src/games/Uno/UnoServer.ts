@@ -42,7 +42,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
           downStackSize: state.downStack.length
         }))
         break;
-      case L0.actions.DRAW_CARD:
+      case L0.actions.DRAW_CARDS:
         this.dispatch(L1.actions.update({
           upStackSize: state.upStack.length
         }))
@@ -66,12 +66,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
         }))
         for (const id of this.getL1State().turnOrder) {
           this.dispatch(L2.actions.resetGame(id));
-        }
-        // TODO: make this more efficient
-        for (let i = 0; i < 7; i++) {
-          for (const id of this.getL1State().turnOrder) {
-            this.dispatch(L2.actions.drawCards([this.drawCard(id)!], id));
-          }
+          this.dispatch(L2.actions.drawCards(this.drawCards(id, 7) || [], id));
         }
         topCard && this.dispatch(L1.actions.update(
           rules.getStateAfterPlay(topCard.id, this.getL1State())
@@ -118,15 +113,14 @@ export class UnoServer extends ServerGame<UnoSpec> {
   }
 
   processRequest(action: Req.actions.All) {
-    let card;
     const state = this.store.getState();
 
     switch (action.type) {
       case Req.actions.DRAW_CARD:
         if (serverSelectors.canDraw(state, action.id)) {
           do {
-            card = this.drawCard(action.id);
-            if (card) this.dispatch(L2.actions.drawCard(card, action.id));
+            const cards = this.drawCards(action.id);
+            if (cards) this.dispatch(L2.actions.drawCard(cards[0], action.id));
           } while (this.getL1State().ruleState.type === 'draw');
         }
         break;
@@ -135,7 +129,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
         break;
       case Req.actions.PLAY_CARD:
         if (serverSelectors.canPlay(state, action.id, action.payload.cardId)) {
-          card = this.playCard(action.id, action.payload.cardId, action.payload.color);
+          const card = this.playCard(action.id, action.payload.cardId, action.payload.color);
           if (card) this.dispatch(L0.actions.playCard(card, action.id));
         }
         break;
@@ -172,24 +166,23 @@ export class UnoServer extends ServerGame<UnoSpec> {
     return card;
   }
 
-  // TODO: support drawing several cards at once
-  private drawCard(id: string) {
+  private drawCards(id: string, count = 1) {
     let state = this.store.getState();
 
-    if (!state.l0.upStack.length) {
+    if (state.l0.upStack.length < count) {
       this.dispatch(L0.actions.shuffle());
       state = this.store.getState();
     }
     const upStack = state.l0.upStack;
-    const card = upStack[upStack.length - 1];
+    const cards = upStack.slice(upStack.length - count);
 
-    if (!card) return null;
+    if (cards.length < count) return null;
 
-    this.dispatch(L0.actions.drawCard(id));
+    this.dispatch(L0.actions.drawCards(count, id));
 
-    // action is dispatched synchronously, but we are still looking at old state
-    if (upStack.length < 2) this.dispatch(L0.actions.shuffle());
+    state = this.store.getState();
+    if (state.l0.upStack.length < 1) this.dispatch(L0.actions.shuffle());
 
-    return card;
+    return cards;
   }
 }

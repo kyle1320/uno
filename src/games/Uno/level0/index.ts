@@ -2,13 +2,13 @@ import { actions as actionTypes } from "../../../types";
 import { Card, shuffled, baseDeck } from "../common";
 
 export namespace actions {
-  export const DRAW_CARD = "DRAW_CARD";
-  export type DrawCardAction = actionTypes.L0<typeof DRAW_CARD> & { id: string };
-  export function drawCard(id: string): DrawCardAction {
+  export const DRAW_CARDS = "DRAW_CARDS";
+  export type DrawCardsAction = actionTypes.L0<typeof DRAW_CARDS, number>;
+  export function drawCards(count: number, id: string): DrawCardsAction {
     return {
       kind: "L0",
-      type: DRAW_CARD,
-      id
+      type: DRAW_CARDS,
+      payload: count
     };
   }
 
@@ -41,7 +41,7 @@ export namespace actions {
     };
   }
 
-  export type All = ShuffleAction | DrawCardAction | PlayCardAction | ResetGameAction;
+  export type All = ShuffleAction | DrawCardsAction | PlayCardAction | ResetGameAction;
 }
 
 export namespace state {
@@ -67,10 +67,10 @@ export function reduce(state: state.State, action: actions.All): state.State {
           ...state.upStack
         ]
       };
-    case actions.DRAW_CARD:
+    case actions.DRAW_CARDS:
       return {
         ...state,
-        upStack: state.upStack.slice(0, state.upStack.length - 1)
+        upStack: state.upStack.slice(0, state.upStack.length - action.payload)
       };
     case actions.PLAY_CARD:
       return {
