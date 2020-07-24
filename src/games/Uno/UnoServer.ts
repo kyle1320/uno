@@ -69,7 +69,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
         }));
         for (const id of this.getL1State().turnOrder) {
           this.dispatch(L2.actions.resetGame(id));
-          this.dispatch(L2.actions.drawCards(this.drawCards(id, 7) || [], id));
+          this.dispatch(L2.actions.drawCards(this.drawCards(id, 2) || [], id));
         }
         topCard && this.dispatch(L1.actions.update(
           rules.getStateAfterPlay(topCard.id, this.getL1State())
@@ -79,7 +79,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
   }
 
   processL2(action: L2.actions.All) {
-    const state = this.store.getState();
+    let state = this.store.getState();
     switch (action.type) {
       case L2.actions.DRAW_CARDS:
         this.dispatch(L1.actions.updatePlayer(action.id, {
@@ -96,8 +96,24 @@ export class UnoServer extends ServerGame<UnoSpec> {
         break;
       case L2.actions.PLAY_CARD:
         const cards = state.l2[action.id].hand.length;
-        this.dispatch(L1.actions.updatePlayer(action.id, { cards }));
-        if (cards === 0) this.dispatch(L1.actions.update({
+        this.dispatch(L1.actions.updatePlayer(action.id, {
+          cards,
+          isInGame: cards > 0
+        }));
+
+        let gameOver = false;
+        if (cards === 0) {
+          gameOver = true;
+
+          if (state.l1.rules.battleRoyale) {
+            state = this.store.getState();
+            gameOver = state.l1.turnOrder
+              .filter(id => state.l1.players[id].isInGame)
+              .length < 2;
+          }
+        }
+
+        if (gameOver) this.dispatch(L1.actions.update({
           status: L1.state.GameStatus.Finished
         }));
         else this.dispatch(L1.actions.update(
@@ -150,7 +166,8 @@ export class UnoServer extends ServerGame<UnoSpec> {
         this.dispatch(L1.actions.addPlayer({
           id: action.id,
           name: this.store.getState().l3[action.id].name,
-          cards: 0
+          cards: 0,
+          isInGame: this.getL1State().status !== L1.state.GameStatus.Started
         }));
         break;
     }

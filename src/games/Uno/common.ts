@@ -112,16 +112,30 @@ export namespace rules {
     return play.color === current.color || play.value === current.value;
   }
 
+  function getTurnAtDistance(l1: L1.state.State, dist: number) {
+    let index = l1.currentPlayer + l1.turnOrder.length;
+    for (var i = 0; dist !== 0 && i < l1.turnOrder.length; i++) {
+      if (dist > 0) {
+        index++;
+        if (l1.players[l1.turnOrder[index % l1.turnOrder.length]].isInGame) {
+          dist--;
+        }
+      } else {
+        index--;
+        if (l1.players[l1.turnOrder[index % l1.turnOrder.length]].isInGame) {
+          dist++;
+        }
+      }
+    }
+    return index % l1.turnOrder.length;
+  }
+
   export function getNextTurn(l1: L1.state.State, direction = l1.direction) {
-    return direction === 'CW'
-      ? (l1.currentPlayer + 1) % l1.turnOrder.length
-      : (l1.currentPlayer + l1.turnOrder.length - 1) % l1.turnOrder.length;
+    return getTurnAtDistance(l1, direction === 'CW' ? 1 : -1);
   }
 
   export function getSkipTurn(l1: L1.state.State, direction = l1.direction) {
-    return direction === 'CW'
-      ? (l1.currentPlayer + 2) % l1.turnOrder.length
-      : (l1.currentPlayer + l1.turnOrder.length - 2) % l1.turnOrder.length;
+    return getTurnAtDistance(l1, direction === 'CW' ? 2 : -2);
   }
 
   export function getReverseDirection(l1: L1.state.State) {

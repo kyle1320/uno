@@ -30,6 +30,10 @@
     }
   }
 
+  &.inactive {
+    opacity: 0.5;
+  }
+
   &-hand {
     height: 40px;
     max-width: 100px;

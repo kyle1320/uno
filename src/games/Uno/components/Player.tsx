@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import emojiRegex from 'emoji-regex';
 
-import { UnoSpec } from '..';
+import { UnoSpec, L1 } from '..';
 import { state } from '../../../types';
 
 import './Player.scss';
@@ -10,13 +10,10 @@ import Card from './Card';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { clientSelectors } from '../common';
 
-interface IProps {
-  id: string;
+type IProps = {
   angle: number;
-  name: string;
-  cards: number;
   isTurn: boolean;
-}
+} & L1.state.Player
 
 function isSingleEmoji(s: string) {
   const match = s.match(emojiRegex());
@@ -27,7 +24,7 @@ export function Player(props: IProps) {
   // angles are relative to bottom, clockwise
   const x = 30 * Math.sin(props.angle);
   const y = 30 * Math.cos(props.angle);
-  return <div className={`player${props.isTurn ? ' active' : ''}`} style={{
+  return <div className={`player${props.isTurn ? ' active' : ''}${props.isInGame ? '' : ' inactive'}`} style={{
     top: `calc(60% + ${y}vh)`,
     left: `calc(50% - ${x}vw)`
   }}>
@@ -51,8 +48,7 @@ export function Player(props: IProps) {
 
 export default connect(
   (state: state.ClientSide<UnoSpec>, props: { id: string }) => ({
-    name: state.l1.players[props.id].name,
-    cards: state.l1.players[props.id].cards,
+    ...state.l1.players[props.id],
     isTurn: clientSelectors.currentPlayer(state) === props.id
   })
 )(Player);

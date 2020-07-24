@@ -64,12 +64,14 @@ export namespace state {
     stackDraw4OnDraw2: boolean;
     stackDraw2OnDraw4: boolean;
     drawTillYouPlay: boolean;
+    battleRoyale: boolean;
   }
 
   export interface Player {
     id: string;
     name: string;
     cards: number;
+    isInGame: boolean;
   }
 
   export type RuleState
@@ -96,7 +98,7 @@ export namespace state {
     upStackSize: number;
     downStackSize: number;
     turnOrder: string[];
-    players: { [id: string]: Player}
+    players: { [id: string]: Player }
   }
 
   export const initial: State = {
@@ -110,6 +112,7 @@ export namespace state {
       stackDraw4OnDraw2: false,
       stackDraw2OnDraw4: false,
       drawTillYouPlay: false,
+      battleRoyale: false
     },
     topCard: null,
     lastPlayBy: null,
@@ -143,9 +146,23 @@ export function reduce(_state: state.State, action: actions.All): state.State {
         status: state.GameStatus.Started,
         lastPlayBy: null,
         direction: 'CW',
-        currentPlayer: -1
+        currentPlayer: -1,
+        players: addPlayersToGame(_state.players)
       };
     default:
       return _state;
   }
+}
+
+function addPlayersToGame(players: { [id: string]: state.Player }) {
+  const newPlayers: typeof players = {};
+
+  for (const id in players) {
+    const player = players[id];
+    newPlayers[id] = player.isInGame ? player : {
+      ...player, isInGame: true
+    }
+  }
+
+  return newPlayers;
 }

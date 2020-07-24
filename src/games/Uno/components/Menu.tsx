@@ -69,6 +69,16 @@ const Rules = connect(
         )} />
         Draw 'till You Play
     </label>
+    <label className="row">
+      <input
+        type="checkbox"
+        checked={props.battleRoyale}
+        onChange={React.useCallback(
+          e => props.update({ battleRoyale: e.target.checked }),
+          [props.update]
+        )} />
+        Battle Royale
+    </label>
   </>;
 });
 
