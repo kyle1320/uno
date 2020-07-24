@@ -77,6 +77,7 @@ interface IProps {
   sortCards: boolean;
   setSortCards: (sortCards: boolean) => void;
   setName: (name: string) => void;
+  resetGame: () => void;
 }
 
 export function Menu(props: IProps) {
@@ -113,6 +114,7 @@ export function Menu(props: IProps) {
       <Rules />
       <div className="spacer" />
       <FullscreenToggle />
+      <button className="primary" onClick={props.resetGame}>New Game</button>
     </div>
   </div>;
 }
@@ -124,6 +126,7 @@ export default connect(
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     setName: (name: string) => dispatch(L3.actions.setName(name)),
-    setSortCards: (sortCards: boolean) => dispatch(L4.actions.update({ sortCards }))
+    setSortCards: (sortCards: boolean) => dispatch(L4.actions.update({ sortCards })),
+    resetGame: () => dispatch(Req.actions.resetGame())
   })
 )(Menu);
