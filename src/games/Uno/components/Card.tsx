@@ -120,7 +120,7 @@ export function CardDefs() {
           <feDropShadow dx="0.8" dy="0.8" stdDeviation="0"/>
         </filter>
         <filter id="darken">
-          <feColorMatrix values="0.6 0 0 0 0 0 0.6 0 0 0 0 0 0.6 0 0 0 0 0 1 0"/>
+          <feColorMatrix values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0"/>
         </filter>
       </defs>
     </svg>

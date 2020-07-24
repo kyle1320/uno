@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { Card as CardType, Color } from '../common';
+import { Card as CardType, Color, clientSelectors } from '../common';
 import { UnoSpec, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
 import PlayableCard from './PlayableCard';
@@ -14,6 +14,7 @@ import './CardWheel.scss';
 interface IProps {
   cards: CardType[];
   sort: boolean;
+  yourTurn: boolean;
   play: (cardId: number, color?: Color) => void;
 }
 
@@ -49,7 +50,7 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
     const cards = this.props.sort
       ? this.props.cards.slice().sort((a, b) => a.id - b.id)
       : this.props.cards;
-    return <div className="card-wheel">
+    return <div className={`card-wheel${this.props.yourTurn ? ' active' : ''}`}>
       <TransitionGroup className="card-wheel-container">
         {cards.map(card =>
           <CSSTransition
@@ -76,7 +77,8 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
 export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
     cards: state.l2.hand,
-    sort: state.l4.sortCards
+    sort: state.l4.sortCards,
+    yourTurn: clientSelectors.isYourTurn(state)
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     play: (cardId: number, color?: Color) => dispatch(Req.actions.playCard(cardId, color))
