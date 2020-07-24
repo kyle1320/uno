@@ -44,8 +44,8 @@ export default class Homepage extends React.Component<IProps, IState> {
   render() {
     return <div className="homepage">
       <div className="homepage-title">
-        {/* TODO: extract this */}
-        Uno
+        <span>Kyle's</span>
+        <div className="uno-title">Uno</div>
       </div>
       <div className="homepage-navigator">
         <div className="row label">

@@ -86,9 +86,22 @@ button {
   height: 100%;
 
   &-title {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+
+    span {
+      font-size: 20px;
+      font-weight: bold;
+      padding-left: 4px;
+    }
+  }
+
+  .uno-title {
     font-size: 80px;
     font-weight: bold;
     text-transform: uppercase;
+    line-height: 1;
     margin-bottom: 20px;
     color: $yellow;
     -webkit-text-stroke: 2px white;
