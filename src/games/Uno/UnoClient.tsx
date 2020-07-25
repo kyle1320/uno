@@ -17,7 +17,7 @@ export class UnoClient extends ClientGame<UnoSpec> {
     };
   }
 
-  protected init() {
+  protected setup() {
     const name = localStorage.getItem(NAME_STORAGE_KEY);
     if (name) {
       this.dispatch(L3.actions.setName(name));
