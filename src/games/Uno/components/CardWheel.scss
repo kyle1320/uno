@@ -9,8 +9,8 @@
   box-sizing: content-box;
   padding: 10px 0 5px;
   align-items: flex-end;
-  background-color: rgba($white, 0.1);
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  background-color: rgba($black, 0.2);
+  box-shadow: 0 0 3px inset rgba(0, 0, 0, 0.5);
   transition: box-shadow 0.3s;
 
   .playable-card {
