@@ -13,8 +13,6 @@ import { Card } from './Card';
 import './Stacks.scss';
 
 interface IProps {
-  upStackSize: number;
-  downStackSize: number;
   topCard: CardType | null;
   placementAngle: number | null;
   canDraw: boolean;
@@ -50,7 +48,6 @@ export function Stacks(props: IProps) {
       <div className={`direction ${props.direction.toLowerCase()}`}>
         <FontAwesomeIcon icon={faSync} />
       </div>
-      <div className="number">{props.downStackSize}</div>
     </div>
     <div className={`up-stack${props.mustDraw ? ' highlight' : ''}`} onClick={props.draw}>
       <Card
@@ -58,15 +55,12 @@ export function Stacks(props: IProps) {
         color="black"
         value="back"
         className={!props.canDraw ? 'disabled' : ''} />
-      <div className="number"> {props.upStackSize}</div>
     </div>
   </div>;
 }
 
 export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
-    upStackSize: state.l1.upStackSize,
-    downStackSize: state.l1.downStackSize,
     topCard: state.l1.topCard,
     placementAngle: (function () {
       const turnOrder = state.l1.turnOrder;
