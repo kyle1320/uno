@@ -138,7 +138,11 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
               l2: state.l2[action.id],
               l3: state.l3[action.id]
             };
-            getClient(action).send(CoreActions.initialState(clientState));
+
+            // when we send the initial state, clear any queued actions
+            const client = getClient(action);
+            actions.delete(client);
+            client.send(CoreActions.initialState(clientState));
           }
           this.processCore(action);
           break;
