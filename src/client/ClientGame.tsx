@@ -162,6 +162,10 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
 
   protected abstract getRootElement(): React.ReactElement;
 
+  protected getL1State(): state.L1<G> {
+    return this.store.getState().l1;
+  }
+
   protected getL4State(): state.L4<G> {
     return this.store.getState().l4;
   }

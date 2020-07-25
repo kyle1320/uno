@@ -39,6 +39,17 @@ export class UnoClient extends ClientGame<UnoSpec> {
   protected reduceL3 = L3.reduce;
   protected reduceL4 = L4.reduce;
 
+  protected processL1(action: L1.actions.All) {
+    const state = this.getL1State();
+    if (action.type === L1.actions.UPDATE_PLAYER) {
+      if (action.payload.didCallUno) {
+        this.dispatch(L4.actions.pushToast(
+          `${state.players[action.id].name} called Uno!`
+        ));
+      }
+    }
+  }
+
   protected processL3(action: L3.actions.All) {
     if (action.type === L3.actions.SET_NAME) {
       localStorage.setItem(NAME_STORAGE_KEY, action.payload);
