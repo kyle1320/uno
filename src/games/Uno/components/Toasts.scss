@@ -6,6 +6,7 @@
   display: flex;
   flex-flow: column nowrap;
   align-items: flex-end;
+  overflow: hidden;
 
   .toast {
     overflow: visible;
