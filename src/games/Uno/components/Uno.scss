@@ -13,7 +13,6 @@ html, body {
 }
 
 input, button {
-  background-color: $white;
   border-radius: 6px;
   outline: none;
   padding: 5px;
@@ -22,48 +21,28 @@ input, button {
 }
 
 input:not([type="checkbox"]) {
-  flex-grow: 1;
   padding: 5px 8px;
 }
 
 input {
   border: none;
   box-shadow: 0 0 3px inset rgba(0, 0, 0, 0.4);
+
+  &[type="number"] {
+    width: 50px;
+  }
 }
 
 button {
   display: block;
   font-size: inherit;
   font-weight: bold;
-  background-color: #CCC;
   border: none;
   cursor: pointer;
 
   &:disabled {
     opacity: 0.5;
     pointer-events: none;
-  }
-
-  &:active {
-    background-color: darken(#CCC, 10);
-  }
-
-  &.primary {
-    background-color: $red;
-    color: white;
-
-    &:active {
-      background-color: darken($red, 10);
-    }
-  }
-
-  &.highlight {
-    background-color: $yellow;
-    color: #333;
-
-    &:active {
-      background-color: darken($yellow, 10);
-    }
   }
 }
 
