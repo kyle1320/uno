@@ -2,6 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 import { UnoSpec, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
@@ -17,6 +19,7 @@ interface IProps {
   placementAngle: number | null;
   canDraw: boolean;
   mustDraw: boolean;
+  direction: 'CW' | 'CCW';
 
   draw: () => void;
 }
@@ -44,7 +47,10 @@ export function Stacks(props: IProps) {
           </CSSTransition>
         ]}
       </TransitionGroup>
-      <div className="number"> {props.downStackSize}</div>
+      <div className={`direction ${props.direction.toLowerCase()}`}>
+        <FontAwesomeIcon icon={faSync} />
+      </div>
+      <div className="number">{props.downStackSize}</div>
     </div>
     <div className={`up-stack${props.mustDraw ? ' highlight' : ''}`} onClick={props.draw}>
       <Card
@@ -72,7 +78,8 @@ export default connect(
         / turnOrder.length;
     }()),
     canDraw: clientSelectors.canDraw(state),
-    mustDraw: clientSelectors.mustDraw(state)
+    mustDraw: clientSelectors.mustDraw(state),
+    direction: state.l1.direction
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     draw: () => dispatch(Req.actions.drawCard())

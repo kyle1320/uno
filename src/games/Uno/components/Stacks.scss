@@ -19,7 +19,7 @@
 
   .number {
     position: absolute;
-    text-shadow: 0 0 2px black;
+    // text-shadow: 0 0 2px black;
     font-weight: bold;
     user-select: none;
     line-height: 1em;
@@ -27,6 +27,23 @@
     bottom: 0;
     left: 100%;
     padding-left: 4px;
+  }
+
+  .direction {
+    position: absolute;
+    text-shadow: 0 0 2px black;
+    font-weight: bold;
+    user-select: none;
+    line-height: 1em;
+    font-size: 14px;
+    bottom: 0;
+    right: 100%;
+    padding: 0 6px;
+
+    &.ccw {
+      transition: transform .5s;
+      transform: rotateY(180deg);
+    }
   }
 
   .card {
