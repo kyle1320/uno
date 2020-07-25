@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import emojiRegex from 'emoji-regex';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faUnlink } from '@fortawesome/free-solid-svg-icons';
 
 import { UnoSpec, L1 } from '..';
 import { state } from '../../../types';
@@ -39,26 +39,31 @@ export function calculatePosition(percent: number, width=35, height=30): [number
 export function Player(props: IProps) {
   const [x, y] = calculatePosition(props.placement);
 
-  return <div className={`player${props.isTurn ? ' active' : ''}${props.isInGame ? '' : ' inactive'}`} style={{
+  return <div className="player-container" style={{
     top: `calc(60% + ${y}vh)`,
     left: `calc(50% + ${x}vw)`
   }}>
-    <div className="arrow"><FontAwesomeIcon icon={faArrowDown} /></div>
-    <div className={`player-name${isSingleEmoji(props.name) ? ' large' : ''}`}>
-      {props.name}
+    <div className={`player${props.isTurn ? ' active' : ''}${props.isInGame ? '' : ' inactive'}${props.connected ? '' : ' disconnected'}`}>
+      <div className="arrow"><FontAwesomeIcon icon={faArrowDown} /></div>
+      <div className={`player-name${isSingleEmoji(props.name) ? ' large' : ''}`}>
+        {props.name}
+      </div>
+      <TransitionGroup className="player-hand">
+        {new Array(props.cards).fill(
+          <CSSTransition
+            classNames="card-slide"
+            timeout={{
+              enter: 300,
+              exit: 0
+            }}>
+            <div className="card-wrapper"><Card value="back" color="black" /></div>
+          </CSSTransition>
+        )}
+      </TransitionGroup>
     </div>
-    <TransitionGroup className="player-hand">
-      {new Array(props.cards).fill(
-        <CSSTransition
-          classNames="card-slide"
-          timeout={{
-            enter: 300,
-            exit: 0
-          }}>
-          <div className="card-wrapper"><Card value="back" color="black" /></div>
-        </CSSTransition>
-      )}
-    </TransitionGroup>
+    {!props.connected && <div className="disconnected-icon">
+          <FontAwesomeIcon icon={faUnlink} />
+    </div>}
   </div>;
 }
 

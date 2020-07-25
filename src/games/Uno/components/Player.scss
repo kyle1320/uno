@@ -1,12 +1,23 @@
 @import "./variables";
 
 .player {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  overflow: visible;
-  max-width: 100px;
-  transition: opacity .5s;
   opacity: .8;
+  transition: opacity .5s;
+
+  &-container {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    overflow: visible;
+    max-width: 100px;
+
+    .disconnected-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 48px;
+    }
+  }
 
   .arrow {
     position: absolute;
@@ -29,6 +40,10 @@
 
   &.inactive {
     opacity: 0.5;
+  }
+
+  &.disconnected {
+    opacity: 0.4;
   }
 
   &-hand {
