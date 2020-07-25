@@ -69,7 +69,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
         }));
         for (const id of this.getL1State().turnOrder) {
           this.dispatch(L2.actions.resetGame(id));
-          this.dispatch(L2.actions.drawCards(this.drawCards(id, 2) || [], id));
+          this.dispatch(L2.actions.drawCards(this.drawCards(id, 7) || [], id));
         }
         topCard && this.dispatch(L1.actions.update(
           rules.getStateAfterPlay(topCard.id, this.getL1State())
