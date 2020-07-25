@@ -13,7 +13,7 @@ import { clientSelectors } from '../common';
 import './Player.scss';
 
 type IProps = {
-  angle: number;
+  placement: number;
   isTurn: boolean;
 } & L1.state.Player
 
@@ -22,13 +22,26 @@ function isSingleEmoji(s: string) {
   return match && match[0] === s;
 }
 
+export function calculatePosition(percent: number, width=35, height=30): [number, number] {
+  percent *= 100;
+  if (percent < 20) {
+    return [-width, -(percent - 20) * (height / 20)];
+  } else if (percent < 80) {
+    const angle =  Math.PI * (percent - 20) / 60;
+    const x = -width * Math.cos(angle);
+    const y = -height * Math.sin(angle);
+    return [x, y];
+  } else {
+    return [width, (percent - 80) * (height / 20)];
+  }
+}
+
 export function Player(props: IProps) {
-  // angles are relative to bottom, clockwise
-  const x = 30 * Math.sin(props.angle);
-  const y = 30 * Math.cos(props.angle);
+  const [x, y] = calculatePosition(props.placement);
+
   return <div className={`player${props.isTurn ? ' active' : ''}${props.isInGame ? '' : ' inactive'}`} style={{
     top: `calc(60% + ${y}vh)`,
-    left: `calc(50% - ${x}vw)`
+    left: `calc(50% + ${x}vw)`
   }}>
     <div className="arrow"><FontAwesomeIcon icon={faArrowDown} /></div>
     <div className={`player-name${isSingleEmoji(props.name) ? ' large' : ''}`}>

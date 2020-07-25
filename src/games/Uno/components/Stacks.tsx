@@ -9,12 +9,13 @@ import { UnoSpec, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
 import { Card as CardType, clientSelectors } from '../common';
 import { Card } from './Card';
+import { calculatePosition } from './Player';
 
 import './Stacks.scss';
 
 interface IProps {
   topCard: CardType | null;
-  placementAngle: number | null;
+  placement: number | null;
   canDraw: boolean;
   mustDraw: boolean;
   direction: 'CW' | 'CCW';
@@ -23,8 +24,9 @@ interface IProps {
 }
 
 export function Stacks(props: IProps) {
-  const x = props.placementAngle === null ? 0 : -25 * Math.sin(props.placementAngle);
-  const y = props.placementAngle === null ? 0 : 25 * Math.cos(props.placementAngle);
+  const [x, y] = props.placement === null
+    ? [0, 0]
+    : calculatePosition(props.placement);
   return <div className="stacks">
     <div className="down-stack">
       <TransitionGroup>
@@ -62,13 +64,12 @@ export function Stacks(props: IProps) {
 export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
     topCard: state.l1.topCard,
-    placementAngle: (function () {
+    placement: (function () {
       const turnOrder = state.l1.turnOrder;
       const myIndex = turnOrder.indexOf(state.l2.id);
       const placementIndex = turnOrder.indexOf(state.l1.lastPlayBy!);
       if (placementIndex < 0) return null;
-      return Math.PI * 2
-        * ((placementIndex - myIndex + turnOrder.length) % turnOrder.length)
+      return ((placementIndex - myIndex + turnOrder.length) % turnOrder.length)
         / turnOrder.length;
     }()),
     canDraw: clientSelectors.canDraw(state),

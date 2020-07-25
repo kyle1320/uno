@@ -19,7 +19,7 @@ export function Players(props: IProps) {
         ? <Player
             key={id}
             id={id}
-            angle={Math.PI * 2 * i / props.relativeTurnOrder.length} />
+            placement={i / props.relativeTurnOrder.length} />
         : null
     )}
   </div>;
