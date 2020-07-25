@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import emojiRegex from 'emoji-regex';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 import { UnoSpec, L1 } from '..';
 import { state } from '../../../types';
+import Card from './Card';
+import { clientSelectors } from '../common';
 
 import './Player.scss';
-import Card from './Card';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { clientSelectors } from '../common';
 
 type IProps = {
   angle: number;
@@ -28,6 +30,7 @@ export function Player(props: IProps) {
     top: `calc(60% + ${y}vh)`,
     left: `calc(50% - ${x}vw)`
   }}>
+    <div className="arrow"><FontAwesomeIcon icon={faArrowDown} /></div>
     <div className={`player-name${isSingleEmoji(props.name) ? ' large' : ''}`}>
       {props.name}
     </div>
