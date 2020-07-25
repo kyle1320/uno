@@ -7,12 +7,16 @@ import { clientSelectors } from '../common';
 
 import './Info.scss';
 import { Dispatch } from 'redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHandPointUp } from '@fortawesome/free-solid-svg-icons';
 
 interface IProps {
   gameStatus: L1.state.GameStatus;
   ruleState: L1.state.RuleState;
   yourTurn: boolean;
   resetGame: () => void;
+  callUno: () => void;
+  calloutUno: () => void;
 }
 
 export function Info(props: IProps) {
@@ -20,7 +24,7 @@ export function Info(props: IProps) {
     case L1.state.GameStatus.Pregame:
       return <div className="info">
         <span>Start a New Game to Play</span>
-        <button className="primary" onClick={props.resetGame}>New Game</button>
+        <button onClick={props.resetGame}>New Game</button>
       </div>;
     case L1.state.GameStatus.Started:
       return <div className="info">
@@ -35,11 +39,13 @@ export function Info(props: IProps) {
               return 'Your Turn';
           }
         })()}</span>
+        <button onClick={props.callUno}>Call Uno!</button>
+        <button onClick={props.calloutUno}><FontAwesomeIcon icon={faHandPointUp} /> Call Out</button>
       </div>;
     case L1.state.GameStatus.Finished:
       return <div className="info">
         <span>Game Over</span>
-        <button className="primary" onClick={props.resetGame}>New Game</button>
+        <button onClick={props.resetGame}>New Game</button>
       </div>;
   }
 }
@@ -51,6 +57,8 @@ export default connect(
     yourTurn: clientSelectors.isYourTurn(state)
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
-    resetGame: () => dispatch(Req.actions.resetGame())
+    resetGame: () => dispatch(Req.actions.resetGame()),
+    callUno: () => dispatch(Req.actions.callUno()),
+    calloutUno: () => dispatch(Req.actions.calloutUno())
   })
 )(Info);

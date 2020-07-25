@@ -44,7 +44,8 @@ export class UnoServer extends ServerGame<UnoSpec> {
         break;
       case L0.actions.DRAW_CARDS:
         this.dispatch(L1.actions.update({
-          upStackSize: state.upStack.length
+          upStackSize: state.upStack.length,
+          lastPlayBy: null
         }))
         break;
       case L0.actions.PLAY_CARD:
@@ -157,6 +158,20 @@ export class UnoServer extends ServerGame<UnoSpec> {
         break;
       case Req.actions.RESET_GAME:
         this.dispatch(L0.actions.resetGame());
+        break;
+      case Req.actions.CALL_UNO:
+        this.dispatch(L1.actions.updatePlayer(action.id, { didCallUno: true }));
+        break;
+      case Req.actions.CALLOUT_UNO:
+        const playerId = state.l1.lastPlayBy;
+        const player = playerId && state.l1.players[playerId];
+        if (player && player.cards === 1 && !player.didCallUno) {
+          this.dispatch(L2.actions.drawCards(
+            this.drawCards(player.id, state.l1.rules.penaltyCardCount) || [],
+            player.id
+          ));
+        }
+        break;
     }
   }
 
@@ -167,7 +182,8 @@ export class UnoServer extends ServerGame<UnoSpec> {
           id: action.id,
           name: this.store.getState().l3[action.id].name,
           cards: 0,
-          isInGame: this.getL1State().status !== L1.state.GameStatus.Started
+          isInGame: this.getL1State().status !== L1.state.GameStatus.Started,
+          didCallUno: false
         }));
         break;
     }

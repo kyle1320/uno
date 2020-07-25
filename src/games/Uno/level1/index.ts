@@ -65,6 +65,7 @@ export namespace state {
     stackDraw2OnDraw4: boolean;
     drawTillYouPlay: boolean;
     battleRoyale: boolean;
+    penaltyCardCount: number;
   }
 
   export interface Player {
@@ -72,6 +73,7 @@ export namespace state {
     name: string;
     cards: number;
     isInGame: boolean;
+    didCallUno: boolean;
   }
 
   export type RuleState
@@ -112,7 +114,8 @@ export namespace state {
       stackDraw4OnDraw2: false,
       stackDraw2OnDraw4: false,
       drawTillYouPlay: false,
-      battleRoyale: false
+      battleRoyale: false,
+      penaltyCardCount: 4
     },
     topCard: null,
     lastPlayBy: null,
@@ -128,7 +131,15 @@ export function reduce(_state: state.State, action: actions.All): state.State {
     case actions.UPDATE:
       return { ..._state, ...action.payload };
     case actions.UPDATE_RULES:
-      return { ..._state, rules: { ..._state.rules, ...action.payload } };
+      let penaltyCardCount = _state.rules.penaltyCardCount;
+      if ('penaltyCardCount' in action.payload) {
+        penaltyCardCount = Math.min(8, Math.max(1, action.payload.penaltyCardCount!));
+      }
+      return { ..._state, rules: {
+        ..._state.rules,
+        ...action.payload,
+        penaltyCardCount
+      } };
     case actions.ADD_PLAYER:
       return { ..._state, turnOrder: [
         ..._state.turnOrder, action.payload.id

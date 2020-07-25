@@ -83,6 +83,16 @@ const Rules = connect(
         )} />
         Battle Royale
     </label>
+    <label className="row">
+      Uno Penalty Cards:
+      <input
+        type="number"
+        value={props.penaltyCardCount}
+        onChange={React.useCallback(
+          e => props.update({ penaltyCardCount: +e.target.value }),
+          [props.update]
+        )} />
+    </label>
   </>;
 });
 

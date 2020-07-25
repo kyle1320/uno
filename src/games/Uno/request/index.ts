@@ -49,5 +49,26 @@ export namespace actions {
     };
   }
 
-  export type All = DrawCardAction | UpdateRulesAction | PlayCardAction | ResetGameAction;
+  export const CALL_UNO = "CALL_UNO";
+  export type CallUnoAction = actionTypes.Req<typeof CALL_UNO>;
+  export function callUno(id: string = ''): CallUnoAction {
+    return {
+      kind: 'Req',
+      type: CALL_UNO,
+      id
+    };
+  }
+
+  export const CALLOUT_UNO = "CALLOUT_UNO";
+  export type CalloutUnoAction = actionTypes.Req<typeof CALLOUT_UNO>;
+  export function calloutUno(id: string = ''): CalloutUnoAction {
+    return {
+      kind: 'Req',
+      type: CALLOUT_UNO,
+      id
+    };
+  }
+
+  export type All = DrawCardAction | UpdateRulesAction | PlayCardAction
+    | ResetGameAction | CallUnoAction | CalloutUnoAction;
 }
