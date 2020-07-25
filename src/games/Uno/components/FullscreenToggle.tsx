@@ -4,7 +4,11 @@ import { faExpand, faCompress } from '@fortawesome/free-solid-svg-icons';
 
 import './FullscreenToggle.scss';
 
-export default class FullscreenToggle extends React.PureComponent {
+interface IProps {
+  className?: string;
+}
+
+export default class FullscreenToggle extends React.PureComponent<IProps> {
   componentDidMount() {
     document.addEventListener('fullscreenchange', this.update);
   }
@@ -23,7 +27,11 @@ export default class FullscreenToggle extends React.PureComponent {
   }
 
   render() {
-    return <button className="fullscreen-toggle" onClick={this.toggle}>
+    let className = "fullscreen-toggle";
+    if (this.props.className) {
+      className += ' ' + this.props.className;
+    }
+    return <button className={className} onClick={this.toggle}>
       {document.fullscreenElement
         ? <FontAwesomeIcon icon={faCompress} />
         : <FontAwesomeIcon icon={faExpand} />}

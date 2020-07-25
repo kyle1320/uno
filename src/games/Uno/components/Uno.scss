@@ -44,6 +44,32 @@ button {
     opacity: 0.5;
     pointer-events: none;
   }
+
+  &.primary {
+    background-color: $red;
+    color: white;
+
+    &:active {
+      background-color: darken($red, 10);
+    }
+  }
+
+  &.secondary {
+    background-color: #CCC;
+
+    &:active {
+      background-color: darken(#CCC, 10);
+    }
+  }
+
+  &.highlight {
+    background-color: $yellow;
+    color: #333;
+
+    &:active {
+      background-color: darken($yellow, 10);
+    }
+  }
 }
 
 #root {
@@ -133,8 +159,16 @@ button {
       }
     }
 
+    .randomize-btn {
+      @extend .secondary;
+    }
+
     input, button {
       margin: 0;
+    }
+
+    input {
+      flex-grow: 1;
     }
   }
 }

@@ -137,7 +137,7 @@ export function Menu(props: IProps) {
       <hr />
       <Rules />
       <div className="spacer" />
-      <FullscreenToggle />
+      <FullscreenToggle className="secondary" />
       <button className="primary" onClick={React.useCallback(() => {
         props.resetGame();
         toggle();
