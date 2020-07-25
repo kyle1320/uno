@@ -39,9 +39,9 @@
     bottom: 0;
     right: 100%;
     padding: 0 6px;
+    transition: transform .5s;
 
     &.ccw {
-      transition: transform .5s;
       transform: rotateY(180deg);
     }
   }
