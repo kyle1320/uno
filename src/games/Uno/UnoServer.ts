@@ -160,16 +160,20 @@ export class UnoServer extends ServerGame<UnoSpec> {
         this.dispatch(L0.actions.resetGame());
         break;
       case Req.actions.CALL_UNO:
-        this.dispatch(L1.actions.updatePlayer(action.id, { didCallUno: true }));
+        if (serverSelectors.canCallUno(state, action.id)) {
+          this.dispatch(L1.actions.updatePlayer(action.id, { didCallUno: true }));
+        }
         break;
       case Req.actions.CALLOUT_UNO:
-        const playerId = state.l1.lastPlayBy;
-        const player = playerId && state.l1.players[playerId];
-        if (player && player.cards === 1 && !player.didCallUno) {
-          this.dispatch(L2.actions.drawCards(
-            this.drawCards(player.id, state.l1.rules.penaltyCardCount) || [],
-            player.id
-          ));
+        if (serverSelectors.canCalloutUno(state, action.id)) {
+          const playerId = state.l1.lastPlayBy;
+          const player = playerId && state.l1.players[playerId];
+          if (player && player.cards === 1 && !player.didCallUno) {
+            this.dispatch(L2.actions.drawCards(
+              this.drawCards(player.id, state.l1.rules.penaltyCardCount) || [],
+              player.id
+            ));
+          }
         }
         break;
     }

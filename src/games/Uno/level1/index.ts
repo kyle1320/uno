@@ -148,9 +148,17 @@ export function reduce(_state: state.State, action: actions.All): state.State {
         [action.payload.id]: action.payload
       }};
     case actions.UPDATE_PLAYER:
+      let didCallUno = _state.players[action.id].didCallUno;
+      if ('cards' in action.payload && action.payload.cards !== 1) {
+        didCallUno = false;
+      }
       return { ..._state, players: {
         ..._state.players,
-        [action.id]: { ..._state.players[action.id], ...action.payload }
+        [action.id]: {
+          ..._state.players[action.id],
+          ...action.payload,
+          didCallUno
+        }
       }};
     case actions.RESET_GAME:
       return { ..._state,

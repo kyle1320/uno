@@ -38,6 +38,14 @@ export namespace clientSelectors {
   export function mustDraw(state: state.ClientSide<UnoSpec>) {
     return isYourTurn(state) && !rules.canPlayAny(state.l1, state.l2);
   }
+
+  export function canCallUno(state: state.ClientSide<UnoSpec>) {
+    return isYourTurn(state);
+  }
+
+  export function canCalloutUno(state: state.ClientSide<UnoSpec>) {
+    return true;
+  }
 }
 
 export namespace serverSelectors {
@@ -52,6 +60,14 @@ export namespace serverSelectors {
   export function canPlay(state: state.ServerSide<UnoSpec>, clientId: string, cardId: number) {
     return currentPlayer(state) === clientId
       && rules.canPlay(cardId, state.l1, state.l2[clientId]);
+  }
+
+  export function canCallUno(state: state.ServerSide<UnoSpec>, id: string) {
+    return currentPlayer(state) === id;
+  }
+
+  export function canCalloutUno(state: state.ServerSide<UnoSpec>, id: string) {
+    return true;
   }
 }
 
