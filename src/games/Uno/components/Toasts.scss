@@ -1,0 +1,49 @@
+.toasts {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-right: 5px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+
+  .toast {
+    overflow: visible;
+    height: 30px;
+    display: flex;
+    align-items: flex-end;
+    max-width: 40vw;
+    margin-top: 5px;
+  }
+
+  .toast-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    height: 30px;
+    padding: 0 15px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .toast-slide-enter {
+    transform: translateX(100%);
+  }
+
+  .toast-slide-enter-active {
+    transform: translateX(0);
+    transition: transform .5s;
+  }
+
+  .toast-slide-exit {
+    height: 30px;
+    opacity: 1;
+  }
+
+  .toast-slide-exit-active {
+    height: 0;
+    opacity: 0;
+    transition: all .5s;
+  }
+}

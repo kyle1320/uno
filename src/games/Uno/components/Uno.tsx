@@ -11,6 +11,7 @@ import Stacks from './Stacks';
 import Info from './Info';
 
 import './Uno.scss';
+import Toasts from './Toasts';
 
 interface Props {
   connected: boolean;
@@ -29,6 +30,7 @@ class Uno extends React.PureComponent<Props> {
             : ""
       }</div>
       <div className="table">
+        <Toasts />
         <CardDefs />
         <Stacks />
         <Players />

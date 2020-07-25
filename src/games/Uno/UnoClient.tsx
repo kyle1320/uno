@@ -49,6 +49,8 @@ export class UnoClient extends ClientGame<UnoSpec> {
     if (action.type === L4.actions.UPDATE) {
       const state = this.getL4State();
       localStorage.setItem(PREFERENCES_STORAGE_KEY, JSON.stringify(state));
+    } else if (action.type === L4.actions.PUSH_TOAST) {
+      setTimeout(() => this.dispatch(L4.actions.popToast()), 2000);
     }
   }
 
