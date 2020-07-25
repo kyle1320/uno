@@ -74,16 +74,6 @@ export namespace CoreActions {
     };
   }
 
-  export const NEW_CLIENT = "NEW_CLIENT";
-  export type NewClientAction = actions.Core<typeof NEW_CLIENT> & { id: string };
-  export function newClient(id: string): NewClientAction {
-    return {
-      kind: "Core",
-      type: NEW_CLIENT,
-      id
-    };
-  }
-
   export const INITIAL_STATE = "INITIAL_STATE";
   export type InitialStateAction<G extends GameSpec>
     = actions.Core<typeof INITIAL_STATE, Partial<state.ClientSide<G>>>;
@@ -98,20 +88,22 @@ export namespace CoreActions {
   }
 
   export const CONNECTED = "CONNECTED";
-  export type ConnectedAction = actions.Core<typeof CONNECTED>;
-  export function connected(): ConnectedAction {
+  export type ConnectedAction = actions.Core<typeof CONNECTED> & { id: string };
+  export function connected(id: string = ''): ConnectedAction {
     return {
       kind: "Core",
-      type: CONNECTED
+      type: CONNECTED,
+      id
     };
   }
 
   export const DISCONNECTED = "DISCONNECTED";
-  export type DisconnectedAction = actions.Core<typeof DISCONNECTED>;
-  export function disconnected(): DisconnectedAction {
+  export type DisconnectedAction = actions.Core<typeof DISCONNECTED> & { id: string };
+  export function disconnected(id: string = ''): DisconnectedAction {
     return {
       kind: "Core",
-      type: DISCONNECTED
+      type: DISCONNECTED,
+      id
     };
   }
 
@@ -132,8 +124,7 @@ export type CoreActions<G extends GameSpec = GameSpec>
   | CoreActions.MultiAction<G>
   | CoreActions.ConnectedAction
   | CoreActions.DisconnectedAction
-  | CoreActions.ErrorAction
-  | CoreActions.NewClientAction;
+  | CoreActions.ErrorAction;
 
 export {
   actions,

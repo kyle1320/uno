@@ -223,7 +223,7 @@ export namespace rules {
   }
 
   export function canCallUno(l1: L1.state.State, id: string) {
-    return !l1.players[id]?.didCallUno;
+    return !(l1.players[id]?.didCallUno ?? true);
   }
 
   export function canCalloutUno(l1: L1.state.State, id: string) {

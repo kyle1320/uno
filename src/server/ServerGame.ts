@@ -33,6 +33,8 @@ function getClient<G extends GameSpec>(
 
 export abstract class ServerGame<G extends GameSpec = GameSpec> {
   protected clients: GameClient<G>[] = [];
+  protected uniqueClients: Set<string> = new Set();
+
   protected store: Store<state.ServerSide<G>, ServerCoreActions<G>>;
 
   public constructor() {
@@ -58,7 +60,9 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
           [action.id]: this.reduceL3(state.l3[action.id], action)
         }};
         case "Core":
-          if (action.type === CoreActions.NEW_CLIENT) {
+          if (action.type === CoreActions.CONNECTED) {
+            if (action.id in state.l2 && action.id in state.l3) return state;
+
             const clientState = this.createInitialClientState(state, action.id) as {
               l2?: state.L2<G>,
               l3?: state.L3<G>
@@ -72,7 +76,8 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
             }
             return newState;
           }
-        default:  return state;
+        default:
+          return state;
       }
     }, {
       ...this.createInitialState() as any
@@ -122,27 +127,23 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
           if (action.type === CoreActions.CLIENT_JOIN) {
             let state = this.store.getState();
 
-            // TODO: better way to check if client exists
-            if (state.l2 && !(action.id in state.l2)) {
-              this.store.dispatch(CoreActions.newClient(action.id));
-            }
+            this.store.dispatch(CoreActions.connected(action.id));
 
             for (const act of action.payload) {
               const client = getClient(action);
               this.handleMessage(client, act);
             }
 
-            state = this.store.getState();
-            const clientState: Partial<state.ClientSide<G>> = {
-              l1: state.l1,
-              l2: state.l2[action.id],
-              l3: state.l3[action.id]
-            };
-
             // when we send the initial state, clear any queued actions
             const client = getClient(action);
             actions.delete(client);
-            client.send(CoreActions.initialState(clientState));
+
+            state = this.store.getState();
+            client.send(CoreActions.initialState({
+              l1: state.l1,
+              l2: state.l2[action.id],
+              l3: state.l3[action.id]
+            }));
           }
           this.processCore(action);
           break;
@@ -205,10 +206,15 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
 
   public join(client: GameClient<G>) {
     this.clients.push(client);
+    this.uniqueClients.add(client.id);
   }
 
   public leave(client: GameClient<G>) {
     this.clients = this.clients.filter(x => x !== client);
+    if (!this.clients.some(c => c.id === client.id)) {
+      this.uniqueClients.delete(client.id);
+      this.handleMessage(client, CoreActions.disconnected());
+    }
   }
 
   protected getClient(action: ServerCoreActions<G>) {

@@ -74,6 +74,7 @@ export namespace state {
     cards: number;
     isInGame: boolean;
     didCallUno: boolean;
+    connected: boolean;
   }
 
   export type RuleState
@@ -148,7 +149,7 @@ export function reduce(_state: state.State, action: actions.All): state.State {
         [action.payload.id]: action.payload
       }};
     case actions.UPDATE_PLAYER:
-      let didCallUno = _state.players[action.id].didCallUno;
+      let didCallUno = _state.players[action.id]?.didCallUno ?? false;
       if ('cards' in action.payload && action.payload.cards !== 1) {
         didCallUno = false;
       }
@@ -161,25 +162,32 @@ export function reduce(_state: state.State, action: actions.All): state.State {
         }
       }};
     case actions.RESET_GAME:
+      const players = getPlayersInGame(_state.players);
+      let turnOrder = _state.turnOrder.slice();
+      turnOrder.push(turnOrder.shift()!);
+      turnOrder = turnOrder.filter(id => id in players);
       return { ..._state,
         status: state.GameStatus.Started,
         lastPlayBy: null,
         direction: 'CW',
         currentPlayer: -1,
-        players: addPlayersToGame(_state.players)
+        players,
+        turnOrder
       };
     default:
       return _state;
   }
 }
 
-function addPlayersToGame(players: { [id: string]: state.Player }) {
+function getPlayersInGame(players: { [id: string]: state.Player }) {
   const newPlayers: typeof players = {};
 
   for (const id in players) {
     const player = players[id];
-    newPlayers[id] = player.isInGame ? player : {
-      ...player, isInGame: true
+    if (player.connected) {
+      newPlayers[id] = player.isInGame ? player : {
+        ...player, isInGame: true
+      }
     }
   }
 

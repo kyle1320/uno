@@ -11,7 +11,6 @@ export class GameClient<G extends GameSpec> {
     public readonly id: string,
     private readonly room: ServerGame<G>,
   ) {
-    // TODO: handle onerror and onclose events
     socket.onmessage = e => {
       const action = JSON.parse(e.data as string) as ServerCoreActions<G>;
 
@@ -22,6 +21,7 @@ export class GameClient<G extends GameSpec> {
         this.send(CoreActions.error(e));
       }
     };
+    socket.onclose = () => room.leave(this);
     room.join(this);
   }
 

@@ -59,14 +59,11 @@ export class UnoServer extends ServerGame<UnoSpec> {
         const topCard = state.downStack.length
           ? state.downStack[state.downStack.length - 1]
           : null;
-        const turnOrder = this.getL1State().turnOrder.slice();
-        turnOrder.push(turnOrder.shift()!);
         this.dispatch(L1.actions.resetGame());
         this.dispatch(L1.actions.update({
           topCard,
           upStackSize: state.upStack.length,
-          downStackSize: state.downStack.length,
-          turnOrder
+          downStackSize: state.downStack.length
         }));
         for (const id of this.getL1State().turnOrder) {
           this.dispatch(L2.actions.resetGame(id));
@@ -180,15 +177,25 @@ export class UnoServer extends ServerGame<UnoSpec> {
   }
 
   processCore(action: CoreActions<UnoSpec>) {
+    const state = this.getL1State();
+
     switch (action.type) {
-      case CoreActions.NEW_CLIENT:
-        this.dispatch(L1.actions.addPlayer({
-          id: action.id,
-          name: this.store.getState().l3[action.id].name,
-          cards: 0,
-          isInGame: this.getL1State().status !== L1.state.GameStatus.Started,
-          didCallUno: false
-        }));
+      case CoreActions.DISCONNECTED:
+        this.dispatch(L1.actions.updatePlayer(action.id, { connected: false }));
+        break;
+      case CoreActions.CONNECTED:
+        if (action.id in state.players) {
+          this.dispatch(L1.actions.updatePlayer(action.id, { connected: true }));
+        } else {
+          this.dispatch(L1.actions.addPlayer({
+            id: action.id,
+            name: this.store.getState().l3[action.id].name,
+            cards: 0,
+            isInGame: this.getL1State().status !== L1.state.GameStatus.Started,
+            didCallUno: false,
+            connected: true
+          }));
+        }
         break;
     }
   }
