@@ -19,46 +19,50 @@ const Rules = connect(
   })
 )(function (props: RulesProps) {
   return <>
-    <label className="row">
-      <input
-        type="checkbox"
-        checked={props.stackDraw2}
-        onChange={React.useCallback(
-          e => props.update({ stackDraw2: e.target.checked }),
-          [props.update]
-        )} />
-      Stack Draw 2s
-    </label>
-    <label className="row">
-      <input
-        type="checkbox"
-        checked={props.stackDraw4}
-        onChange={React.useCallback(
-          e => props.update({ stackDraw4: e.target.checked }),
-          [props.update]
-        )} />
-      Stack Draw 4s
-    </label>
-    <label className="row">
-      <input
-        type="checkbox"
-        checked={props.stackDraw4OnDraw2}
-        onChange={React.useCallback(
-          e => props.update({ stackDraw4OnDraw2: e.target.checked }),
-          [props.update]
-        )} />
-      Stack Draw 4s On Draw 2s
-    </label>
-    <label className="row">
-      <input
-        type="checkbox"
-        checked={props.stackDraw2OnDraw4}
-        onChange={React.useCallback(
-          e => props.update({ stackDraw2OnDraw4: e.target.checked }),
-          [props.update]
-        )} />
-        Stack Draw 2s On Draw 4s
-    </label>
+    <div className="row">
+      <label className="row">
+        <input
+          type="checkbox"
+          checked={props.stackDraw2}
+          onChange={React.useCallback(
+            e => props.update({ stackDraw2: e.target.checked }),
+            [props.update]
+          )} />
+        Stack Draw 2s
+      </label>
+      <label className="row">
+        <input
+          type="checkbox"
+          checked={props.stackDraw2OnDraw4}
+          onChange={React.useCallback(
+            e => props.update({ stackDraw2OnDraw4: e.target.checked }),
+            [props.update]
+          )} />
+          on Draw 4s
+      </label>
+    </div>
+    <div className="row">
+      <label className="row">
+        <input
+          type="checkbox"
+          checked={props.stackDraw4}
+          onChange={React.useCallback(
+            e => props.update({ stackDraw4: e.target.checked }),
+            [props.update]
+          )} />
+        Stack Draw 4s
+      </label>
+      <label className="row">
+        <input
+          type="checkbox"
+          checked={props.stackDraw4OnDraw2}
+          onChange={React.useCallback(
+            e => props.update({ stackDraw4OnDraw2: e.target.checked }),
+            [props.update]
+          )} />
+        on Draw 2s
+      </label>
+    </div>
     <label className="row">
       <input
         type="checkbox"
@@ -67,7 +71,7 @@ const Rules = connect(
           e => props.update({ drawTillYouPlay: e.target.checked }),
           [props.update]
         )} />
-        Draw 'till You Play
+        Draw 'Till You Play
     </label>
     <label className="row">
       <input
@@ -124,7 +128,10 @@ export function Menu(props: IProps) {
       <Rules />
       <div className="spacer" />
       <FullscreenToggle />
-      <button className="primary" onClick={props.resetGame}>New Game</button>
+      <button className="primary" onClick={React.useCallback(() => {
+        props.resetGame();
+        toggle();
+      }, [props.resetGame, toggle])}>New Game</button>
     </div>
   </div>;
 }

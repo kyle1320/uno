@@ -63,6 +63,10 @@
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
+
+    & > .row:not(:first-child) {
+      margin-left: 10px;
+    }
   }
 }
 
