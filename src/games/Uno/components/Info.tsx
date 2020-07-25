@@ -14,6 +14,9 @@ interface IProps {
   gameStatus: L1.state.GameStatus;
   ruleState: L1.state.RuleState;
   yourTurn: boolean;
+  canCallUno: boolean;
+  canCalloutUno: boolean;
+
   resetGame: () => void;
   callUno: () => void;
   calloutUno: () => void;
@@ -39,8 +42,12 @@ export function Info(props: IProps) {
               return 'Your Turn';
           }
         })()}</span>
-        <button onClick={props.callUno}>Call Uno!</button>
-        <button onClick={props.calloutUno}><FontAwesomeIcon icon={faHandPointUp} /> Call Out</button>
+        <button onClick={props.callUno} disabled={!props.canCallUno}>
+          Call Uno!
+        </button>
+        <button onClick={props.calloutUno} disabled={!props.canCalloutUno}>
+          <FontAwesomeIcon icon={faHandPointUp} /> Call Out
+        </button>
       </div>;
     case L1.state.GameStatus.Finished:
       return <div className="info">
@@ -54,7 +61,9 @@ export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
     gameStatus: state.l1.status,
     ruleState: state.l1.ruleState,
-    yourTurn: clientSelectors.isYourTurn(state)
+    yourTurn: clientSelectors.isYourTurn(state),
+    canCallUno: clientSelectors.canCallUno(state),
+    canCalloutUno: clientSelectors.canCalloutUno(state)
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     resetGame: () => dispatch(Req.actions.resetGame()),

@@ -40,11 +40,11 @@ export namespace clientSelectors {
   }
 
   export function canCallUno(state: state.ClientSide<UnoSpec>) {
-    return true;
+    return rules.canCallUno(state.l1, state.l2.id);
   }
 
   export function canCalloutUno(state: state.ClientSide<UnoSpec>) {
-    return true;
+    return rules.canCalloutUno(state.l1, state.l2.id);
   }
 }
 
@@ -63,11 +63,11 @@ export namespace serverSelectors {
   }
 
   export function canCallUno(state: state.ServerSide<UnoSpec>, id: string) {
-    return true;
+    return rules.canCallUno(state.l1, id);
   }
 
   export function canCalloutUno(state: state.ServerSide<UnoSpec>, id: string) {
-    return true;
+    return rules.canCalloutUno(state.l1, id);
   }
 }
 
@@ -220,6 +220,14 @@ export namespace rules {
           currentPlayer: getNextTurn(l1)
         };
     }
+  }
+
+  export function canCallUno(l1: L1.state.State, id: string) {
+    return !l1.players[id]?.didCallUno;
+  }
+
+  export function canCalloutUno(l1: L1.state.State, id: string) {
+    return true;
   }
 }
 

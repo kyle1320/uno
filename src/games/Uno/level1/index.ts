@@ -156,8 +156,8 @@ export function reduce(_state: state.State, action: actions.All): state.State {
         ..._state.players,
         [action.id]: {
           ..._state.players[action.id],
+          didCallUno,
           ...action.payload,
-          didCallUno
         }
       }};
     case actions.RESET_GAME:
