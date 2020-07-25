@@ -40,7 +40,7 @@ export namespace clientSelectors {
   }
 
   export function canCallUno(state: state.ClientSide<UnoSpec>) {
-    return isYourTurn(state);
+    return true;
   }
 
   export function canCalloutUno(state: state.ClientSide<UnoSpec>) {
@@ -63,7 +63,7 @@ export namespace serverSelectors {
   }
 
   export function canCallUno(state: state.ServerSide<UnoSpec>, id: string) {
-    return currentPlayer(state) === id;
+    return true;
   }
 
   export function canCalloutUno(state: state.ServerSide<UnoSpec>, id: string) {
