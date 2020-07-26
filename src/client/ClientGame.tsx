@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createStore, Store, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
+import { Provider, batch } from 'react-redux';
 
 import {
   state,
@@ -93,9 +93,11 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
             this.actionQueue = [];
             this.socket.send(JSON.stringify(CoreActions.clientJoin(actions)));
           } else if (action.type === CoreActions.MULTI_ACTION) {
-            for (const act of action.payload) {
-              this.store.dispatch(act);
-            }
+            batch(() => {
+              for (const act of action.payload) {
+                this.store.dispatch(act);
+              }
+            });
           }
           this.processCore(action);
       }
