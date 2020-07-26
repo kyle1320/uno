@@ -13,7 +13,7 @@ import {
   PickSubset,
   CoreActions,
   ClientSentActions,
-  ClientGameActions} from '../types';
+  ClientGameActions } from '../types';
 
 function getWebSocketUrl(): string {
   var loc = window.location, new_uri;
@@ -40,6 +40,9 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
   private socket!: WebSocket;
   private store: Store<state.ClientSide<G>, ClientCoreActions<G>>;
   private actionQueue: ClientSentActions<G>[] = [];
+
+  private reconnectTimeout: NodeJS.Timeout | null = null;
+  private reconnectFlag = false;
 
   public constructor(props: {}) {
     super(props);
@@ -106,9 +109,20 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
 
   protected setup() {
     // any preliminary work like setting default state values should happen here
+    // these effects should be idempotent
   }
 
   private initSocket() {
+    this.reconnectFlag = true;
+    if (this.reconnectTimeout) return;
+    this.reconnectFlag = false;
+
+    this.reconnectTimeout = setTimeout(() => {
+      this.reconnectTimeout = null;
+      if (this.reconnectFlag) this.initSocket();
+    }, 1500)
+
+    this.setup();
     this.socket = new WebSocket(getWebSocketUrl());
     this.socket.onopen = () => this.store.dispatch(CoreActions.connected());
     this.socket.onclose = () => this.store.dispatch(CoreActions.disconnected());
@@ -177,7 +191,6 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
   }
 
   componentDidMount() {
-    this.setup();
     this.initSocket();
   }
 
