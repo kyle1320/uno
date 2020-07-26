@@ -12,7 +12,7 @@ html, body {
   height: 100%;
 }
 
-input, button {
+input, button, select {
   border-radius: 6px;
   outline: none;
   padding: 5px;
@@ -24,7 +24,7 @@ input:not([type="checkbox"]) {
   padding: 5px 8px;
 }
 
-input {
+input, select {
   border: none;
   box-shadow: 0 0 3px inset rgba(0, 0, 0, 0.4);
 
