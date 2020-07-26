@@ -145,6 +145,10 @@ export class UnoServer extends ServerGame<UnoSpec> {
         }
         break;
       case Req.actions.UPDATE_RULES:
+        if ('penaltyCardCount' in action.payload) {
+          action.payload.penaltyCardCount
+            = Math.min(8, Math.max(1, action.payload.penaltyCardCount!));
+        }
         this.dispatch(L1.actions.updateRules(action.payload));
         break;
       case Req.actions.PLAY_CARD:

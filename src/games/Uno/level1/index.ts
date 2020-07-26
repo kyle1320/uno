@@ -132,14 +132,9 @@ export function reduce(_state: state.State, action: actions.All): state.State {
     case actions.UPDATE:
       return { ..._state, ...action.payload };
     case actions.UPDATE_RULES:
-      let penaltyCardCount = _state.rules.penaltyCardCount;
-      if ('penaltyCardCount' in action.payload) {
-        penaltyCardCount = Math.min(8, Math.max(1, action.payload.penaltyCardCount!));
-      }
       return { ..._state, rules: {
         ..._state.rules,
-        ...action.payload,
-        penaltyCardCount
+        ...action.payload
       } };
     case actions.ADD_PLAYER:
       return { ..._state, turnOrder: [
