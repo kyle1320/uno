@@ -37,6 +37,9 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
 
   protected store: Store<state.ServerSide<G>, ServerCoreActions<G>>;
 
+  private deleteCallbacks: (() => void)[] = [];
+  private deleteTimeout: NodeJS.Timer | null = null;
+
   public constructor() {
     let depth = 0;
     const actions: Map<GameClient<G>, ServerSentActions<G>[]> = new Map();
@@ -163,6 +166,15 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
     setInterval(() => this.clients.forEach(c => c.ping()), 30000);
   }
 
+  public onDelete(cb: () => void) {
+    this.deleteCallbacks.push(cb);
+  }
+
+  private delete = () => {
+    this.deleteTimeout = null;
+    this.deleteCallbacks.forEach(cb => cb());
+  }
+
   // TODO: make the typings here allow omitting unused parts of state
   protected abstract createInitialState(): state.ServerSide<G>;
   protected abstract createInitialClientState(state: state.ServerSide<G>, id: string): PickSubset<G["state"], "l2" | "l3">;
@@ -207,6 +219,10 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
   public join(client: GameClient<G>) {
     this.clients.push(client);
     this.uniqueClients.add(client.id);
+    if (this.deleteTimeout) {
+      clearTimeout(this.deleteTimeout);
+      this.deleteTimeout = null;
+    }
   }
 
   public leave(client: GameClient<G>) {
@@ -214,6 +230,9 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
     if (!this.clients.some(c => c.id === client.id)) {
       this.uniqueClients.delete(client.id);
       this.handleMessage(client, CoreActions.disconnected());
+    }
+    if (this.clients.length === 0 && !this.deleteTimeout) {
+      this.deleteTimeout = setTimeout(this.delete, 5000);
     }
   }
 

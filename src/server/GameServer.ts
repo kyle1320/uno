@@ -48,7 +48,9 @@ export class GameServer<G extends GameSpec> {
       const privateId = (req as any)._clientid as string;
 
       if (!(room in this.rooms)) {
-        this.rooms[room] = new game();
+        const g = new game();
+        g.onDelete(() => delete this.rooms[room]);
+        this.rooms[room] = g;
       }
 
       // don't leak the private client id as it could be used by anyone
