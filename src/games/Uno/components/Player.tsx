@@ -50,14 +50,20 @@ export function Player(props: IProps) {
         {props.name}
       </div>
       <TransitionGroup className="player-hand">
-        {new Array(props.cards).fill(
+        {new Array(props.cards).fill(null).map((_, i) =>
           <CSSTransition
+            key={i}
             classNames="card-slide"
             timeout={{
               enter: 300,
               exit: 0
             }}>
-            <div className="card-wrapper"><Card value="back" color="black" /></div>
+            <div className="card-wrapper">
+              <Card value="back" color="black" />
+              { i === props.cards - 1
+                ? <div className="card-count">{props.cards}</div>
+                : null }
+            </div>
           </CSSTransition>
         )}
       </TransitionGroup>
