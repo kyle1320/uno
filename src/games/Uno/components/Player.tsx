@@ -24,6 +24,7 @@ function isSingleEmoji(s: string) {
 
 export function calculatePosition(percent: number, width=35, height=30): [number, number] {
   percent *= 100;
+  if (percent === 0 || percent === 100) return [0, height];
   if (percent < 20) {
     return [-width, -(percent - 20) * (height / 20)];
   } else if (percent < 80) {
