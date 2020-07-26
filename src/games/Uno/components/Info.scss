@@ -13,12 +13,13 @@
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-end;
-  align-items: center;
+  align-items: flex-end;
   padding: 0 15px;
   min-height: 40px;
 
   span {
     margin-right: auto;
+    line-height: 28px;
   }
 
   button {
@@ -29,6 +30,16 @@
 
     &:active {
       background-color: rgba($white, 0.2);
+    }
+  }
+
+  .buttons {
+    display: flex;
+    flex-flow: column-reverse nowrap;
+    align-items: stretch;
+
+    @media(min-width: 480px) {
+      flex-direction: row;
     }
   }
 }

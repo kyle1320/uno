@@ -42,12 +42,14 @@ export function Info(props: IProps) {
               return 'Your Turn';
           }
         })()}</span>
-        <button onClick={props.callUno} disabled={!props.canCallUno}>
-          Call Uno!
-        </button>
-        <button onClick={props.calloutUno} disabled={!props.canCalloutUno}>
-          <FontAwesomeIcon icon={faHandPointUp} /> Call Out
-        </button>
+        <div className="buttons">
+          <button onClick={props.callUno} disabled={!props.canCallUno}>
+            Call Uno!
+          </button>
+          <button onClick={props.calloutUno} disabled={!props.canCalloutUno}>
+            <FontAwesomeIcon icon={faHandPointUp} /> Call Out
+          </button>
+        </div>
       </div>;
     case L1.state.GameStatus.Finished:
       return <div className="info">
