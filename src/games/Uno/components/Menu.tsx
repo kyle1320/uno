@@ -12,17 +12,19 @@ type StandingsInfo = {
   name: string;
   score: number;
   gamesWon: number;
+  index: number;
 }[];
 type StandingsProps = {
   standings: StandingsInfo;
 }
 const Standings = connect(
   (state: state.ClientSide<UnoSpec>) => ({
-    standings: state.l1.turnOrder.map(id => ({
+    standings: state.l1.turnOrder.map((id, i) => ({
       name: state.l1.players[id].name,
       score: state.l1.players[id].score,
       gamesWon: state.l1.players[id].gamesWon,
-    }))
+      index: i
+    })).sort((a, b) => (b.score - a.score) || (b.index - a.index))
   })
 )(function (props: StandingsProps) {
   return <>
