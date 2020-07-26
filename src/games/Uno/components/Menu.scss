@@ -43,7 +43,6 @@
   transition: transform .5s;
   pointer-events: all;
   width: 250px;
-  padding: 10px;
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
@@ -55,8 +54,37 @@
     background-color: #A0A0A0;
   }
 
-  .spacer {
+  h3 {
+    margin: 0 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #A0A0A0;
+
+    &:not(:first-of-type) {
+      margin-top: 12px;
+    }
+  }
+
+  .scrolling {
+    padding: 10px;
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  .standing {
+    line-height: 1.5;
+  }
+
+  th {
+    text-align: right;
+  }
+
+  .buttons {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
     margin-top: auto;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    padding: 10px;
   }
 
   .row {

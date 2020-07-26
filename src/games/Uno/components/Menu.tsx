@@ -8,10 +8,36 @@ import FullscreenToggle from './FullscreenToggle';
 
 import './Menu.scss';
 
+type StandingsInfo = {
+  name: string;
+  score: number;
+  gamesWon: number;
+}[];
+type StandingsProps = {
+  standings: StandingsInfo;
+}
+const Standings = connect(
+  (state: state.ClientSide<UnoSpec>) => ({
+    standings: state.l1.turnOrder.map(id => ({
+      name: state.l1.players[id].name,
+      score: state.l1.players[id].score,
+      gamesWon: state.l1.players[id].gamesWon,
+    }))
+  })
+)(function (props: StandingsProps) {
+  return <>
+    <h3>Standings</h3>
+    <table>
+    {props.standings.map(s => <tr className="standing">
+      <th>{s.name}: </th><td>{s.score} point{s.score === 1 ? '' : 's'}, </td><td>{s.gamesWon} game{s.gamesWon === 1 ? '' : 's'} won</td>
+    </tr>)}
+    </table>
+  </>;
+});
+
 type RulesProps = {
   update: (rules: Partial<L1.state.Rules>) => void;
 } & L1.state.Rules;
-
 const Rules = connect(
   (state: state.ClientSide<UnoSpec>) => state.l1.rules,
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
@@ -19,6 +45,7 @@ const Rules = connect(
   })
 )(function (props: RulesProps) {
   return <>
+    <h3>Rules</h3>
     <div className="row">
       <label className="row">
         <input
@@ -121,34 +148,37 @@ export function Menu(props: IProps) {
         <div className="line2" />
         <div className="line3" />
       </div>
-      <label className="row">
-        Name <input
-          type="text"
-          value={props.name}
-          onChange={React.useCallback(
-            e => props.setName(e.target.value),
-            [props.setName]
-          )} />
-      </label>
-      <hr />
-      <label className="row">
-        <input
-          type="checkbox"
-          checked={props.sortCards}
-          onChange={React.useCallback(
-            e => props.setSortCards(e.target.checked),
-            [props.setSortCards]
-          )} />
-        Sort Cards
-      </label>
-      <hr />
-      <Rules />
-      <div className="spacer" />
-      <FullscreenToggle className="secondary" />
-      <button className="primary" onClick={React.useCallback(() => {
-        props.resetGame();
-        toggle();
-      }, [props.resetGame, toggle])}>New Game</button>
+      <div className="scrolling">
+        <h3>Options</h3>
+        <label className="row">
+          Name <input
+            type="text"
+            value={props.name}
+            onChange={React.useCallback(
+              e => props.setName(e.target.value),
+              [props.setName]
+            )} />
+        </label>
+        <label className="row">
+          <input
+            type="checkbox"
+            checked={props.sortCards}
+            onChange={React.useCallback(
+              e => props.setSortCards(e.target.checked),
+              [props.setSortCards]
+            )} />
+          Sort Cards
+        </label>
+        <Rules />
+        <Standings />
+      </div>
+      <div className="buttons">
+        <FullscreenToggle className="secondary" />
+        <button className="primary" onClick={React.useCallback(() => {
+          props.resetGame();
+          toggle();
+        }, [props.resetGame, toggle])}>New Game</button>
+      </div>
     </div>
   </div>;
 }
