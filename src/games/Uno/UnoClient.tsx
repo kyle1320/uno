@@ -41,35 +41,43 @@ export class UnoClient extends ClientGame<UnoSpec> {
 
   protected processL1(action: L1.actions.All) {
     const state = this.getL1State();
-    if (action.type === L1.actions.UPDATE_PLAYER) {
-      if (action.payload.didCallUno) {
+    switch (action.type) {
+      case L1.actions.UPDATE_PLAYER:
+        if (action.payload.didCallUno) {
+          this.dispatch(L4.actions.pushToast(
+            `${state.players[action.id].name} called Uno!`
+          ));
+        }
+        break;
+      case L1.actions.PLAYER_WIN:
         this.dispatch(L4.actions.pushToast(
-          `${state.players[action.id].name} called Uno!`
+          `${state.players[action.id].name} went out with ${action.payload} points!`
         ));
-      }
-    } else if (action.type === L1.actions.UPDATE_RULES) {
-      for (const k in action.payload) {
-        const key = k as keyof L1.state.Rules;
-        const name = (() => {
-          switch (key) {
-            case 'stackDraw2': return "Stack Draw 2s";
-            case 'stackDraw4': return "Stack Draw 4s";
-            case 'stackDraw4OnDraw2': return "Stack Draw 4s on Draw 2s";
-            case 'stackDraw2OnDraw4': return "Stack Draw 2s on Draw 4s";
-            case 'drawTillYouPlay': return "Draw 'Till You Play";
-            case 'battleRoyale': return "Battle Royale";
-            case 'penaltyCardCount': return "Uno Penalty Cards";
-          }
-        })();
-        const value = (() => {
-          const val = action.payload[key];
-          switch (typeof val) {
-            case 'boolean': return val ? 'enabled' : 'disabled';
-            case 'number': return 'set to ' + val;
-          }
-        })();
-        this.dispatch(L4.actions.pushToast(`Rule Changed: ${name} ${value}`));
-      }
+        break;
+      case L1.actions.UPDATE_RULES:
+        for (const k in action.payload) {
+          const key = k as keyof L1.state.Rules;
+          const name = (() => {
+            switch (key) {
+              case 'stackDraw2': return "Stack Draw 2s";
+              case 'stackDraw4': return "Stack Draw 4s";
+              case 'stackDraw4OnDraw2': return "Stack Draw 4s on Draw 2s";
+              case 'stackDraw2OnDraw4': return "Stack Draw 2s on Draw 4s";
+              case 'drawTillYouPlay': return "Draw 'Till You Play";
+              case 'battleRoyale': return "Battle Royale";
+              case 'penaltyCardCount': return "Uno Penalty Cards";
+            }
+          })();
+          const value = (() => {
+            const val = action.payload[key];
+            switch (typeof val) {
+              case 'boolean': return val ? 'enabled' : 'disabled';
+              case 'number': return 'set to ' + val;
+            }
+          })();
+          this.dispatch(L4.actions.pushToast(`Rule Changed: ${name} ${value}`));
+        }
+        break;
     }
   }
 

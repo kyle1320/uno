@@ -93,10 +93,10 @@ export class UnoServer extends ServerGame<UnoSpec> {
         ));
         break;
       case L2.actions.PLAY_CARD:
+        const player = state.l1.players[action.id];
         const cards = state.l2[action.id].hand.length;
         this.dispatch(L1.actions.updatePlayer(action.id, {
-          cards,
-          isInGame: cards > 0
+          cards
         }));
 
         let gameOver = false;
@@ -109,6 +109,8 @@ export class UnoServer extends ServerGame<UnoSpec> {
               .filter(id => state.l1.players[id].isInGame)
               .length < 2;
           }
+
+          this.dispatch(L1.actions.playerWin(action.id, serverSelectors.getScore(state)));
         }
 
         if (gameOver) this.dispatch(L1.actions.update({
@@ -197,7 +199,9 @@ export class UnoServer extends ServerGame<UnoSpec> {
             cards: 0,
             isInGame: this.getL1State().status !== L1.state.GameStatus.Started,
             didCallUno: false,
-            connected: true
+            connected: true,
+            score: 0,
+            gamesWon: 0
           }));
         }
         break;

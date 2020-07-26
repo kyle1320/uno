@@ -53,8 +53,19 @@ export namespace actions {
     };
   }
 
+  export const PLAYER_WIN = "PLAYER_WIN";
+  export type PlayerWinAction = actionTypes.L1<typeof PLAYER_WIN, number> & { id: string }
+  export function playerWin(id: string, score: number): PlayerWinAction {
+    return {
+      kind: 'L1',
+      type: PLAYER_WIN,
+      payload: score,
+      id
+    };
+  }
+
   export type All = UpdateAction | UpdateRulesAction | AddPlayerAction
-    | UpdatePlayerAction | ResetGameAction;
+    | UpdatePlayerAction | ResetGameAction | PlayerWinAction;
 }
 
 export namespace state {
@@ -75,6 +86,8 @@ export namespace state {
     isInGame: boolean;
     didCallUno: boolean;
     connected: boolean;
+    score: number;
+    gamesWon: number;
   }
 
   export type RuleState
@@ -143,6 +156,17 @@ export function reduce(_state: state.State, action: actions.All): state.State {
         ..._state.players,
         [action.payload.id]: action.payload
       }};
+    case actions.PLAYER_WIN:
+      const player = _state.players[action.id];
+      return { ..._state, players: {
+        ..._state.players,
+        [action.id]: {
+          ...player,
+          isInGame: false,
+          gamesWon: player.gamesWon + 1,
+          score: player.score + action.payload
+        }
+      }};
     case actions.UPDATE_PLAYER:
       let didCallUno = _state.players[action.id]?.didCallUno ?? false;
       if ('cards' in action.payload && action.payload.cards !== 1) {
@@ -180,9 +204,12 @@ function getPlayersInGame(players: { [id: string]: state.Player }) {
   for (const id in players) {
     const player = players[id];
     if (player.connected) {
-      newPlayers[id] = player.isInGame ? player : {
-        ...player, isInGame: true
-      }
+      newPlayers[id] = {
+        ...player,
+        isInGame: true,
+        score: 0,
+        gamesWon: 0
+      };
     }
   }
 

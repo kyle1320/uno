@@ -69,6 +69,17 @@ export namespace serverSelectors {
   export function canCalloutUno(state: state.ServerSide<UnoSpec>, id: string) {
     return rules.canCalloutUno(state.l1, id);
   }
+
+  export function getScore(state: state.ServerSide<UnoSpec>) {
+    let score = 0;
+    for (const playerId of state.l1.turnOrder) {
+      const player = state.l1.players[playerId];
+      if (player.isInGame) {
+        score += rules.getScore(state.l2[playerId]);
+      }
+    }
+    return score;
+  }
 }
 
 export namespace rules {
@@ -230,6 +241,30 @@ export namespace rules {
   export function canCalloutUno(l1: L1.state.State, id: string) {
     const player = l1.players[id];
     return player && player.isInGame;
+  }
+
+  export function getScore(l2: L2.state.State) {
+    return l2.hand.reduce((acc, c) => acc + getCardScore(c), 0);
+  }
+
+  export function getCardScore(card: Card) {
+    switch (card.value) {
+      case "0": return 0;
+      case "1": return 1;
+      case "2": return 2;
+      case "3": return 3;
+      case "4": return 4;
+      case "5": return 5;
+      case "6": return 6;
+      case "7": return 7;
+      case "8": return 8;
+      case "9": return 9;
+      case "skip":
+      case "reverse":
+      case "draw2": return 20;
+      case "wild":
+      case "draw4": return 50;
+    }
   }
 }
 
