@@ -17,7 +17,13 @@ const Toasts = function(props: IProps) {
       <CSSTransition
         key={msg}
         classNames="toast-slide"
-        timeout={500}>
+        timeout={500}
+        onExit={(node: HTMLElement) => {
+          node.style.height=node.clientHeight+'px';
+        }}
+        onExiting={(node: HTMLElement) => {
+          node.style.height='';
+        }}>
         <div className="toast">
           <div className="toast-wrapper">{msg}</div>
         </div>
