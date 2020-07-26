@@ -204,11 +204,8 @@ function getPlayersInGame(players: { [id: string]: state.Player }) {
   for (const id in players) {
     const player = players[id];
     if (player.connected) {
-      newPlayers[id] = {
-        ...player,
-        isInGame: true,
-        score: 0,
-        gamesWon: 0
+      newPlayers[id] = player.isInGame ? player : {
+        ...player, isInGame: true
       };
     }
   }
