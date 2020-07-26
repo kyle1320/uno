@@ -38,11 +38,8 @@ export class GameServer<G extends GameSpec> {
     const wss = new WebSocket.Server({ server: this.server });
 
     wss.on("headers", (headers, req) => {
-      let id = getClientIdCookie(req);
-      if (!id) {
-        id = uuid.v4();
-        headers.push('Set-Cookie: ' + cookie.serialize(CLIENT_ID_COOKIE, id));
-      };
+      let id = getClientIdCookie(req) || uuid.v4();
+      headers.push('Set-Cookie: ' + cookie.serialize(CLIENT_ID_COOKIE, id, { maxAge: 2592000 }));
       (req as any)._clientid = id;
     })
 
@@ -60,11 +57,8 @@ export class GameServer<G extends GameSpec> {
     });
 
     app.use((req, res, next) => {
-      let id = getClientIdCookie(req);
-      if (!id) {
-        id = uuid.v4();
-        res.setHeader('Set-Cookie', cookie.serialize(CLIENT_ID_COOKIE, id));
-      };
+      let id = getClientIdCookie(req) || uuid.v4();
+      res.setHeader('Set-Cookie', cookie.serialize(CLIENT_ID_COOKIE, id, { maxAge: 2592000 }));
       next();
     });
 
