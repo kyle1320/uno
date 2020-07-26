@@ -46,6 +46,13 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
     this.setState({ colorChooserId: null });
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps: IProps) {
+    const id = this.state.colorChooserId;
+    if (id && !nextProps.cards.some(c => c.id === id)) {
+      this.setState({ colorChooserId: null });
+    }
+  }
+
   render() {
     const cards = this.props.sort
       ? this.props.cards.slice().sort((a, b) => a.id - b.id)
