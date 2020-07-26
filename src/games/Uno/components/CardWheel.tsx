@@ -46,11 +46,12 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
     this.setState({ colorChooserId: null });
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps: IProps) {
-    const id = this.state.colorChooserId;
-    if (id && !nextProps.cards.some(c => c.id === id)) {
-      this.setState({ colorChooserId: null });
+  static getDerivedStateFromProps(props: IProps, state: IState) {
+    const id = state.colorChooserId;
+    if (id && !props.cards.some(c => c.id === id)) {
+      return { colorChooserId: null };
     }
+    return null;
   }
 
   render() {
