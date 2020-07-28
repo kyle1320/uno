@@ -13,6 +13,9 @@ export default function ColorChooser(props: IProps) {
     <div>Choose a color</div>
     <svg viewBox="-30 -45 60 90">
       <defs>
+        <clipPath id="card-ellipse-clip">
+          <ellipse id="card-ellipse" cx="0" cy="0" rx="19" ry="37" transform="rotate(33,0,0)" />
+        </clipPath>
         <filter id="svg-highlight">
           <feDropShadow dx="0" dy="0" stdDeviation="1" flood-color="white"/>
         </filter>

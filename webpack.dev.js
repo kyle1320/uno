@@ -32,6 +32,10 @@ const client = {
         ]
       },
       { test: /\.tsx?$/, use: 'ts-loader' },
+      {
+        test: /\.(png|jpg)$/,
+        loader: 'url-loader'
+      }
     ]
   },
   resolve: {

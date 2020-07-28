@@ -14,7 +14,6 @@
   transition: box-shadow 0.3s;
 
   .playable-card {
-    height: 100%;
     min-width: 40px;
     transition: transform .3s;
     z-index: 0;
@@ -39,8 +38,8 @@
   }
 
   .card {
-    height: 100%;
-    width: auto;
+    width: 20vh;
+    max-width: 100px;
     z-index: 1;
   }
 

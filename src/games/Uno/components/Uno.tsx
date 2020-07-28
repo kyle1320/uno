@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { state } from '../../../types';
 import { UnoSpec } from '..';
 import CardWheel from './CardWheel';
-import { CardDefs } from './Card';
 import Menu from './Menu';
 import Players from './Players';
 import Stacks from './Stacks';
@@ -31,7 +30,6 @@ class Uno extends React.PureComponent<Props> {
       }</div>
       <div className="table">
         <Toasts />
-        <CardDefs />
         <Stacks />
         <Players />
         <Info />

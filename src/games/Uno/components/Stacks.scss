@@ -8,7 +8,7 @@
   top: 65%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(150px, 18vh);
+  width: min(125px, 18vh);
   z-index: 200;
 }
 
@@ -58,6 +58,17 @@
 .up-stack {
   width: 100%;
   padding-top: 66.6666666666%;
+  position: relative;
+
+  .card {
+    position: absolute;
+    transform: rotate(90deg);
+    transform-origin: 0 0;
+    width: 66.666666666%;
+    height: 150%;
+    top: 0;
+    left: 100%;
+  }
 
   &.highlight .card {
     box-shadow: 0 0 5px 5px $yellow;

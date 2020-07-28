@@ -53,7 +53,6 @@ export function Stacks(props: IProps) {
     </div>
     <div className={`up-stack${props.mustDraw ? ' highlight' : ''}`} onClick={props.draw}>
       <Card
-        turned={true}
         color="black"
         value="back"
         className={!props.canDraw ? 'disabled' : ''} />
