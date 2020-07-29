@@ -78,6 +78,7 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
           </CSSTransition>
         )}
       </TransitionGroup>
+      <div className="counter">{ cards.length }</div>
       { this.state.colorChooserId !== null
         ? <ColorChooser onSelect={this.playColor} onClose={this.closeChooser} />
         : null
