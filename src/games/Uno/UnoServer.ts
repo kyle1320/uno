@@ -176,6 +176,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
               this.drawCards(player.id, state.l1.rules.penaltyCardCount) || [],
               player.id
             ));
+            this.dispatch(L1.actions.callout(action.id, player.id));
           }
         }
         break;

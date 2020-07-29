@@ -64,8 +64,22 @@ export namespace actions {
     };
   }
 
+  export const CALLOUT = "CALLOUT";
+  export type CalloutPayload = {
+    callerId: string;
+    targetId: string;
+  }
+  export type CalloutAction = actionTypes.L1<typeof CALLOUT, CalloutPayload>
+  export function callout(callerId: string, targetId: string): CalloutAction {
+    return {
+      kind: 'L1',
+      type: CALLOUT,
+      payload: { callerId, targetId }
+    };
+  }
+
   export type All = UpdateAction | UpdateRulesAction | AddPlayerAction
-    | UpdatePlayerAction | ResetGameAction | PlayerWinAction;
+    | UpdatePlayerAction | ResetGameAction | PlayerWinAction | CalloutAction;
 }
 
 export namespace state {

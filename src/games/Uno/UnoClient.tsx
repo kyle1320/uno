@@ -54,6 +54,12 @@ export class UnoClient extends ClientGame<UnoSpec> {
           `${state.players[action.id].name} went out with ${action.payload} points!`
         ));
         break;
+      case L1.actions.CALLOUT:
+        this.dispatch(L4.actions.pushToast(
+          `${state.players[action.payload.callerId].name} called out ` +
+          `${state.players[action.payload.targetId].name} on not saying Uno!`
+        ));
+        break;
       case L1.actions.UPDATE_RULES:
         for (const k in action.payload) {
           const key = k as keyof L1.state.Rules;
@@ -92,7 +98,7 @@ export class UnoClient extends ClientGame<UnoSpec> {
       const state = this.getL4State();
       localStorage.setItem(PREFERENCES_STORAGE_KEY, JSON.stringify(state));
     } else if (action.type === L4.actions.PUSH_TOAST) {
-      setTimeout(() => this.dispatch(L4.actions.popToast()), 2000);
+      setTimeout(() => this.dispatch(L4.actions.popToast()), 3500);
     }
   }
 
