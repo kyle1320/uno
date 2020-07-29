@@ -6,10 +6,11 @@ import './ColorChooser.scss';
 
 interface IProps {
   onSelect: (color: Color) => void;
+  onClose: () => void;
 }
 
 export default function ColorChooser(props: IProps) {
-  return <div className="color-chooser">
+  return <div className="color-chooser" onClick={props.onClose}>
     <div>Choose a color</div>
     <svg viewBox="-30 -45 60 90">
       <defs>
@@ -59,7 +60,10 @@ export default function ColorChooser(props: IProps) {
             y="0"
             transform="matrix(1,0,-.4,1,0,0)"
             className="color-chooser-color"
-            onClick={React.useCallback(() => props.onSelect("green"), [])} />
+            onClick={React.useCallback(e => {
+              e.stopPropagation();
+              props.onSelect("green");
+            }, [])} />
           <rect
             width="30"
             height="45"
@@ -67,7 +71,10 @@ export default function ColorChooser(props: IProps) {
             y="-45"
             transform="matrix(1,0,-.4,1,0,0)"
             className="color-chooser-color"
-            onClick={React.useCallback(() => props.onSelect("blue"), [])} />
+            onClick={React.useCallback(e => {
+              e.stopPropagation();
+              props.onSelect("blue");
+            }, [])} />
           <rect
             width="30"
             height="45"
@@ -75,7 +82,10 @@ export default function ColorChooser(props: IProps) {
             y="0"
             transform="matrix(1,0,-.4,1,0,0)"
             className="color-chooser-color"
-            onClick={React.useCallback(() => props.onSelect("yellow"), [])} />
+            onClick={React.useCallback(e => {
+              e.stopPropagation();
+              props.onSelect("yellow");
+            }, [])} />
           <rect
             width="30"
             height="45"
@@ -83,7 +93,10 @@ export default function ColorChooser(props: IProps) {
             y="-45"
             transform="matrix(1,0,-.4,1,0,0)"
             className="color-chooser-color"
-            onClick={React.useCallback(() => props.onSelect("red"), [])} />
+            onClick={React.useCallback(e => {
+              e.stopPropagation();
+              props.onSelect("red");
+            }, [])} />
         </g>
         <use xlinkHref="#card-ellipse" style={{ fill: 'none', stroke: '#ffffff', strokeWidth: '3'}} />
       </g>

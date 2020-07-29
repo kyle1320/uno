@@ -46,6 +46,10 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
     this.setState({ colorChooserId: null });
   }
 
+  closeChooser = () => {
+    this.setState({ colorChooserId: null });
+  }
+
   static getDerivedStateFromProps(props: IProps, state: IState) {
     const id = state.colorChooserId;
     if (id && !props.cards.some(c => c.id === id)) {
@@ -75,7 +79,7 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
         )}
       </TransitionGroup>
       { this.state.colorChooserId !== null
-        ? <ColorChooser onSelect={this.playColor} />
+        ? <ColorChooser onSelect={this.playColor} onClose={this.closeChooser} />
         : null
       }
     </div>;
