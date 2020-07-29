@@ -35,6 +35,10 @@ export namespace clientSelectors {
     return isYourTurn(state) && rules.canPlay(cardId, state.l1, state.l2);
   }
 
+  export function canPlayAny(state: state.ClientSide<UnoSpec>) {
+    return isYourTurn(state) && rules.canPlayAny(state.l1, state.l2);
+  }
+
   export function mustDraw(state: state.ClientSide<UnoSpec>) {
     return isYourTurn(state) && !rules.canPlayAny(state.l1, state.l2);
   }
@@ -88,10 +92,11 @@ export namespace rules {
 
     switch (l1.ruleState.type) {
       case "normal":
+        return !l1.rules.drawTillYouPlay || !canPlayAny(l1, l2);
+      case "draw":
       case "draw2":
       case "draw4":
-      case "draw":
-        return !l1.rules.drawTillYouPlay || !canPlayAny(l1, l2);
+        return true;
       case "maybePlay":
         return l1.rules.drawTillYouPlay && !canPlay(l2.lastDrawnCard!, l1, l2);
     }

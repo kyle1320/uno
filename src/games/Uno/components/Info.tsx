@@ -16,6 +16,7 @@ interface IProps {
   yourTurn: boolean;
   canCallUno: boolean;
   canCalloutUno: boolean;
+  canPlayAny: boolean;
 
   resetGame: () => void;
   callUno: () => void;
@@ -37,7 +38,9 @@ export function Info(props: IProps) {
             case 'draw2':
             case 'draw4':
             case 'draw':
-              return `Draw ${props.ruleState.count} card${props.ruleState.count === 1 ? '' : 's'}`;
+              if (!props.canPlayAny)
+                return `Draw ${props.ruleState.count} card${props.ruleState.count === 1 ? '' : 's'}`;
+              // fallthrough
             default:
               return 'Your Turn';
           }
@@ -65,7 +68,8 @@ export default connect(
     ruleState: state.l1.ruleState,
     yourTurn: clientSelectors.isYourTurn(state),
     canCallUno: clientSelectors.canCallUno(state),
-    canCalloutUno: clientSelectors.canCalloutUno(state)
+    canCalloutUno: clientSelectors.canCalloutUno(state),
+    canPlayAny: clientSelectors.canPlayAny(state)
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     resetGame: () => dispatch(Req.actions.resetGame()),
