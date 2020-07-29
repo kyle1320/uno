@@ -18,6 +18,7 @@ interface IProps {
   placement: number | null;
   canDraw: boolean;
   mustDraw: boolean;
+  upStackSize: number;
   direction: 'CW' | 'CCW';
 
   draw: () => void;
@@ -56,6 +57,7 @@ export function Stacks(props: IProps) {
         color="black"
         value="back"
         className={!props.canDraw ? 'disabled' : ''} />
+      <div className="counter">{ props.upStackSize }</div>
     </div>
   </div>;
 }
@@ -73,6 +75,7 @@ export default connect(
     }()),
     canDraw: clientSelectors.canDraw(state),
     mustDraw: clientSelectors.mustDraw(state),
+    upStackSize: state.l1.upStackSize,
     direction: state.l1.direction
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({

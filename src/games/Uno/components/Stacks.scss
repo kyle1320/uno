@@ -18,16 +18,17 @@
   position: relative;
   line-height: 0;
 
-  .number {
+  .counter {
     position: absolute;
-    // text-shadow: 0 0 2px black;
     font-weight: bold;
     user-select: none;
     line-height: 1em;
     font-size: 10px;
-    bottom: 0;
-    left: 100%;
-    padding-left: 4px;
+    bottom: -3px;
+    right: -5px;
+    padding: 4px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
   }
 
   .direction {
