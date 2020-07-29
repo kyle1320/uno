@@ -8,7 +8,8 @@
   top: 65%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(125px, 18vh);
+  width: 18vh;
+  max-width: 125px;
   z-index: 200;
 }
 

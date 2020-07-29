@@ -29,11 +29,11 @@ const Standings = connect(
 )(function (props: StandingsProps) {
   return <>
     <h3>Standings</h3>
-    <table>
+    <table><tbody>
     {props.standings.map(s => <tr className="standing">
       <th>{s.name}: </th><td>{s.score} point{s.score === 1 ? '' : 's'}, </td><td>{s.gamesWon} game{s.gamesWon === 1 ? '' : 's'} won</td>
     </tr>)}
-    </table>
+    </tbody></table>
   </>;
 });
 
