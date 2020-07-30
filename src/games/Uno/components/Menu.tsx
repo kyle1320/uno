@@ -17,6 +17,7 @@ type StandingsInfo = {
   score: number;
   gamesWon: number;
   index: number;
+  id: string;
 }[];
 type StandingsProps = {
   standings: StandingsInfo;
@@ -24,9 +25,7 @@ type StandingsProps = {
 const Standings = connect(
   (state: state.ClientSide<UnoSpec>) => ({
     standings: state.l1.turnOrder.map((id, i) => ({
-      name: state.l1.players[id].name,
-      score: state.l1.players[id].score,
-      gamesWon: state.l1.players[id].gamesWon,
+      ...state.l1.players[id],
       index: i
     })).sort((a, b) => (b.score - a.score) || (b.index - a.index))
   })
@@ -34,7 +33,7 @@ const Standings = connect(
   return <>
     <h3>Standings</h3>
     <table><tbody>
-    {props.standings.map(s => <tr className="standing">
+    {props.standings.map(s => <tr className="standing" key={s.id}>
       <th>{s.name}: </th><td>{s.score} point{s.score === 1 ? '' : 's'}, </td><td>{s.gamesWon} game{s.gamesWon === 1 ? '' : 's'} won</td>
     </tr>)}
     </tbody></table>

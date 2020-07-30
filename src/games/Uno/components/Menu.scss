@@ -78,6 +78,10 @@
     text-align: right;
   }
 
+  td {
+    white-space: nowrap;
+  }
+
   .buttons {
     display: flex;
     flex-flow: column nowrap;
