@@ -67,7 +67,12 @@ export namespace serverSelectors {
   }
 
   export function canCallUno(state: state.ServerSide<UnoSpec>, id: string) {
-    return rules.canCallUno(state.l1, id);
+    const cards = state.l1.players[id].cards;
+    return rules.canCallUno(state.l1, id) &&
+      (cards === 1 ||
+        (cards === 2
+          && currentPlayer(state) === id
+          && rules.canPlayAny(state.l1, state.l2[id])));
   }
 
   export function canCalloutUno(state: state.ServerSide<UnoSpec>, id: string) {
