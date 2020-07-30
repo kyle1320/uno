@@ -49,7 +49,12 @@ export function Stacks(props: IProps) {
         ]}
       </TransitionGroup>
       <div className={`direction ${props.direction.toLowerCase()}`}>
-        <FontAwesomeIcon icon={faSync} />
+        <svg width="18" height="62" viewBox="0 0 18 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 60C-2.66666 44.6265 -2.66667 16.6747 16 2M16 2V6.5L11.5 2H16Z" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <svg width="18" height="62" viewBox="0 0 18 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 60C-2.66666 44.6265 -2.66667 16.6747 16 2M16 2V6.5L11.5 2H16Z" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        </svg>
       </div>
     </div>
     <div className={`up-stack${props.mustDraw ? ' highlight' : ''}`} onClick={props.draw}>
