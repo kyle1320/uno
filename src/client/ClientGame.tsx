@@ -197,6 +197,11 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
     this.initSocket();
   }
 
+  componentWillUnmount() {
+    this.socket.onclose = null;
+    this.socket.close();
+  }
+
   render() {
     return <Provider store={this.store}>
       {this.getRootElement()}
