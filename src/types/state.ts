@@ -9,6 +9,7 @@ export type ServerSide<G extends GameSpec = GameSpec> = {
 export type ClientSide<G extends GameSpec = GameSpec> = {
   connected: boolean;
   error?: any;
+  timeOffset: number;
   l1: L1<G>;
   l2: L2<G>;
   l3: L3<G>;

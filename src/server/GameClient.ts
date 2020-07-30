@@ -23,6 +23,8 @@ export class GameClient<G extends GameSpec> {
     };
     socket.onclose = () => room.leave(this);
     room.join(this);
+
+    this.sync();
   }
 
   public send(msg: ClientCoreActions<G>) {
@@ -37,7 +39,7 @@ export class GameClient<G extends GameSpec> {
     }
   }
 
-  public ping() {
-    this.socket.ping();
+  public sync() {
+    this.send(CoreActions.sync(Date.now()));
   }
 }

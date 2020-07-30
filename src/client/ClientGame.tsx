@@ -65,6 +65,7 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
       }
     }, {
       connected: false,
+      timeOffset: 0,
       ...this.createInitialState() as any
     }, applyMiddleware(() => next => (action: ClientCoreActions<G>) => {
       next(action);
@@ -149,6 +150,8 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
         return { ...state, connected: false };
       case CoreActions.ERROR:
         return { ...state, error: action.payload };
+      case CoreActions.SYNC:
+        return { ...state, timeOffset: Date.now() - action.payload };
       default:
         return state;
     }

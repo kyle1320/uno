@@ -54,6 +54,16 @@ export class UnoClient extends ClientGame<UnoSpec> {
           `${state.players[action.id].name} went out with ${action.payload} points!`
         ));
         break;
+      case L1.actions.GAME_OVER:
+        let duration = action.payload.duration;
+        duration = Math.floor(duration / 1000);
+        const s = duration % 60;
+        const m = Math.floor(duration / 60);
+
+        this.dispatch(L4.actions.pushToast(
+          `Game over! The game lasted ${m} minute${m === 1 ? '' : 's'} and ${s} second${s === 1 ? '' : 's'}`
+        ));
+        break;
       case L1.actions.CALLOUT:
         this.dispatch(L4.actions.pushToast(
           `${state.players[action.payload.callerId].name} called out ` +
@@ -98,7 +108,7 @@ export class UnoClient extends ClientGame<UnoSpec> {
       const state = this.getL4State();
       localStorage.setItem(PREFERENCES_STORAGE_KEY, JSON.stringify(state));
     } else if (action.type === L4.actions.PUSH_TOAST) {
-      setTimeout(() => this.dispatch(L4.actions.popToast()), 3500);
+      setTimeout(() => this.dispatch(L4.actions.popToast()), 4000);
     }
   }
 

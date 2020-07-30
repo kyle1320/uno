@@ -87,6 +87,16 @@ export namespace CoreActions {
     };
   }
 
+  export const SYNC = "SYNC";
+  export type SyncAction = actions.Core<typeof SYNC, number>;
+  export function sync(timestamp: number): SyncAction {
+    return {
+      kind: "Core",
+      type: SYNC,
+      payload: timestamp
+    };
+  }
+
   export const CONNECTED = "CONNECTED";
   export type ConnectedAction = actions.Core<typeof CONNECTED> & { id: string };
   export function connected(id: string = ''): ConnectedAction {
@@ -124,7 +134,8 @@ export type CoreActions<G extends GameSpec = GameSpec>
   | CoreActions.MultiAction<G>
   | CoreActions.ConnectedAction
   | CoreActions.DisconnectedAction
-  | CoreActions.ErrorAction;
+  | CoreActions.ErrorAction
+  | CoreActions.SyncAction;
 
 export {
   actions,

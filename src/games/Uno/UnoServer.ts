@@ -59,11 +59,11 @@ export class UnoServer extends ServerGame<UnoSpec> {
         const topCard = state.downStack.length
           ? state.downStack[state.downStack.length - 1]
           : null;
-        this.dispatch(L1.actions.resetGame());
-        this.dispatch(L1.actions.update({
+        this.dispatch(L1.actions.resetGame({
           topCard,
           upStackSize: state.upStack.length,
-          downStackSize: state.downStack.length
+          downStackSize: state.downStack.length,
+          startTime: Date.now()
         }));
         for (const id of this.getL1State().turnOrder) {
           this.dispatch(L2.actions.resetGame(id));
@@ -93,7 +93,6 @@ export class UnoServer extends ServerGame<UnoSpec> {
         ));
         break;
       case L2.actions.PLAY_CARD:
-        const player = state.l1.players[action.id];
         const cards = state.l2[action.id].hand.length;
         this.dispatch(L1.actions.updatePlayer(action.id, {
           cards
@@ -113,8 +112,8 @@ export class UnoServer extends ServerGame<UnoSpec> {
           this.dispatch(L1.actions.playerWin(action.id, serverSelectors.getScore(state)));
         }
 
-        if (gameOver) this.dispatch(L1.actions.update({
-          status: L1.state.GameStatus.Finished
+        if (gameOver) this.dispatch(L1.actions.gameOver({
+          duration: Date.now() - state.l1.startTime
         }));
         else this.dispatch(L1.actions.update(
           rules.getStateAfterPlay(action.payload, state.l1)

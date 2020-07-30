@@ -12,6 +12,11 @@ html, body {
   height: 100%;
 }
 
+a {
+  color: $blue;
+  text-decoration: none;
+}
+
 input, button, select {
   border-radius: 6px;
   outline: none;

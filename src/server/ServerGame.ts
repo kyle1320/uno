@@ -163,7 +163,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
       }
     }));
 
-    setInterval(() => this.clients.forEach(c => c.ping()), 30000);
+    setInterval(() => this.clients.forEach(c => c.sync()), 30000);
   }
 
   public onDelete(cb: () => void) {

@@ -33,11 +33,18 @@ export namespace actions {
   }
 
   export const RESET_GAME = "RESET_GAME";
-  export type ResetGameAction = actionTypes.L1<typeof RESET_GAME>
-  export function resetGame(): ResetGameAction {
+  export type ResetGamePayload = {
+    topCard: Card | null;
+    upStackSize: number;
+    downStackSize: number;
+    startTime: number;
+  }
+  export type ResetGameAction = actionTypes.L1<typeof RESET_GAME, ResetGamePayload>
+  export function resetGame(payload: ResetGamePayload): ResetGameAction {
     return {
       kind: 'L1',
-      type: RESET_GAME
+      type: RESET_GAME,
+      payload
     };
   }
 
@@ -64,6 +71,19 @@ export namespace actions {
     };
   }
 
+  export const GAME_OVER = "GAME_OVER";
+  export type GameOverPayload = {
+    duration: number;
+  }
+  export type GameOverAction = actionTypes.L1<typeof GAME_OVER, GameOverPayload>;
+  export function gameOver(payload: GameOverPayload): GameOverAction {
+    return {
+      kind: 'L1',
+      type: GAME_OVER,
+      payload
+    };
+  }
+
   export const CALLOUT = "CALLOUT";
   export type CalloutPayload = {
     callerId: string;
@@ -79,7 +99,8 @@ export namespace actions {
   }
 
   export type All = UpdateAction | UpdateRulesAction | AddPlayerAction
-    | UpdatePlayerAction | ResetGameAction | PlayerWinAction | CalloutAction;
+    | UpdatePlayerAction | ResetGameAction | PlayerWinAction | GameOverAction
+    | CalloutAction;
 }
 
 export namespace state {
@@ -119,7 +140,8 @@ export namespace state {
 
   export interface State {
     status: GameStatus;
-    direction: "CW" | "CCW",
+    direction: "CW" | "CCW";
+    startTime: number;
     currentPlayer: number;
     ruleState: RuleState;
     rules: Rules;
@@ -134,6 +156,7 @@ export namespace state {
   export const initial: State = {
     status: GameStatus.Pregame,
     direction: "CW",
+    startTime: -1,
     currentPlayer: -1,
     ruleState: { type: "normal" },
     rules: {
@@ -181,6 +204,10 @@ export function reduce(_state: state.State, action: actions.All): state.State {
           score: player.score + action.payload
         }
       }};
+    case actions.GAME_OVER:
+      return { ..._state,
+        status: state.GameStatus.Finished
+      };
     case actions.UPDATE_PLAYER:
       let didCallUno = _state.players[action.id]?.didCallUno ?? false;
       if ('cards' in action.payload && action.payload.cards !== 1) {
@@ -205,7 +232,8 @@ export function reduce(_state: state.State, action: actions.All): state.State {
         direction: 'CW',
         currentPlayer: -1,
         players,
-        turnOrder
+        turnOrder,
+        ...action.payload
       };
     default:
       return _state;
