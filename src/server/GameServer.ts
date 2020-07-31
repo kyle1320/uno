@@ -7,6 +7,7 @@ import Express from 'express';
 import WebSocket from 'ws';
 import * as cookie from 'cookie';
 import * as uuid from 'uuid';
+import compression from 'compression';
 
 import { GameClient } from './GameClient';
 import { ServerGame } from './ServerGame';
@@ -57,6 +58,8 @@ export class GameServer<G extends GameSpec> {
       const publicId = crypto.createHash('md5').update(privateId).digest("hex");
       new GameClient(ws, publicId, this.rooms[room]);
     });
+
+    app.use(compression());
 
     app.use((req, res, next) => {
       let id = getClientIdCookie(req) || uuid.v4();
