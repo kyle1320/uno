@@ -48,6 +48,7 @@ export class PlayableCard extends React.PureComponent<IProps, IState> {
         className={`playable-card${this.state.focused ? ' focus' : ''}${
           this.props.canPlay ? ' enabled' : ''
         }`}
+        data-card-id={String(this.props.card.id)}
         onClick={this.play}>
         <Card
           color={this.props.card.color}

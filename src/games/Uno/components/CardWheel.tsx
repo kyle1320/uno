@@ -23,8 +23,11 @@ interface IState {
 }
 
 export class CardWheel extends React.PureComponent<IProps, IState> {
+  private container: React.RefObject<HTMLDivElement>;
+
   constructor(props: IProps) {
     super(props);
+    this.container = React.createRef();
     this.state = {
       colorChooserId: null
     };
@@ -58,25 +61,65 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
     return null;
   }
 
+  componentDidUpdate(prevProps: IProps) {
+    const container = this.container.current;
+    if (this.props.yourTurn && !prevProps.yourTurn && container) {
+      const bounds = container.getBoundingClientRect();
+
+      let minDist: number = Infinity;
+      let closestCard: Element | null = null;
+      for (const card of this.props.cards) {
+        const el = container.querySelector(
+          `.enabled[data-card-id="${card.id}"]`
+        );
+
+        if (el) {
+          const dimens = el.getBoundingClientRect();
+          const dist = Math.max(
+            bounds.left - dimens.right,
+            dimens.left - bounds.right
+          );
+
+          if (dist < minDist) {
+            minDist = dist;
+            closestCard = el;
+          }
+        }
+      }
+
+      if (closestCard && minDist >= 0) {
+        closestCard.scrollIntoView({
+          behavior: 'smooth',
+          inline: 'center'
+        });
+      }
+    }
+  }
+
   render() {
     const cards = this.props.sort
       ? this.props.cards.slice().sort((a, b) => a.id - b.id)
       : this.props.cards;
     return (
       <div className={`card-wheel${this.props.yourTurn ? ' active' : ''}`}>
-        <TransitionGroup className="card-wheel-container">
-          {cards.map(card => (
-            <CSSTransition
-              key={card.id}
-              classNames="card-pickup"
-              timeout={{
-                enter: 3000,
-                exit: 0
-              }}>
-              <PlayableCard card={card} play={this.play.bind(this, card.id)} />
-            </CSSTransition>
-          ))}
-        </TransitionGroup>
+        <div className="card-wheel-container" ref={this.container}>
+          <TransitionGroup component={null}>
+            {cards.map(card => (
+              <CSSTransition
+                key={card.id}
+                classNames="card-pickup"
+                timeout={{
+                  enter: 3000,
+                  exit: 0
+                }}>
+                <PlayableCard
+                  card={card}
+                  play={this.play.bind(this, card.id)}
+                />
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
+        </div>
         <div className="counter">{cards.length}</div>
         {this.state.colorChooserId !== null ? (
           <ColorChooser onSelect={this.playColor} onClose={this.closeChooser} />
