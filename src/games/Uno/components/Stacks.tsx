@@ -2,8 +2,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 import { UnoSpec, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
@@ -60,8 +58,8 @@ export function Stacks(props: IProps) {
             <path
               d="M16 60C-2.66666 44.6265 -2.66667 16.6747 16 2M16 2V6.5L11.5 2H16Z"
               stroke="white"
-              stroke-width="3"
-              stroke-linecap="round"
+              strokeWidth="3"
+              strokeLinecap="round"
             />
           </svg>
           <svg
@@ -73,8 +71,8 @@ export function Stacks(props: IProps) {
             <path
               d="M16 60C-2.66666 44.6265 -2.66667 16.6747 16 2M16 2V6.5L11.5 2H16Z"
               stroke="white"
-              stroke-width="3"
-              stroke-linecap="round"
+              strokeWidth="3"
+              strokeLinecap="round"
             />
           </svg>
         </div>

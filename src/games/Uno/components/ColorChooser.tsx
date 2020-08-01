@@ -26,7 +26,7 @@ export default function ColorChooser(props: IProps) {
             />
           </clipPath>
           <filter id="svg-highlight">
-            <feDropShadow dx="0" dy="0" stdDeviation="1" flood-color="white" />
+            <feDropShadow dx="0" dy="0" stdDeviation="1" floodColor="white" />
           </filter>
         </defs>
         <g id="color-chooser-wheel">
