@@ -19,31 +19,31 @@ interface Props {
 
 class Uno extends React.PureComponent<Props> {
   render() {
-    return <div className="uno-game">
-      <Menu />
-      <div className="banner">{
-        !this.props.connected
-          ? "Connecting..."
-          : this.props.error
-            ? "An error occured. Try refreshing the page."
-            : ""
-      }</div>
-      <div className="table">
-        <Toasts />
-        <Stacks />
-        <Players />
-        <Info />
+    return (
+      <div className="uno-game">
+        <Menu />
+        <div className="banner">
+          {!this.props.connected
+            ? 'Connecting...'
+            : this.props.error
+            ? 'An error occured. Try refreshing the page.'
+            : ''}
+        </div>
+        <div className="table">
+          <Toasts />
+          <Stacks />
+          <Players />
+          <Info />
+        </div>
+        <div className="hand">
+          <CardWheel />
+        </div>
       </div>
-      <div className="hand">
-        <CardWheel />
-      </div>
-    </div>;
+    );
   }
 }
 
-export default connect(
-  (state: state.ClientSide<UnoSpec>) => ({
-    connected: state.connected,
-    error: state.error
-  })
-)(Uno);
+export default connect((state: state.ClientSide<UnoSpec>) => ({
+  connected: state.connected,
+  error: state.error
+}))(Uno);

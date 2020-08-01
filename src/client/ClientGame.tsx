@@ -13,21 +13,23 @@ import {
   PickSubset,
   CoreActions,
   ClientSentActions,
-  ClientGameActions } from '../types';
+  ClientGameActions
+} from '../types';
 
 function getWebSocketUrl(): string {
-  var loc = window.location, new_uri;
-  if (loc.protocol === "https:") {
-      new_uri = "wss:";
+  var loc = window.location,
+    new_uri;
+  if (loc.protocol === 'https:') {
+    new_uri = 'wss:';
   } else {
-      new_uri = "ws:";
+    new_uri = 'ws:';
   }
-  new_uri += "//" + loc.host;
+  new_uri += '//' + loc.host;
   new_uri += loc.pathname;
   return new_uri;
 }
 
-const serverTagSymbol = Symbol("From Server");
+const serverTagSymbol = Symbol('From Server');
 function tagFromServer(action: any) {
   action[serverTagSymbol] = true;
 }
@@ -36,7 +38,9 @@ function isFromServer(action: any) {
   return !!action[serverTagSymbol];
 }
 
-export abstract class ClientGame<G extends GameSpec> extends React.PureComponent {
+export abstract class ClientGame<
+  G extends GameSpec
+> extends React.PureComponent {
   private socket!: WebSocket;
   private store: Store<state.ClientSide<G>, ClientCoreActions<G>>;
   private actionQueue: ClientSentActions<G>[] = [];
@@ -51,61 +55,71 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
     roomName = roomName.startsWith('/') ? roomName.substring(1) : roomName;
     localStorage.setItem('savedRoomName', roomName);
 
-    this.store = createStore((
-      state: state.ClientSide<G> = null!,
-      action: ClientCoreActions<G>
-    ): state.ClientSide<G> => {
-      switch (action.kind) {
-        case "L1": return {...state, l1: this.reduceL1(state.l1, action)};
-        case "L2": return {...state, l2: this.reduceL2(state.l2, action)};
-        case "L3": return {...state, l3: this.reduceL3(state.l3, action)};
-        case "L4": return {...state, l4: this.reduceL4(state.l4, action)};
-        case "Core": return this.reduceCore(state, action);
-        default:  return state;
-      }
-    }, {
-      connected: false,
-      timeOffset: 0,
-      ...this.createInitialState() as any
-    }, applyMiddleware(() => next => (action: ClientCoreActions<G>) => {
-      next(action);
-      switch (action.kind) {
-        case 'L1':
-          this.processL1(action);
-          break;
-        case 'L2':
-          this.processL2(action);
-          break;
-        case 'L4':
-          this.processL4(action);
-          break;
-        case 'L3':
-          this.processL3(action);
-          if (isFromServer(action)) break;
-        case 'Req':
-          if (this.socket?.readyState === WebSocket.OPEN) {
-            this.socket.send(JSON.stringify(action));
-          } else {
-            this.actionQueue.push(action);
-          }
-          break;
-        case 'Core':
-          if (action.type === CoreActions.DISCONNECTED) {
-            this.initSocket();
-          } else if (action.type === CoreActions.CONNECTED) {
-            const actions = this.actionQueue;
-            this.actionQueue = [];
-            this.socket.send(JSON.stringify(CoreActions.clientJoin(actions)));
-          } else if (action.type === CoreActions.MULTI_ACTION) {
-            batch(() => {
-              for (const act of action.payload) {
-                this.store.dispatch(act);
-              }
-            });
-          }
-          this.processCore(action);
-      }
-    }));
+    this.store = createStore(
+      (
+        state: state.ClientSide<G> = null!,
+        action: ClientCoreActions<G>
+      ): state.ClientSide<G> => {
+        switch (action.kind) {
+          case 'L1':
+            return { ...state, l1: this.reduceL1(state.l1, action) };
+          case 'L2':
+            return { ...state, l2: this.reduceL2(state.l2, action) };
+          case 'L3':
+            return { ...state, l3: this.reduceL3(state.l3, action) };
+          case 'L4':
+            return { ...state, l4: this.reduceL4(state.l4, action) };
+          case 'Core':
+            return this.reduceCore(state, action);
+          default:
+            return state;
+        }
+      },
+      {
+        connected: false,
+        timeOffset: 0,
+        ...(this.createInitialState() as any)
+      },
+      applyMiddleware(() => next => (action: ClientCoreActions<G>) => {
+        next(action);
+        switch (action.kind) {
+          case 'L1':
+            this.processL1(action);
+            break;
+          case 'L2':
+            this.processL2(action);
+            break;
+          case 'L4':
+            this.processL4(action);
+            break;
+          case 'L3':
+            this.processL3(action);
+            if (isFromServer(action)) break;
+          case 'Req':
+            if (this.socket?.readyState === WebSocket.OPEN) {
+              this.socket.send(JSON.stringify(action));
+            } else {
+              this.actionQueue.push(action);
+            }
+            break;
+          case 'Core':
+            if (action.type === CoreActions.DISCONNECTED) {
+              this.initSocket();
+            } else if (action.type === CoreActions.CONNECTED) {
+              const actions = this.actionQueue;
+              this.actionQueue = [];
+              this.socket.send(JSON.stringify(CoreActions.clientJoin(actions)));
+            } else if (action.type === CoreActions.MULTI_ACTION) {
+              batch(() => {
+                for (const act of action.payload) {
+                  this.store.dispatch(act);
+                }
+              });
+            }
+            this.processCore(action);
+        }
+      })
+    );
   }
 
   protected setup() {
@@ -121,7 +135,7 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
     this.reconnectTimeout = setTimeout(() => {
       this.reconnectTimeout = null;
       if (this.reconnectFlag) this.initSocket();
-    }, 1500)
+    }, 1500);
 
     this.setup();
     this.socket = new WebSocket(getWebSocketUrl());
@@ -135,7 +149,10 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
     };
   }
 
-  protected abstract createInitialState(): PickSubset<G["state"], "l1" | "l2" | "l3" | "l4">;
+  protected abstract createInitialState(): PickSubset<
+    G['state'],
+    'l1' | 'l2' | 'l3' | 'l4'
+  >;
 
   protected reduceCore(
     state: state.ClientSide<G>,
@@ -203,8 +220,6 @@ export abstract class ClientGame<G extends GameSpec> extends React.PureComponent
   }
 
   render() {
-    return <Provider store={this.store}>
-      {this.getRootElement()}
-    </Provider>;
+    return <Provider store={this.store}>{this.getRootElement()}</Provider>;
   }
 }

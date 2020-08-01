@@ -1,9 +1,9 @@
-import { actions as actionTypes } from "../../../types";
-import { Color } from "../common";
-import { L1 } from "..";
+import { actions as actionTypes } from '../../../types';
+import { Color } from '../common';
+import { L1 } from '..';
 
 export namespace actions {
-  export const DRAW_CARD = "DRAW_CARD";
+  export const DRAW_CARD = 'DRAW_CARD';
   export type DrawCardAction = actionTypes.Req<typeof DRAW_CARD>;
   export function drawCard(id: string = ''): DrawCardAction {
     return {
@@ -13,9 +13,15 @@ export namespace actions {
     };
   }
 
-  export const UPDATE_RULES = "UPDATE_RULES";
-  export type UpdateRulesAction = actionTypes.Req<typeof UPDATE_RULES, Partial<L1.state.Rules>>;
-  export function updateRules(payload: Partial<L1.state.Rules>, id: string = ''): UpdateRulesAction {
+  export const UPDATE_RULES = 'UPDATE_RULES';
+  export type UpdateRulesAction = actionTypes.Req<
+    typeof UPDATE_RULES,
+    Partial<L1.state.Rules>
+  >;
+  export function updateRules(
+    payload: Partial<L1.state.Rules>,
+    id: string = ''
+  ): UpdateRulesAction {
     return {
       kind: 'Req',
       type: UPDATE_RULES,
@@ -24,13 +30,20 @@ export namespace actions {
     };
   }
 
-  export const PLAY_CARD = "PLAY_CARD";
+  export const PLAY_CARD = 'PLAY_CARD';
   export type PlayCardPayload = {
     cardId: number;
     color?: Color;
-  }
-  export type PlayCardAction = actionTypes.Req<typeof PLAY_CARD, PlayCardPayload>;
-  export function playCard(cardId: number, color?: Color, id: string = ''): PlayCardAction {
+  };
+  export type PlayCardAction = actionTypes.Req<
+    typeof PLAY_CARD,
+    PlayCardPayload
+  >;
+  export function playCard(
+    cardId: number,
+    color?: Color,
+    id: string = ''
+  ): PlayCardAction {
     return {
       kind: 'Req',
       type: PLAY_CARD,
@@ -39,7 +52,7 @@ export namespace actions {
     };
   }
 
-  export const RESET_GAME = "RESET_GAME";
+  export const RESET_GAME = 'RESET_GAME';
   export type ResetGameAction = actionTypes.Req<typeof RESET_GAME>;
   export function resetGame(id: string = ''): ResetGameAction {
     return {
@@ -49,7 +62,7 @@ export namespace actions {
     };
   }
 
-  export const CALL_UNO = "CALL_UNO";
+  export const CALL_UNO = 'CALL_UNO';
   export type CallUnoAction = actionTypes.Req<typeof CALL_UNO>;
   export function callUno(id: string = ''): CallUnoAction {
     return {
@@ -59,7 +72,7 @@ export namespace actions {
     };
   }
 
-  export const CALLOUT_UNO = "CALLOUT_UNO";
+  export const CALLOUT_UNO = 'CALLOUT_UNO';
   export type CalloutUnoAction = actionTypes.Req<typeof CALLOUT_UNO>;
   export function calloutUno(id: string = ''): CalloutUnoAction {
     return {
@@ -69,6 +82,11 @@ export namespace actions {
     };
   }
 
-  export type All = DrawCardAction | UpdateRulesAction | PlayCardAction
-    | ResetGameAction | CallUnoAction | CalloutUnoAction;
+  export type All =
+    | DrawCardAction
+    | UpdateRulesAction
+    | PlayCardAction
+    | ResetGameAction
+    | CallUnoAction
+    | CalloutUnoAction;
 }

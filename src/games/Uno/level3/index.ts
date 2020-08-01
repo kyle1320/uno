@@ -1,7 +1,7 @@
-import { actions as actionTypes } from "../../../types";
+import { actions as actionTypes } from '../../../types';
 
 export namespace actions {
-  export const SET_NAME = "NAME";
+  export const SET_NAME = 'NAME';
   export type SetNameAction = actionTypes.L3<typeof SET_NAME, string>;
   export function setName(name: string, id: string = ''): SetNameAction {
     return {

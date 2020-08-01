@@ -1,4 +1,4 @@
-import { GameSpec } from "../../types";
+import { GameSpec } from '../../types';
 import * as L1 from './level1';
 import * as L3 from './level3';
 import * as Req from './request';

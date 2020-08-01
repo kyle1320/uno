@@ -4,7 +4,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   padding: 0;
   margin: 0;
   color: $white;
@@ -17,7 +18,9 @@ a {
   text-decoration: none;
 }
 
-input, button, select {
+input,
+button,
+select {
   border-radius: 6px;
   outline: none;
   padding: 5px;
@@ -25,15 +28,16 @@ input, button, select {
   font-size: inherit;
 }
 
-input:not([type="checkbox"]) {
+input:not([type='checkbox']) {
   padding: 5px 8px;
 }
 
-input, select {
+input,
+select {
   border: none;
   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.4);
 
-  &[type="number"] {
+  &[type='number'] {
     width: 50px;
   }
 }
@@ -60,10 +64,10 @@ button {
   }
 
   &.secondary {
-    background-color: #CCC;
+    background-color: #ccc;
 
     &:active {
-      background-color: darken(#CCC, 10);
+      background-color: darken(#ccc, 10);
     }
   }
 
@@ -82,7 +86,7 @@ button {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #ed1c24;
-  background-image: url("../../../../assets/45-degree-fabric-dark.png");
+  background-image: url('../../../../assets/45-degree-fabric-dark.png');
   background-size: 150px;
   width: 100%;
   height: 100%;
@@ -115,7 +119,7 @@ button {
     margin-bottom: 20px;
     color: $yellow;
     -webkit-text-stroke: 2px white;
-    text-shadow: black .05em .03em 0;
+    text-shadow: black 0.05em 0.03em 0;
   }
 
   &-go-btn {
@@ -138,7 +142,7 @@ button {
     }
 
     .label {
-      font-size: .7em;
+      font-size: 0.7em;
       margin-bottom: 3px;
     }
 
@@ -156,7 +160,7 @@ button {
 
     .submit {
       margin-top: 10px;
-      font-size: .8em;
+      font-size: 0.8em;
 
       button {
         flex-grow: 1;
@@ -168,7 +172,8 @@ button {
       @extend .secondary;
     }
 
-    input, button {
+    input,
+    button {
       margin: 0;
     }
 
@@ -210,7 +215,7 @@ button {
   left: 0;
   right: 0;
   padding-left: 45px;
-  transition: padding .5s;
+  transition: padding 0.5s;
 
   &:empty {
     display: none;

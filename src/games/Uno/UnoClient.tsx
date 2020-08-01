@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ClientGame } from "../../client/ClientGame";
+import { ClientGame } from '../../client/ClientGame';
 import { UnoSpec, L1, L2, L3, L4 } from '.';
 import Uno from './components/Uno';
 
@@ -44,15 +44,19 @@ export class UnoClient extends ClientGame<UnoSpec> {
     switch (action.type) {
       case L1.actions.UPDATE_PLAYER:
         if (action.payload.didCallUno) {
-          this.dispatch(L4.actions.pushToast(
-            `${state.players[action.id].name} called Uno!`
-          ));
+          this.dispatch(
+            L4.actions.pushToast(`${state.players[action.id].name} called Uno!`)
+          );
         }
         break;
       case L1.actions.PLAYER_WIN:
-        this.dispatch(L4.actions.pushToast(
-          `${state.players[action.id].name} went out with ${action.payload} points!`
-        ));
+        this.dispatch(
+          L4.actions.pushToast(
+            `${state.players[action.id].name} went out with ${
+              action.payload
+            } points!`
+          )
+        );
         break;
       case L1.actions.GAME_OVER:
         let duration = action.payload.duration;
@@ -60,35 +64,52 @@ export class UnoClient extends ClientGame<UnoSpec> {
         const s = duration % 60;
         const m = Math.floor(duration / 60);
 
-        this.dispatch(L4.actions.pushToast(
-          `Game over! The game lasted ${m} minute${m === 1 ? '' : 's'} and ${s} second${s === 1 ? '' : 's'}`
-        ));
+        this.dispatch(
+          L4.actions.pushToast(
+            `Game over! The game lasted ${m} minute${
+              m === 1 ? '' : 's'
+            } and ${s} second${s === 1 ? '' : 's'}`
+          )
+        );
         break;
       case L1.actions.CALLOUT:
-        this.dispatch(L4.actions.pushToast(
-          `${state.players[action.payload.callerId].name} called out ` +
-          `${state.players[action.payload.targetId].name} on not saying Uno!`
-        ));
+        this.dispatch(
+          L4.actions.pushToast(
+            `${state.players[action.payload.callerId].name} called out ` +
+              `${
+                state.players[action.payload.targetId].name
+              } on not saying Uno!`
+          )
+        );
         break;
       case L1.actions.UPDATE_RULES:
         for (const k in action.payload) {
           const key = k as keyof L1.state.Rules;
           const name = (() => {
             switch (key) {
-              case 'stackDraw2': return "Stack Draw 2s";
-              case 'stackDraw4': return "Stack Draw 4s";
-              case 'stackDraw4OnDraw2': return "Stack Draw 4s on Draw 2s";
-              case 'stackDraw2OnDraw4': return "Stack Draw 2s on Draw 4s";
-              case 'drawTillYouPlay': return "Draw 'Till You Play";
-              case 'battleRoyale': return "Battle Royale";
-              case 'penaltyCardCount': return "Uno Penalty Cards";
+              case 'stackDraw2':
+                return 'Stack Draw 2s';
+              case 'stackDraw4':
+                return 'Stack Draw 4s';
+              case 'stackDraw4OnDraw2':
+                return 'Stack Draw 4s on Draw 2s';
+              case 'stackDraw2OnDraw4':
+                return 'Stack Draw 2s on Draw 4s';
+              case 'drawTillYouPlay':
+                return "Draw 'Till You Play";
+              case 'battleRoyale':
+                return 'Battle Royale';
+              case 'penaltyCardCount':
+                return 'Uno Penalty Cards';
             }
           })();
           const value = (() => {
             const val = action.payload[key];
             switch (typeof val) {
-              case 'boolean': return val ? 'enabled' : 'disabled';
-              case 'number': return 'set to ' + val;
+              case 'boolean':
+                return val ? 'enabled' : 'disabled';
+              case 'number':
+                return 'set to ' + val;
             }
           })();
           this.dispatch(L4.actions.pushToast(`Rule Changed: ${name} ${value}`));

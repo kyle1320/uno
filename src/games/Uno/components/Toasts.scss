@@ -33,7 +33,7 @@
 
   .toast-slide-enter-active {
     transform: translateX(0);
-    transition: transform .5s;
+    transition: transform 0.5s;
   }
 
   .toast-slide-exit {
@@ -43,6 +43,6 @@
   .toast-slide-exit-active {
     height: 0;
     opacity: 0;
-    transition: height .5s, opacity .5s;
+    transition: height 0.5s, opacity 0.5s;
   }
 }

@@ -38,11 +38,14 @@ export class GameServer<G extends GameSpec> {
     this.server = http.createServer(app);
     const wss = new WebSocket.Server({ server: this.server });
 
-    wss.on("headers", (headers, req) => {
+    wss.on('headers', (headers, req) => {
       let id = getClientIdCookie(req) || uuid.v4();
-      headers.push('Set-Cookie: ' + cookie.serialize(CLIENT_ID_COOKIE, id, { maxAge: 2592000 }));
+      headers.push(
+        'Set-Cookie: ' +
+          cookie.serialize(CLIENT_ID_COOKIE, id, { maxAge: 2592000 })
+      );
       (req as any)._clientid = id;
-    })
+    });
 
     wss.on('connection', (ws, req) => {
       const room = getRoomName(req.url || '').toLowerCase();
@@ -55,7 +58,7 @@ export class GameServer<G extends GameSpec> {
       }
 
       // don't leak the private client id as it could be used by anyone
-      const publicId = crypto.createHash('md5').update(privateId).digest("hex");
+      const publicId = crypto.createHash('md5').update(privateId).digest('hex');
       new GameClient(ws, publicId, this.rooms[room]);
     });
 
@@ -63,7 +66,10 @@ export class GameServer<G extends GameSpec> {
 
     app.use((req, res, next) => {
       let id = getClientIdCookie(req) || uuid.v4();
-      res.setHeader('Set-Cookie', cookie.serialize(CLIENT_ID_COOKIE, id, { maxAge: 2592000 }));
+      res.setHeader(
+        'Set-Cookie',
+        cookie.serialize(CLIENT_ID_COOKIE, id, { maxAge: 2592000 })
+      );
       next();
     });
 
@@ -83,7 +89,7 @@ export class GameServer<G extends GameSpec> {
   private getRandomRoom() {
     let room: string;
     do {
-      room = nouns[Math.floor(Math.random() * nouns.length)]
+      room = nouns[Math.floor(Math.random() * nouns.length)];
     } while (room in this.rooms);
     return room;
   }

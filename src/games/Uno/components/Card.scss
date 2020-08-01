@@ -11,29 +11,74 @@
     background-image: url(../../../../assets/cards.png);
     background-size: 600% 300%;
 
-    &.red    { background-color: #ED1C24; }
-    &.yellow { background-color: #FFDE00; }
-    &.green  { background-color: #00A651; }
-    &.blue   { background-color: #0096DA; }
-    &.black  { background-color: #000000; }
+    &.red {
+      background-color: #ed1c24;
+    }
+    &.yellow {
+      background-color: #ffde00;
+    }
+    &.green {
+      background-color: #00a651;
+    }
+    &.blue {
+      background-color: #0096da;
+    }
+    &.black {
+      background-color: #000000;
+    }
 
-    &.val-empty { background-position: 0% 0%; opacity: 0.5; }
-    &.val-1 { background-position: -100% 0%; }
-    &.val-2 { background-position: -200% 0%; }
-    &.val-3 { background-position: -300% 0%; }
-    &.val-4 { background-position: -400% 0%; }
-    &.val-5 { background-position: -500% 0%; }
-    &.val-6 { background-position: 0% -100%; }
-    &.val-7 { background-position: -100% -100%; }
-    &.val-8 { background-position: -200% -100%; }
-    &.val-9 { background-position: -300% -100%; }
-    &.val-0 { background-position: -400% -100%; }
-    &.val-skip { background-position: -500% -100%; }
-    &.val-reverse { background-position: 0% -200%; }
-    &.val-draw2 { background-position: -100% -200%; }
-    &.val-draw4 { background-position: -200% -200%; }
-    &.val-wild { background-position: -300% -200%; }
-    &.val-back { background-position: -400% -200%; }
+    &.val-empty {
+      background-position: 0% 0%;
+      opacity: 0.5;
+    }
+    &.val-1 {
+      background-position: -100% 0%;
+    }
+    &.val-2 {
+      background-position: -200% 0%;
+    }
+    &.val-3 {
+      background-position: -300% 0%;
+    }
+    &.val-4 {
+      background-position: -400% 0%;
+    }
+    &.val-5 {
+      background-position: -500% 0%;
+    }
+    &.val-6 {
+      background-position: 0% -100%;
+    }
+    &.val-7 {
+      background-position: -100% -100%;
+    }
+    &.val-8 {
+      background-position: -200% -100%;
+    }
+    &.val-9 {
+      background-position: -300% -100%;
+    }
+    &.val-0 {
+      background-position: -400% -100%;
+    }
+    &.val-skip {
+      background-position: -500% -100%;
+    }
+    &.val-reverse {
+      background-position: 0% -200%;
+    }
+    &.val-draw2 {
+      background-position: -100% -200%;
+    }
+    &.val-draw4 {
+      background-position: -200% -200%;
+    }
+    &.val-wild {
+      background-position: -300% -200%;
+    }
+    &.val-back {
+      background-position: -400% -200%;
+    }
   }
 
   &.disabled {

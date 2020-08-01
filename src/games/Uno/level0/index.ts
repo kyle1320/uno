@@ -1,53 +1,59 @@
-import { actions as actionTypes } from "../../../types";
-import { Card, shuffled, baseDeck } from "../common";
+import { actions as actionTypes } from '../../../types';
+import { Card, shuffled, baseDeck } from '../common';
 
 export namespace actions {
-  export const DRAW_CARDS = "DRAW_CARDS";
+  export const DRAW_CARDS = 'DRAW_CARDS';
   export type DrawCardsAction = actionTypes.L0<typeof DRAW_CARDS, number>;
   export function drawCards(count: number, id: string): DrawCardsAction {
     return {
-      kind: "L0",
+      kind: 'L0',
       type: DRAW_CARDS,
       payload: count
     };
   }
 
-  export const PLAY_CARD = "PLAY_CARD";
-  export type PlayCardAction = actionTypes.L0<typeof PLAY_CARD, Card> & { id: string };
+  export const PLAY_CARD = 'PLAY_CARD';
+  export type PlayCardAction = actionTypes.L0<typeof PLAY_CARD, Card> & {
+    id: string;
+  };
   export function playCard(payload: Card, id: string): PlayCardAction {
     return {
-      kind: "L0",
+      kind: 'L0',
       type: PLAY_CARD,
       payload,
       id
     };
   }
 
-  export const SHUFFLE = "SHUFFLE";
+  export const SHUFFLE = 'SHUFFLE';
   export type ShuffleAction = actionTypes.L0<typeof SHUFFLE>;
   export function shuffle(): ShuffleAction {
     return {
-      kind: "L0",
+      kind: 'L0',
       type: SHUFFLE
     };
   }
 
-  export const RESET_GAME = "RESET_GAME";
+  export const RESET_GAME = 'RESET_GAME';
   export type ResetGameAction = actionTypes.L0<typeof RESET_GAME>;
   export function resetGame(): ResetGameAction {
     return {
-      kind: "L0",
+      kind: 'L0',
       type: RESET_GAME
     };
   }
 
-  export type All = ShuffleAction | DrawCardsAction | PlayCardAction | ResetGameAction;
+  export type All =
+    | ShuffleAction
+    | DrawCardsAction
+    | PlayCardAction
+    | ResetGameAction;
 }
 
 export namespace state {
   export interface State {
-    upStack: readonly Card[],
-    downStack: readonly Card[]
+    upStack: readonly Card[];
+    downStack: readonly Card[];
   }
 
   export const initial: State = {
@@ -81,7 +87,11 @@ export function reduce(state: state.State, action: actions.All): state.State {
       const newStack = shuffled(baseDeck);
       let firstCard = newStack.pop()!;
       while (firstCard.value === 'wild' || firstCard.value === 'draw4') {
-        newStack.splice(Math.floor(Math.random() * newStack.length), 0, firstCard);
+        newStack.splice(
+          Math.floor(Math.random() * newStack.length),
+          0,
+          firstCard
+        );
         firstCard = newStack.pop()!;
       }
       return {

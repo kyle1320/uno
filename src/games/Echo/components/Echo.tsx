@@ -14,24 +14,26 @@ interface Props {
 class Echo extends React.PureComponent<Props> {
   updateMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.props.setMessage(e.target.value);
-  }
+  };
 
   submit = () => {
     this.props.send();
-  }
+  };
 
   render() {
-    return <div>
-      <ul>
-        {this.props.messages.map((msg, i) => <li key={i}>{msg}</li>)}
-      </ul>
+    return (
       <div>
-        <input
-          value={this.props.message}
-          onChange={this.updateMessage} />
-        <button onClick={this.submit}>Send</button>
+        <ul>
+          {this.props.messages.map((msg, i) => (
+            <li key={i}>{msg}</li>
+          ))}
+        </ul>
+        <div>
+          <input value={this.props.message} onChange={this.updateMessage} />
+          <button onClick={this.submit}>Send</button>
+        </div>
       </div>
-    </div>;
+    );
   }
 }
 

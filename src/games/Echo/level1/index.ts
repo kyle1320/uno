@@ -1,7 +1,7 @@
-import { actions as coreActions } from "../../../types";
+import { actions as coreActions } from '../../../types';
 
 export namespace actions {
-  export const MESSAGE = "MESSAGE";
+  export const MESSAGE = 'MESSAGE';
   export type MessageAction = coreActions.L1<typeof MESSAGE, string>;
   export function message(message: string): MessageAction {
     return {

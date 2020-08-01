@@ -1,4 +1,4 @@
-@import "./variables.scss";
+@import './variables.scss';
 
 .stacks {
   display: flex;
@@ -13,7 +13,8 @@
   z-index: 200;
 }
 
-.up-stack, .down-stack {
+.up-stack,
+.down-stack {
   display: block;
   position: relative;
   line-height: 0;
@@ -36,7 +37,7 @@
 
     svg {
       position: absolute;
-      transition: transform .5s;
+      transition: transform 0.5s;
       height: 62px;
       margin: 4px;
 

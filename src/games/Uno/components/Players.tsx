@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 import { UnoSpec } from '..';
 import { state } from '../../../types';
@@ -13,20 +13,21 @@ interface IProps {
 }
 
 export function Players(props: IProps) {
-  return <div className="players">
-    {props.relativeTurnOrder.map((id, i) =>
-      i > 0
-        ? <Player
+  return (
+    <div className="players">
+      {props.relativeTurnOrder.map((id, i) =>
+        i > 0 ? (
+          <Player
             key={id}
             id={id}
-            placement={i / props.relativeTurnOrder.length} />
-        : null
-    )}
-  </div>;
+            placement={i / props.relativeTurnOrder.length}
+          />
+        ) : null
+      )}
+    </div>
+  );
 }
 
-export default connect(
-  (state: state.ClientSide<UnoSpec>) => ({
-    relativeTurnOrder: clientSelectors.relativeTurnOrder(state)
-  })
-)(Players);
+export default connect((state: state.ClientSide<UnoSpec>) => ({
+  relativeTurnOrder: clientSelectors.relativeTurnOrder(state)
+}))(Players);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ClientGame } from "../../client/ClientGame";
+import { ClientGame } from '../../client/ClientGame';
 import { EchoSpec, L1, L3 } from '.';
 import Echo from './components/Echo';
 

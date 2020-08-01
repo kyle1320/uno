@@ -15,7 +15,7 @@
 
   .playable-card {
     min-width: 40px;
-    transition: transform .3s;
+    transition: transform 0.3s;
     z-index: 0;
     margin: 0 2px;
 
@@ -75,5 +75,5 @@
 
 .card-pickup-enter-active .card {
   transform: translateY(0);
-  transition: transform 3s cubic-bezier(0,1,0,1);
+  transition: transform 3s cubic-bezier(0, 1, 0, 1);
 }

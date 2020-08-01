@@ -1,7 +1,12 @@
 import WebSocket from 'ws';
 
 import { ServerGame } from './ServerGame';
-import { GameSpec, ServerCoreActions, ClientCoreActions, CoreActions } from '../types';
+import {
+  GameSpec,
+  ServerCoreActions,
+  ClientCoreActions,
+  CoreActions
+} from '../types';
 
 export class GameClient<G extends GameSpec> {
   private hasReceivedInitialState = false;
@@ -9,7 +14,7 @@ export class GameClient<G extends GameSpec> {
   public constructor(
     private socket: WebSocket,
     public readonly id: string,
-    private readonly room: ServerGame<G>,
+    private readonly room: ServerGame<G>
   ) {
     socket.onmessage = e => {
       const action = JSON.parse(e.data as string) as ServerCoreActions<G>;

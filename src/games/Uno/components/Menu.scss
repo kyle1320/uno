@@ -39,8 +39,8 @@
   right: 100%;
   top: 0;
   bottom: 0;
-  background-color: #EEE;
-  transition: transform .5s;
+  background-color: #eee;
+  transition: transform 0.5s;
   pointer-events: all;
   width: 250px;
   display: flex;
@@ -51,13 +51,13 @@
   hr {
     margin: 10px 0;
     height: 1px;
-    background-color: #A0A0A0;
+    background-color: #a0a0a0;
   }
 
   h3 {
     margin: 0 0 8px;
     padding-bottom: 4px;
-    border-bottom: 1px solid #A0A0A0;
+    border-bottom: 1px solid #a0a0a0;
 
     &:not(:first-of-type) {
       margin-top: 12px;
@@ -120,7 +120,8 @@
     }
   }
 
-  input, button {
+  input,
+  button {
     background-color: $white;
   }
 }
@@ -132,7 +133,9 @@
   width: 45px;
   height: 45px;
 
-  .line1, .line2, .line3 {
+  .line1,
+  .line2,
+  .line3 {
     position: absolute;
     background-color: $white;
     height: 3px;

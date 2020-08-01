@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 import { UnoSpec, L1, L3, L4, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
@@ -26,39 +26,49 @@ interface IProps {
 export function Info(props: IProps) {
   switch (props.gameStatus) {
     case L1.state.GameStatus.Pregame:
-      return <div className="info">
-        <span>Start a New Game to Play</span>
-        <button onClick={props.resetGame}>New Game</button>
-      </div>;
-    case L1.state.GameStatus.Started:
-      return <div className="info">
-        <span>{(() => {
-          if (!props.yourTurn) return null;
-          switch (props.ruleState.type) {
-            case 'draw2':
-            case 'draw4':
-            case 'draw':
-              if (!props.canPlayAny)
-                return `Draw ${props.ruleState.count} card${props.ruleState.count === 1 ? '' : 's'}`;
-              // fallthrough
-            default:
-              return 'Your Turn';
-          }
-        })()}</span>
-        <div className="buttons">
-          <button onClick={props.callUno} disabled={!props.canCallUno}>
-            Call Uno!
-          </button>
-          <button onClick={props.calloutUno} disabled={!props.canCalloutUno}>
-            <FontAwesomeIcon icon={faHandPointUp} /> Call Out
-          </button>
+      return (
+        <div className="info">
+          <span>Start a New Game to Play</span>
+          <button onClick={props.resetGame}>New Game</button>
         </div>
-      </div>;
+      );
+    case L1.state.GameStatus.Started:
+      return (
+        <div className="info">
+          <span>
+            {(() => {
+              if (!props.yourTurn) return null;
+              switch (props.ruleState.type) {
+                case 'draw2':
+                case 'draw4':
+                case 'draw':
+                  if (!props.canPlayAny)
+                    return `Draw ${props.ruleState.count} card${
+                      props.ruleState.count === 1 ? '' : 's'
+                    }`;
+                // fallthrough
+                default:
+                  return 'Your Turn';
+              }
+            })()}
+          </span>
+          <div className="buttons">
+            <button onClick={props.callUno} disabled={!props.canCallUno}>
+              Call Uno!
+            </button>
+            <button onClick={props.calloutUno} disabled={!props.canCalloutUno}>
+              <FontAwesomeIcon icon={faHandPointUp} /> Call Out
+            </button>
+          </div>
+        </div>
+      );
     case L1.state.GameStatus.Finished:
-      return <div className="info">
-        <span>Game Over</span>
-        <button onClick={props.resetGame}>New Game</button>
-      </div>;
+      return (
+        <div className="info">
+          <span>Game Over</span>
+          <button onClick={props.resetGame}>New Game</button>
+        </div>
+      );
   }
 }
 

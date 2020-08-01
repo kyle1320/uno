@@ -1,10 +1,25 @@
-import { state } from "../../types";
-import { UnoSpec, L1, L2 } from ".";
+import { state } from '../../types';
+import { UnoSpec, L1, L2 } from '.';
 
-export type Color = "red" | "green" | "blue" | "yellow";
+export type Color = 'red' | 'green' | 'blue' | 'yellow';
 export interface Card {
-  value: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "reverse" | "skip" | "wild" | "draw2" | "draw4";
-  color: Color | "black";
+  value:
+    | '0'
+    | '1'
+    | '2'
+    | '3'
+    | '4'
+    | '5'
+    | '6'
+    | '7'
+    | '8'
+    | '9'
+    | 'reverse'
+    | 'skip'
+    | 'wild'
+    | 'draw2'
+    | 'draw4';
+  color: Color | 'black';
   id: number;
 }
 
@@ -12,10 +27,7 @@ export namespace clientSelectors {
   export function relativeTurnOrder(state: state.ClientSide<UnoSpec>) {
     const turnOrder = state.l1.turnOrder;
     const myIndex = turnOrder.indexOf(state.l2.id);
-    return [
-      ...turnOrder.slice(myIndex),
-      ...turnOrder.slice(0, myIndex),
-    ];
+    return [...turnOrder.slice(myIndex), ...turnOrder.slice(0, myIndex)];
   }
 
   export function currentPlayer(state: state.ClientSide<UnoSpec>) {
@@ -23,8 +35,10 @@ export namespace clientSelectors {
   }
 
   export function isYourTurn(state: state.ClientSide<UnoSpec>) {
-    return state.l1.status === L1.state.GameStatus.Started
-      && currentPlayer(state) === state.l2.id;
+    return (
+      state.l1.status === L1.state.GameStatus.Started &&
+      currentPlayer(state) === state.l2.id
+    );
   }
 
   export function canDraw(state: state.ClientSide<UnoSpec>) {
@@ -61,18 +75,26 @@ export namespace serverSelectors {
     return currentPlayer(state) === id && rules.canDraw(state.l1, state.l2[id]);
   }
 
-  export function canPlay(state: state.ServerSide<UnoSpec>, clientId: string, cardId: number) {
-    return currentPlayer(state) === clientId
-      && rules.canPlay(cardId, state.l1, state.l2[clientId]);
+  export function canPlay(
+    state: state.ServerSide<UnoSpec>,
+    clientId: string,
+    cardId: number
+  ) {
+    return (
+      currentPlayer(state) === clientId &&
+      rules.canPlay(cardId, state.l1, state.l2[clientId])
+    );
   }
 
   export function canCallUno(state: state.ServerSide<UnoSpec>, id: string) {
     const cards = state.l1.players[id].cards;
-    return rules.canCallUno(state.l1, id) &&
+    return (
+      rules.canCallUno(state.l1, id) &&
       (cards === 1 ||
-        (cards === 2
-          && currentPlayer(state) === id
-          && rules.canPlayAny(state.l1, state.l2[id])));
+        (cards === 2 &&
+          currentPlayer(state) === id &&
+          rules.canPlayAny(state.l1, state.l2[id])))
+    );
   }
 
   export function canCalloutUno(state: state.ServerSide<UnoSpec>, id: string) {
@@ -96,13 +118,13 @@ export namespace rules {
     if (l1.status !== 'started') return false;
 
     switch (l1.ruleState.type) {
-      case "normal":
+      case 'normal':
         return !l1.rules.drawTillYouPlay || !canPlayAny(l1, l2);
-      case "draw":
-      case "draw2":
-      case "draw4":
+      case 'draw':
+      case 'draw2':
+      case 'draw4':
         return true;
-      case "maybePlay":
+      case 'maybePlay':
         return l1.rules.drawTillYouPlay && !canPlay(l2.lastDrawnCard!, l1, l2);
     }
   }
@@ -128,17 +150,23 @@ export namespace rules {
     if (!card) return false;
 
     switch (l1.ruleState.type) {
-      case "normal":
+      case 'normal':
         return cardMatches(card, l1.topCard);
-      case "draw2":
-        return (l1.rules.stackDraw2 && card.value === 'draw2')
-          || (l1.rules.stackDraw4OnDraw2 && card.value === 'draw4')
-      case "draw4":
-        return (l1.rules.stackDraw4 && card.value === 'draw4')
-          || (l1.rules.stackDraw2OnDraw4 && card.value === 'draw2' && cardMatches(card, l1.topCard))
-      case "draw":
+      case 'draw2':
+        return (
+          (l1.rules.stackDraw2 && card.value === 'draw2') ||
+          (l1.rules.stackDraw4OnDraw2 && card.value === 'draw4')
+        );
+      case 'draw4':
+        return (
+          (l1.rules.stackDraw4 && card.value === 'draw4') ||
+          (l1.rules.stackDraw2OnDraw4 &&
+            card.value === 'draw2' &&
+            cardMatches(card, l1.topCard))
+        );
+      case 'draw':
         return false;
-      case "maybePlay":
+      case 'maybePlay':
         return cardId === l2.lastDrawnCard && cardMatches(card, l1.topCard);
     }
   }
@@ -176,7 +204,7 @@ export namespace rules {
   }
 
   export function getReverseDirection(l1: L1.state.State) {
-    return l1.direction === 'CW' ? 'CCW' : 'CW'
+    return l1.direction === 'CW' ? 'CCW' : 'CW';
   }
 
   export function getNextTurnReverse(l1: L1.state.State) {
@@ -187,27 +215,33 @@ export namespace rules {
     return getNextTurn(l1, getReverseDirection(l1));
   }
 
-  export function getStateAfterDraw(cardId: number, l1: L1.state.State): Partial<L1.state.State> {
+  export function getStateAfterDraw(
+    cardId: number,
+    l1: L1.state.State
+  ): Partial<L1.state.State> {
     const card = getCardFromId(cardId);
 
     if (!card) return {};
 
     switch (l1.ruleState.type) {
-      case "draw2":
-      case "draw4":
-      case "draw":
+      case 'draw2':
+      case 'draw4':
+      case 'draw':
         return l1.ruleState.count <= 1
           ? { ruleState: { type: 'normal' }, currentPlayer: getNextTurn(l1) }
           : { ruleState: { type: 'draw', count: l1.ruleState.count - 1 } };
-      case "normal":
-      case "maybePlay":
+      case 'normal':
+      case 'maybePlay':
         return cardMatches(card, l1.topCard) || l1.rules.drawTillYouPlay
           ? { ruleState: { type: 'maybePlay' } }
-          : { ruleState: { type: 'normal' }, currentPlayer: getNextTurn(l1) }
+          : { ruleState: { type: 'normal' }, currentPlayer: getNextTurn(l1) };
     }
   }
 
-  export function getStateAfterPlay(cardId: number, l1: L1.state.State): Partial<L1.state.State> {
+  export function getStateAfterPlay(
+    cardId: number,
+    l1: L1.state.State
+  ): Partial<L1.state.State> {
     const card = getCardFromId(cardId);
 
     if (!card) return {};
@@ -245,7 +279,7 @@ export namespace rules {
 
   export function canCallUno(l1: L1.state.State, id: string) {
     const player = l1.players[id];
-    return player && player.isInGame && !(player.didCallUno);
+    return player && player.isInGame && !player.didCallUno;
   }
 
   export function canCalloutUno(l1: L1.state.State, id: string) {
@@ -259,21 +293,33 @@ export namespace rules {
 
   export function getCardScore(card: Card) {
     switch (card.value) {
-      case "0": return 0;
-      case "1": return 1;
-      case "2": return 2;
-      case "3": return 3;
-      case "4": return 4;
-      case "5": return 5;
-      case "6": return 6;
-      case "7": return 7;
-      case "8": return 8;
-      case "9": return 9;
-      case "skip":
-      case "reverse":
-      case "draw2": return 20;
-      case "wild":
-      case "draw4": return 50;
+      case '0':
+        return 0;
+      case '1':
+        return 1;
+      case '2':
+        return 2;
+      case '3':
+        return 3;
+      case '4':
+        return 4;
+      case '5':
+        return 5;
+      case '6':
+        return 6;
+      case '7':
+        return 7;
+      case '8':
+        return 8;
+      case '9':
+        return 9;
+      case 'skip':
+      case 'reverse':
+      case 'draw2':
+        return 20;
+      case 'wild':
+      case 'draw4':
+        return 50;
     }
   }
 }
@@ -286,24 +332,53 @@ export const baseDeck: readonly Card[] = (function () {
     return _cardId++;
   }
 
-  for (const color of (["red", "yellow", "green", "blue"] as const)) {
-    for (const value of ([
-      "0", "1", "1", "2", "2", "3", "3", "4", "4", "5", "5",
-      "6", "6", "7", "7", "8", "8", "9", "9",
-      "reverse", "reverse", "skip", "skip", "draw2", "draw2"
-    ] as const)) {
+  for (const color of ['red', 'yellow', 'green', 'blue'] as const) {
+    for (const value of [
+      '0',
+      '1',
+      '1',
+      '2',
+      '2',
+      '3',
+      '3',
+      '4',
+      '4',
+      '5',
+      '5',
+      '6',
+      '6',
+      '7',
+      '7',
+      '8',
+      '8',
+      '9',
+      '9',
+      'reverse',
+      'reverse',
+      'skip',
+      'skip',
+      'draw2',
+      'draw2'
+    ] as const) {
       deck.push({ color, value, id: getId() });
     }
   }
 
-  for (const value of ([
-    "wild", "wild", "wild", "wild", "draw4", "draw4", "draw4", "draw4"
-  ] as const)) {
-    deck.push({ color: "black", value, id: getId() });
+  for (const value of [
+    'wild',
+    'wild',
+    'wild',
+    'wild',
+    'draw4',
+    'draw4',
+    'draw4',
+    'draw4'
+  ] as const) {
+    deck.push({ color: 'black', value, id: getId() });
   }
 
   return deck;
-}());
+})();
 
 export function getCardFromId(id: number): Card | null {
   return baseDeck[id] || null;
@@ -311,10 +386,10 @@ export function getCardFromId(id: number): Card | null {
 
 function shuffle(arr: unknown[]) {
   for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = arr[i];
-      arr[i] = arr[j];
-      arr[j] = temp;
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
   }
 }
 

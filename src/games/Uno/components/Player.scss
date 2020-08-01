@@ -1,8 +1,8 @@
-@import "./variables";
+@import './variables';
 
 .player {
-  opacity: .8;
-  transition: opacity .5s;
+  opacity: 0.8;
+  transition: opacity 0.5s;
 
   &-container {
     position: absolute;
@@ -26,7 +26,7 @@
     transform: translateX(-50%);
     padding-bottom: 5px;
     opacity: 0;
-    transition: opacity .3s;
+    transition: opacity 0.3s;
     font-size: 20px;
   }
 

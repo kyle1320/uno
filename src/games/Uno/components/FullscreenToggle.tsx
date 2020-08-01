@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExpand, faCompress } from '@fortawesome/free-solid-svg-icons';
 
 import './FullscreenToggle.scss';
@@ -24,18 +24,22 @@ export default class FullscreenToggle extends React.PureComponent<IProps> {
     } else {
       document.getElementById('root')?.requestFullscreen();
     }
-  }
+  };
 
   render() {
-    let className = "fullscreen-toggle";
+    let className = 'fullscreen-toggle';
     if (this.props.className) {
       className += ' ' + this.props.className;
     }
-    return <button className={className} onClick={this.toggle}>
-      {document.fullscreenElement
-        ? <FontAwesomeIcon icon={faCompress} />
-        : <FontAwesomeIcon icon={faExpand} />}
-      {document.fullscreenElement ? 'Exit Fullscreen' : 'Enter Fullscreen'}
-    </button>;
+    return (
+      <button className={className} onClick={this.toggle}>
+        {document.fullscreenElement ? (
+          <FontAwesomeIcon icon={faCompress} />
+        ) : (
+          <FontAwesomeIcon icon={faExpand} />
+        )}
+        {document.fullscreenElement ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+      </button>
+    );
   }
 }

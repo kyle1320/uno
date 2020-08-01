@@ -9,23 +9,21 @@ interface IProps {
 }
 
 function getTimeString(millis: number) {
- millis = Math.floor(millis / 1000);
- const s = millis % 60;
- const m = Math.floor(millis / 60);
+  millis = Math.floor(millis / 1000);
+  const s = millis % 60;
+  const m = Math.floor(millis / 60);
 
- return `${m}:${("00" + s).slice(-2)}`;
+  return `${m}:${('00' + s).slice(-2)}`;
 }
 
-export default connect(
-  (state: state.ClientSide<UnoSpec>) => ({
-    gameStartTime: state.l1.startTime - state.timeOffset
-  })
-)(function (props: IProps) {
+export default connect((state: state.ClientSide<UnoSpec>) => ({
+  gameStartTime: state.l1.startTime - state.timeOffset
+}))(function (props: IProps) {
   const [o, refresh] = React.useReducer(() => ({}), {});
-  const duration = React.useMemo(
-    () => Date.now() - props.gameStartTime,
-    [props.gameStartTime, o]
-  );
+  const duration = React.useMemo(() => Date.now() - props.gameStartTime, [
+    props.gameStartTime,
+    o
+  ]);
   React.useEffect(function () {
     let timer: NodeJS.Timer | null = null;
 
@@ -33,7 +31,7 @@ export default connect(
       timer = setTimeout(() => {
         refresh();
         tick();
-      }, 1001 - (Date.now() - props.gameStartTime) % 1000);
+      }, 1001 - ((Date.now() - props.gameStartTime) % 1000));
     }
 
     tick();
@@ -42,7 +40,7 @@ export default connect(
       if (timer) {
         clearTimeout(timer);
         timer = null;
-     }
+      }
     };
   });
   return <>{getTimeString(duration)}</>;

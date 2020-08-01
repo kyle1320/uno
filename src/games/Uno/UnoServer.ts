@@ -1,7 +1,7 @@
-import { ServerGame } from "../../server/ServerGame";
-import { UnoSpec, L0, L1, L2, L3, Req } from ".";
-import { Card, shuffled, Color, serverSelectors, rules } from "./common";
-import { CoreActions, state } from "../../types";
+import { ServerGame } from '../../server/ServerGame';
+import { UnoSpec, L0, L1, L2, L3, Req } from '.';
+import { Card, shuffled, Color, serverSelectors, rules } from './common';
+import { CoreActions, state } from '../../types';
 
 export class UnoServer extends ServerGame<UnoSpec> {
   createInitialState() {
@@ -12,7 +12,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
       },
       l1: L1.state.initial,
       l2: {},
-      l3: {},
+      l3: {}
     };
   }
 
@@ -20,7 +20,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
     return {
       l2: {
         ...L2.state.initial,
-        id,
+        id
       },
       l3: {
         ...L3.state.initial,
@@ -37,41 +37,52 @@ export class UnoServer extends ServerGame<UnoSpec> {
     const state = this.store.getState().l0;
     switch (action.type) {
       case L0.actions.SHUFFLE:
-        this.dispatch(L1.actions.update({
-          upStackSize: state.upStack.length,
-          downStackSize: state.downStack.length
-        }))
+        this.dispatch(
+          L1.actions.update({
+            upStackSize: state.upStack.length,
+            downStackSize: state.downStack.length
+          })
+        );
         break;
       case L0.actions.DRAW_CARDS:
-        this.dispatch(L1.actions.update({
-          upStackSize: state.upStack.length,
-          lastPlayBy: null
-        }))
+        this.dispatch(
+          L1.actions.update({
+            upStackSize: state.upStack.length,
+            lastPlayBy: null
+          })
+        );
         break;
       case L0.actions.PLAY_CARD:
-        this.dispatch(L1.actions.update({
-          topCard: state.downStack[state.downStack.length - 1],
-          downStackSize: state.downStack.length,
-          lastPlayBy: action.id
-        }))
+        this.dispatch(
+          L1.actions.update({
+            topCard: state.downStack[state.downStack.length - 1],
+            downStackSize: state.downStack.length,
+            lastPlayBy: action.id
+          })
+        );
         break;
       case L0.actions.RESET_GAME:
         const topCard = state.downStack.length
           ? state.downStack[state.downStack.length - 1]
           : null;
-        this.dispatch(L1.actions.resetGame({
-          topCard,
-          upStackSize: state.upStack.length,
-          downStackSize: state.downStack.length,
-          startTime: Date.now()
-        }));
+        this.dispatch(
+          L1.actions.resetGame({
+            topCard,
+            upStackSize: state.upStack.length,
+            downStackSize: state.downStack.length,
+            startTime: Date.now()
+          })
+        );
         for (const id of this.getL1State().turnOrder) {
           this.dispatch(L2.actions.resetGame(id));
           this.dispatch(L2.actions.drawCards(this.drawCards(id, 7) || [], id));
         }
-        topCard && this.dispatch(L1.actions.update(
-          rules.getStateAfterPlay(topCard.id, this.getL1State())
-        ));
+        topCard &&
+          this.dispatch(
+            L1.actions.update(
+              rules.getStateAfterPlay(topCard.id, this.getL1State())
+            )
+          );
         break;
     }
   }
@@ -80,23 +91,31 @@ export class UnoServer extends ServerGame<UnoSpec> {
     let state = this.store.getState();
     switch (action.type) {
       case L2.actions.DRAW_CARDS:
-        this.dispatch(L1.actions.updatePlayer(action.id, {
-          cards: state.l2[action.id].hand.length
-        }));
+        this.dispatch(
+          L1.actions.updatePlayer(action.id, {
+            cards: state.l2[action.id].hand.length
+          })
+        );
         break;
       case L2.actions.DRAW_CARD:
-        this.dispatch(L1.actions.updatePlayer(action.id, {
-          cards: state.l2[action.id].hand.length
-        }));
-        this.dispatch(L1.actions.update(
-          rules.getStateAfterDraw(action.payload.id, state.l1)
-        ));
+        this.dispatch(
+          L1.actions.updatePlayer(action.id, {
+            cards: state.l2[action.id].hand.length
+          })
+        );
+        this.dispatch(
+          L1.actions.update(
+            rules.getStateAfterDraw(action.payload.id, state.l1)
+          )
+        );
         break;
       case L2.actions.PLAY_CARD:
         const cards = state.l2[action.id].hand.length;
-        this.dispatch(L1.actions.updatePlayer(action.id, {
-          cards
-        }));
+        this.dispatch(
+          L1.actions.updatePlayer(action.id, {
+            cards
+          })
+        );
 
         let gameOver = false;
         if (cards === 0) {
@@ -104,20 +123,26 @@ export class UnoServer extends ServerGame<UnoSpec> {
 
           if (state.l1.rules.battleRoyale) {
             state = this.store.getState();
-            gameOver = state.l1.turnOrder
-              .filter(id => state.l1.players[id].isInGame)
-              .length < 2;
+            gameOver =
+              state.l1.turnOrder.filter(id => state.l1.players[id].isInGame)
+                .length < 2;
           }
 
-          this.dispatch(L1.actions.playerWin(action.id, serverSelectors.getScore(state)));
+          this.dispatch(
+            L1.actions.playerWin(action.id, serverSelectors.getScore(state))
+          );
         }
 
-        if (gameOver) this.dispatch(L1.actions.gameOver({
-          duration: Date.now() - state.l1.startTime
-        }));
-        else this.dispatch(L1.actions.update(
-          rules.getStateAfterPlay(action.payload, state.l1)
-        ));
+        if (gameOver)
+          this.dispatch(
+            L1.actions.gameOver({
+              duration: Date.now() - state.l1.startTime
+            })
+          );
+        else
+          this.dispatch(
+            L1.actions.update(rules.getStateAfterPlay(action.payload, state.l1))
+          );
         break;
     }
   }
@@ -125,9 +150,11 @@ export class UnoServer extends ServerGame<UnoSpec> {
   processL3(action: L3.actions.All) {
     switch (action.type) {
       case L3.actions.SET_NAME:
-        this.dispatch(L1.actions.updatePlayer(action.id, {
-          name: action.payload
-        }));
+        this.dispatch(
+          L1.actions.updatePlayer(action.id, {
+            name: action.payload
+          })
+        );
         break;
     }
   }
@@ -147,14 +174,20 @@ export class UnoServer extends ServerGame<UnoSpec> {
         break;
       case Req.actions.UPDATE_RULES:
         if ('penaltyCardCount' in action.payload) {
-          action.payload.penaltyCardCount
-            = Math.min(8, Math.max(1, action.payload.penaltyCardCount!));
+          action.payload.penaltyCardCount = Math.min(
+            8,
+            Math.max(1, action.payload.penaltyCardCount!)
+          );
         }
         this.dispatch(L1.actions.updateRules(action.payload));
         break;
       case Req.actions.PLAY_CARD:
         if (serverSelectors.canPlay(state, action.id, action.payload.cardId)) {
-          const card = this.playCard(action.id, action.payload.cardId, action.payload.color);
+          const card = this.playCard(
+            action.id,
+            action.payload.cardId,
+            action.payload.color
+          );
           if (card) this.dispatch(L0.actions.playCard(card, action.id));
         }
         break;
@@ -163,7 +196,9 @@ export class UnoServer extends ServerGame<UnoSpec> {
         break;
       case Req.actions.CALL_UNO:
         if (serverSelectors.canCallUno(state, action.id)) {
-          this.dispatch(L1.actions.updatePlayer(action.id, { didCallUno: true }));
+          this.dispatch(
+            L1.actions.updatePlayer(action.id, { didCallUno: true })
+          );
         }
         break;
       case Req.actions.CALLOUT_UNO:
@@ -171,10 +206,13 @@ export class UnoServer extends ServerGame<UnoSpec> {
           const playerId = state.l1.lastPlayBy;
           const player = playerId && state.l1.players[playerId];
           if (player && player.cards === 1 && !player.didCallUno) {
-            this.dispatch(L2.actions.drawCards(
-              this.drawCards(player.id, state.l1.rules.penaltyCardCount) || [],
-              player.id
-            ));
+            this.dispatch(
+              L2.actions.drawCards(
+                this.drawCards(player.id, state.l1.rules.penaltyCardCount) ||
+                  [],
+                player.id
+              )
+            );
             this.dispatch(L1.actions.callout(action.id, player.id));
           }
         }
@@ -191,18 +229,23 @@ export class UnoServer extends ServerGame<UnoSpec> {
         break;
       case CoreActions.CONNECTED:
         if (action.id in state.players) {
-          this.dispatch(L1.actions.updatePlayer(action.id, { connected: true }));
+          this.dispatch(
+            L1.actions.updatePlayer(action.id, { connected: true })
+          );
         } else {
-          this.dispatch(L1.actions.addPlayer({
-            id: action.id,
-            name: this.store.getState().l3[action.id].name,
-            cards: 0,
-            isInGame: this.getL1State().status !== L1.state.GameStatus.Started,
-            didCallUno: false,
-            connected: true,
-            score: 0,
-            gamesWon: 0
-          }));
+          this.dispatch(
+            L1.actions.addPlayer({
+              id: action.id,
+              name: this.store.getState().l3[action.id].name,
+              cards: 0,
+              isInGame:
+                this.getL1State().status !== L1.state.GameStatus.Started,
+              didCallUno: false,
+              connected: true,
+              score: 0,
+              gamesWon: 0
+            })
+          );
         }
         break;
     }

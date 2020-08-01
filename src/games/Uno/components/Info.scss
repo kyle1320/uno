@@ -38,7 +38,7 @@
     flex-flow: column-reverse nowrap;
     align-items: stretch;
 
-    @media(min-width: 480px) {
+    @media (min-width: 480px) {
       flex-direction: row;
     }
   }
