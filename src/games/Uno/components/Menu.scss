@@ -98,8 +98,13 @@
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
     padding: 5px 10px;
 
-    a {
+    .home-link {
       font-size: 18px;
+    }
+
+    .timer {
+      font-weight: bold;
+      padding: 0 5px;
     }
 
     .row {
@@ -107,6 +112,25 @@
       flex-flow: row nowrap;
       justify-content: space-between;
       align-items: center;
+      text-align: center;
+
+      &>* {
+        flex: 0 0 auto;
+      }
+
+      &>:first-child {
+        flex: 1 0 0;
+        text-align: left;
+      }
+
+      &>:last-child {
+        flex: 1 0 0;
+        text-align: right;
+      }
+
+      .room-link {
+        justify-content: flex-end;
+      }
     }
   }
 
@@ -115,7 +139,7 @@
     flex-flow: row nowrap;
     align-items: center;
 
-    & > .row:not(:first-child) {
+    &>.row:not(:first-child) {
       margin-left: 10px;
     }
   }

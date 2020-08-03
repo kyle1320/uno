@@ -11,6 +11,7 @@ import FullscreenToggle from './FullscreenToggle';
 import GameTimer from './GameTimer';
 
 import './Menu.scss';
+import RoomLink from './RoomLink';
 
 type StandingsInfo = {
   name: string;
@@ -179,15 +180,16 @@ export function Menu(props: IProps) {
         </div>
         <div className="header">
           <div className="row">
-            <Link to="/">
+            <Link to="/" className="home-link">
               <FontAwesomeIcon icon={faAngleLeft} />{' '}
               <FontAwesomeIcon icon={faHome} />
             </Link>
             {props.status === L1.state.GameStatus.Started ? (
-              <b>
+              <div className="timer">
                 <GameTimer />
-              </b>
+              </div>
             ) : null}
+            <RoomLink shorten />
           </div>
         </div>
         <div className="scrolling">

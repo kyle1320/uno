@@ -1,15 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faClipboard,
-  faClipboardCheck
-} from '@fortawesome/free-solid-svg-icons';
 
 import { UnoSpec } from '..';
 import { state } from '../../../types';
 import Player from './Player';
 import { clientSelectors } from '../common';
+import RoomLink from './RoomLink';
 
 import './Players.scss';
 
@@ -17,20 +13,8 @@ interface IProps {
   relativeTurnOrder: string[];
 }
 
-function getRoomLink() {
-  return `${location.protocol}//${location.hostname}${location.pathname}`;
-}
-
-function copyRoomLink() {
-  navigator.clipboard.writeText(getRoomLink());
-}
-
 export function Players(props: IProps) {
-  const [copied, setCopied] = React.useState(false);
-  const copy = React.useCallback(() => {
-    copyRoomLink();
-    setCopied(true);
-  }, [setCopied]);
+  const [copied, setCopied] = React.useReducer(() => true, false);
 
   return (
     <div className="players">
@@ -51,13 +35,7 @@ export function Players(props: IProps) {
             invite others to play using this link (
             {copied ? 'copied' : 'click to copy'}):
           </div>
-          <div
-            className="no-players-link-wrapper"
-            onClick={copy}
-            title="Copy Link">
-            <div className="no-players-link">{getRoomLink()}</div>
-            <FontAwesomeIcon icon={copied ? faClipboardCheck : faClipboard} />
-          </div>
+          <RoomLink onCopy={setCopied} />
         </div>
       )}
     </div>

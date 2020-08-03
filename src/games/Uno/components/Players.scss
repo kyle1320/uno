@@ -11,6 +11,9 @@
   background-color: rgba(black, 0.4);
   padding: 10px;
   border-radius: 5px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
 
   &-heading {
     font-size: 20px;
@@ -22,18 +25,7 @@
     margin-bottom: 3px;
   }
 
-  &-link-wrapper {
+  .room-link {
     font-size: 12px;
-    color: lighten($blue, 0.8);
-    cursor: pointer;
-
-    svg {
-      margin-left: 3px;
-    }
-  }
-
-  &-link {
-    display: inline-block;
-    text-decoration: underline;
   }
 }
