@@ -235,13 +235,13 @@ export function Menu(props: IProps) {
 export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
     name: state.l3.name,
-    sortCards: state.l4.sortCards,
+    sortCards: state.l4.settings.sortCards,
     status: state.l1.status
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     setName: (name: string) => dispatch(L3.actions.setName(name)),
     setSortCards: (sortCards: boolean) =>
-      dispatch(L4.actions.update({ sortCards })),
+      dispatch(L4.actions.updateSettings({ sortCards })),
     resetGame: () => dispatch(Req.actions.resetGame())
   })
 )(Menu);

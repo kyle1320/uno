@@ -132,7 +132,7 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
 export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
     cards: state.l2.hand,
-    sort: state.l4.sortCards,
+    sort: state.l4.settings.sortCards,
     yourTurn: clientSelectors.isYourTurn(state)
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({

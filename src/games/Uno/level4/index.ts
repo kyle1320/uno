@@ -14,6 +14,21 @@ export namespace actions {
     };
   }
 
+  export const UPDATE_SETTINGS = '_SETTINGS';
+  export type UpdateSettingsAction = actionTypes.L4<
+    typeof UPDATE_SETTINGS,
+    Partial<state.Settings>
+  >;
+  export function updateSettings(
+    payload: Partial<state.Settings>
+  ): UpdateSettingsAction {
+    return {
+      kind: 'L4',
+      type: UPDATE_SETTINGS,
+      payload
+    };
+  }
+
   export const PUSH_TOAST = 'PUSH_TOAST';
   export type PushToastAction = actionTypes.L4<typeof PUSH_TOAST, string>;
   export function pushToast(message: string): PushToastAction {
@@ -33,17 +48,27 @@ export namespace actions {
     };
   }
 
-  export type All = UpdateAction | PushToastAction | PopToastAction;
+  export type All =
+    | UpdateAction
+    | PushToastAction
+    | PopToastAction
+    | UpdateSettingsAction;
 }
 
 export namespace state {
-  export interface State {
+  export interface Settings {
     sortCards: boolean;
+  }
+
+  export interface State {
+    settings: Settings;
     toasts: string[];
   }
 
   export const initial: State = {
-    sortCards: false,
+    settings: {
+      sortCards: false
+    },
     toasts: []
   };
 }
@@ -52,6 +77,14 @@ export function reduce(state: state.State, action: actions.All): state.State {
   switch (action.type) {
     case actions.UPDATE:
       return { ...state, ...action.payload };
+    case actions.UPDATE_SETTINGS:
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          ...action.payload
+        }
+      };
     case actions.PUSH_TOAST:
       return { ...state, toasts: [...state.toasts, action.payload] };
     case actions.POP_TOAST:

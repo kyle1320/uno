@@ -27,7 +27,7 @@ export class UnoClient extends ClientGame<UnoSpec> {
     if (prefsString) {
       try {
         const prefs = JSON.parse(prefsString);
-        this.dispatch(L4.actions.update(prefs));
+        this.dispatch(L4.actions.updateSettings(prefs));
       } catch (e) {
         //
       }
@@ -125,9 +125,9 @@ export class UnoClient extends ClientGame<UnoSpec> {
   }
 
   protected processL4(action: L4.actions.All) {
-    if (action.type === L4.actions.UPDATE) {
-      const state = this.getL4State();
-      localStorage.setItem(PREFERENCES_STORAGE_KEY, JSON.stringify(state));
+    if (action.type === L4.actions.UPDATE_SETTINGS) {
+      const settings = this.getL4State().settings;
+      localStorage.setItem(PREFERENCES_STORAGE_KEY, JSON.stringify(settings));
     } else if (action.type === L4.actions.PUSH_TOAST) {
       setTimeout(() => this.dispatch(L4.actions.popToast()), 4000);
     }
