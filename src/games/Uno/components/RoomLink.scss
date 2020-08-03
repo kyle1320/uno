@@ -1,7 +1,7 @@
 @import './variables';
 
 .room-link {
-  color: lighten($blue, 0.8);
+  color: $blue;
   cursor: pointer;
   display: flex;
   flex-flow: row nowrap;
