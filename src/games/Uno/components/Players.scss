@@ -25,10 +25,10 @@
   &-link-wrapper {
     font-size: 12px;
     color: lighten($blue, 0.8);
+    cursor: pointer;
 
     svg {
       margin-left: 3px;
-      cursor: pointer;
     }
   }
 

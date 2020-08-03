@@ -47,11 +47,12 @@ export function Players(props: IProps) {
           <div className="no-players-subheading">
             invite others to play using this link{copied ? ' (copied)' : ''}:
           </div>
-          <div className="no-players-link-wrapper">
-            <a href="#" className="no-players-link">
-              {getRoomLink()}
-            </a>
-            <FontAwesomeIcon icon={faClone} onClick={copy} title="Copy Link" />
+          <div
+            className="no-players-link-wrapper"
+            onClick={copy}
+            title="Copy Link">
+            <div className="no-players-link">{getRoomLink()}</div>
+            <FontAwesomeIcon icon={faClone} />
           </div>
         </div>
       )}
