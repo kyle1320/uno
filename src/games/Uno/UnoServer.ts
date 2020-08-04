@@ -121,16 +121,16 @@ export class UnoServer extends ServerGame<UnoSpec> {
         if (cards === 0) {
           gameOver = true;
 
+          this.dispatch(
+            L1.actions.playerWin(action.id, serverSelectors.getScore(state))
+          );
+
           if (state.l1.rules.battleRoyale) {
             state = this.store.getState();
             gameOver =
               state.l1.turnOrder.filter(id => state.l1.players[id].isInGame)
                 .length < 2;
           }
-
-          this.dispatch(
-            L1.actions.playerWin(action.id, serverSelectors.getScore(state))
-          );
         }
 
         if (gameOver)
