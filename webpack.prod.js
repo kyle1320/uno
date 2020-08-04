@@ -3,8 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var WebpackPwaManifest = require('webpack-pwa-manifest');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
@@ -38,16 +37,14 @@ const client = {
   entry: './src/client/index.tsx',
   devtool: 'source-map',
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.s?css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          "css-loader",
-          "sass-loader"
-        ]
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       },
-      { test: /\.tsx?$/, use: 'ts-loader' },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader'
+      },
       {
         test: /\.(png|jpg)$/,
         loader: 'url-loader'
@@ -55,7 +52,7 @@ const client = {
     ]
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js"]
+    extensions: ['.ts', '.tsx', '.js']
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -63,12 +60,8 @@ const client = {
       templateContent: template
     }),
     new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css"
-    }),
-    new WorkboxPlugin.GenerateSW({
-      clientsClaim: true,
-      skipWaiting: true,
+      filename: '[name].css',
+      chunkFilename: '[id].css'
     }),
     new WebpackPwaManifest({
       name: 'Uno',
@@ -77,13 +70,11 @@ const client = {
       start_url: '/',
       orientation: 'any',
       display: 'fullscreen',
-      icons: [
-        {
-          src: path.resolve('./assets/icon.png'),
-          sizes: [96, 128, 192, 256, 384, 512],
-          destination: 'icons'
-        }
-      ]
+      icons: [{
+        src: path.resolve('./assets/icon.png'),
+        sizes: [96, 128, 192, 256, 384, 512],
+        destination: 'icons'
+      }]
     }),
     new FaviconsWebpackPlugin('./assets/icon.svg')
   ],
@@ -99,18 +90,19 @@ const server = {
   entry: './src/server/index.ts',
   devtool: 'source-map',
   module: {
-    rules: [
-      { test: /\.ts$/, use: 'ts-loader' }
-    ]
+    rules: [{
+      test: /\.ts$/,
+      use: 'ts-loader'
+    }]
   },
   target: 'node',
   resolve: {
-    extensions: [".ts", ".tsx", ".js"]
+    extensions: ['.ts', '.tsx', '.js']
   },
   externals: [nodeExternals()],
   output: {
     filename: 'server.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist')
   }
 };
 
