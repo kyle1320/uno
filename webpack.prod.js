@@ -6,6 +6,7 @@ const nodeExternals = require('webpack-node-externals');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var WebpackPwaManifest = require('webpack-pwa-manifest');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const RemoveServiceWorkerPlugin = require('webpack-remove-serviceworker-plugin');
 
 const template = `<!DOCTYPE html>
 <html>
@@ -37,7 +38,8 @@ const client = {
   entry: './src/client/index.tsx',
   devtool: 'source-map',
   module: {
-    rules: [{
+    rules: [
+      {
         test: /\.s?css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       },
@@ -70,12 +72,15 @@ const client = {
       start_url: '/',
       orientation: 'any',
       display: 'fullscreen',
-      icons: [{
-        src: path.resolve('./assets/icon.png'),
-        sizes: [96, 128, 192, 256, 384, 512],
-        destination: 'icons'
-      }]
+      icons: [
+        {
+          src: path.resolve('./assets/icon.png'),
+          sizes: [96, 128, 192, 256, 384, 512],
+          destination: 'icons'
+        }
+      ]
     }),
+    new RemoveServiceWorkerPlugin({ filename: 'service-worker.js' }),
     new FaviconsWebpackPlugin('./assets/icon.svg')
   ],
   output: {
@@ -90,10 +95,12 @@ const server = {
   entry: './src/server/index.ts',
   devtool: 'source-map',
   module: {
-    rules: [{
-      test: /\.ts$/,
-      use: 'ts-loader'
-    }]
+    rules: [
+      {
+        test: /\.ts$/,
+        use: 'ts-loader'
+      }
+    ]
   },
   target: 'node',
   resolve: {
