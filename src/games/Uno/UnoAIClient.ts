@@ -39,9 +39,11 @@ export default class UnoAIClient implements IClient<UnoSpec> {
   public send(msg: ClientCoreActions<UnoSpec>): void {
     const l1 = this.server.getL1ClientState(this.id);
 
-    // delay(Math.random() * 1000).then(() =>
-    //   this.sendServer(Req.actions.calloutUno())
-    // );
+    if (rules.canCalloutUno(l1, this.id)) {
+      delay(Math.random() * Math.random() * 3000).then(() =>
+        this.sendServer(Req.actions.calloutUno())
+      );
+    }
 
     if (this.isTurn(l1) && !this.isTurn(this.oldL1State)) {
       this.takeTurn();
@@ -78,7 +80,7 @@ export default class UnoAIClient implements IClient<UnoSpec> {
 
     if (this.turnInProgress) return;
 
-    await delay(Math.random() * 300 + 600);
+    await delay(Math.random() * 200 + 500);
     this.turnInProgress = true;
     await play();
     this.turnInProgress = false;
@@ -87,7 +89,7 @@ export default class UnoAIClient implements IClient<UnoSpec> {
   private async playCard(card: Card, l2: L2.state.State) {
     if (l2.hand.length === 2) {
       // don't wait for this -- it will race against the next timeout
-      delay((Math.random() + Math.random()) * 1000).then(() =>
+      delay(Math.random() * Math.random() * 2000).then(() =>
         this.sendServer(Req.actions.callUno())
       );
     }
