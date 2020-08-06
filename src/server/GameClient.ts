@@ -8,7 +8,13 @@ import {
   CoreActions
 } from '../types';
 
-export class GameClient<G extends GameSpec> {
+export interface IClient<G extends GameSpec> {
+  readonly id: string;
+  send(msg: ClientCoreActions<G>): void;
+  sync(): void;
+}
+
+export class GameClient<G extends GameSpec> implements IClient<G> {
   private hasReceivedInitialState = false;
 
   public constructor(

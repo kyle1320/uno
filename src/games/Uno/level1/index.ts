@@ -139,6 +139,7 @@ export namespace state {
     drawTillYouPlay: boolean;
     battleRoyale: boolean;
     penaltyCardCount: number;
+    aiCount: number;
   }
 
   export interface Player {
@@ -193,7 +194,8 @@ export namespace state {
       stackDraw2OnDraw4: false,
       drawTillYouPlay: false,
       battleRoyale: false,
-      penaltyCardCount: 4
+      penaltyCardCount: 4,
+      aiCount: 0
     },
     topCard: null,
     lastPlayBy: null,

@@ -101,6 +101,8 @@ export class UnoClient extends ClientGame<UnoSpec> {
                 return 'Battle Royale';
               case 'penaltyCardCount':
                 return 'Uno Penalty Cards';
+              case 'aiCount':
+                return 'AI Players';
             }
           })();
           const value = (() => {

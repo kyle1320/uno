@@ -1,6 +1,6 @@
 import { Store, createStore, applyMiddleware } from 'redux';
 
-import { GameClient } from './GameClient';
+import { IClient } from './GameClient';
 import {
   GameSpec,
   ServerCoreActions,
@@ -18,19 +18,19 @@ import {
 const originatingClientSymbol = Symbol('Originating Client');
 function tagWithClient<G extends GameSpec>(
   action: ServerCoreActions<G>,
-  client: GameClient<G>
+  client: IClient<G>
 ) {
   (action as any)[originatingClientSymbol] = client;
 }
 
 function getClient<G extends GameSpec>(
   action: ServerCoreActions<G>
-): GameClient<G> {
+): IClient<G> {
   return (action as any)[originatingClientSymbol];
 }
 
 export abstract class ServerGame<G extends GameSpec = GameSpec> {
-  protected clients: GameClient<G>[] = [];
+  protected clients: IClient<G>[] = [];
   protected uniqueClients: Set<string> = new Set();
 
   protected store: Store<state.ServerSide<G>, ServerCoreActions<G>>;
@@ -40,9 +40,9 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
 
   public constructor() {
     let depth = 0;
-    const actions: Map<GameClient<G>, ServerSentActions<G>[]> = new Map();
+    const actions: Map<IClient<G>, ServerSentActions<G>[]> = new Map();
 
-    function pushAction(client: GameClient<G>, action: ServerSentActions<G>) {
+    function pushAction(client: IClient<G>, action: ServerSentActions<G>) {
       if (actions.has(client)) actions.get(client)!.push(action);
       else actions.set(client, [action]);
     }
@@ -217,7 +217,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
     return state;
   }
 
-  public handleMessage(client: GameClient<G>, action: ServerCoreActions<G>) {
+  public handleMessage(client: IClient<G>, action: ServerCoreActions<G>) {
     tagWithClient(action, client);
     switch (action.kind) {
       case 'L3':
@@ -238,7 +238,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
   protected processRequest(action: ReqActions<G>) {}
   protected processCore(action: CoreActions<G>) {}
 
-  public join(client: GameClient<G>) {
+  public join(client: IClient<G>) {
     this.clients.push(client);
     this.uniqueClients.add(client.id);
     if (this.deleteTimeout) {
@@ -247,7 +247,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
     }
   }
 
-  public leave(client: GameClient<G>) {
+  public leave(client: IClient<G>) {
     this.clients = this.clients.filter(x => x !== client);
     if (!this.clients.some(c => c.id === client.id)) {
       this.uniqueClients.delete(client.id);

@@ -154,6 +154,21 @@ const Rules = connect(
           <option value="8">8</option>
         </select>
       </label>
+      <label className="row">
+        AI Players:
+        <select
+          value={props.aiCount}
+          onChange={React.useCallback(
+            e => props.update({ aiCount: +e.target.value }),
+            [props.update]
+          )}>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </label>
     </>
   );
 });

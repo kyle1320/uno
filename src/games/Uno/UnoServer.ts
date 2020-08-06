@@ -2,8 +2,11 @@ import { ServerGame } from '../../server/ServerGame';
 import { UnoSpec, L0, L1, L2, L3, Req } from '.';
 import { Card, shuffled, Color, serverSelectors, rules } from './common';
 import { CoreActions, state } from '../../types';
+import UnoAIClient from './UnoAIClient';
 
 export class UnoServer extends ServerGame<UnoSpec> {
+  private bots: UnoAIClient[] = [];
+
   createInitialState() {
     return {
       l0: {
@@ -32,6 +35,14 @@ export class UnoServer extends ServerGame<UnoSpec> {
   protected reduceL1 = L1.reduce;
   protected reduceL2 = L2.reduce;
   protected reduceL3 = L3.reduce;
+
+  public getL1ClientState(id: string) {
+    return this.getL1State();
+  }
+
+  public getL2ClientState(id: string) {
+    return this.getL2State(id);
+  }
 
   processL0(action: L0.actions.All) {
     const state = this.store.getState().l0;
@@ -83,6 +94,23 @@ export class UnoServer extends ServerGame<UnoSpec> {
               rules.getStateAfterPlay(topCard.id, this.getL1State())
             )
           );
+        break;
+    }
+  }
+
+  processL1(action: L1.actions.All) {
+    switch (action.type) {
+      case L1.actions.UPDATE_RULES:
+        if ('aiCount' in action.payload) {
+          while (this.bots.length > action.payload.aiCount!) {
+            this.leave(this.bots.pop()!);
+          }
+          while (this.bots.length < action.payload.aiCount!) {
+            const client = new UnoAIClient(this, this.bots.length);
+            this.bots.push(client);
+            this.join(client);
+          }
+        }
         break;
     }
   }
