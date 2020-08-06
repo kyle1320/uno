@@ -242,12 +242,31 @@ export function reduce(_state: state.State, action: actions.All): state.State {
         }
       };
     case actions.GAME_OVER:
-      return { ..._state, status: state.GameStatus.Finished };
+      return {
+        ..._state,
+        ...removeInactivePlayers(_state),
+        status: state.GameStatus.Finished
+      };
     case actions.UPDATE_PLAYER:
       let didCallUno = _state.players[action.id]?.didCallUno ?? false;
       if ('cards' in action.payload && action.payload.cards !== 1) {
         didCallUno = false;
       }
+
+      // auto-remove player
+      if (
+        action.payload.connected === false &&
+        (!_state.players[action.id].isInGame ||
+          _state.status !== state.GameStatus.Started)
+      ) {
+        let { [action.id]: _, ...otherPlayers } = _state.players;
+        return {
+          ..._state,
+          players: otherPlayers,
+          turnOrder: _state.turnOrder.filter(id => id !== action.id)
+        };
+      }
+
       return {
         ..._state,
         players: {
@@ -260,18 +279,13 @@ export function reduce(_state: state.State, action: actions.All): state.State {
         }
       };
     case actions.RESET_GAME:
-      const players = getPlayersInGame(_state.players);
-      let turnOrder = _state.turnOrder.slice();
-      turnOrder.push(turnOrder.shift()!);
-      turnOrder = turnOrder.filter(id => id in players);
       return {
         ..._state,
         status: state.GameStatus.Started,
         lastPlayBy: null,
         direction: 'CW',
         currentPlayer: -1,
-        players,
-        turnOrder,
+        ...removeInactivePlayers(_state),
         ...action.payload
       };
     default:
@@ -279,13 +293,13 @@ export function reduce(_state: state.State, action: actions.All): state.State {
   }
 }
 
-function getPlayersInGame(players: { [id: string]: state.Player }) {
-  const newPlayers: typeof players = {};
+function removeInactivePlayers(l1: state.State) {
+  const players: typeof l1.players = {};
 
-  for (const id in players) {
-    const player = players[id];
+  for (const id in l1.players) {
+    const player = l1.players[id];
     if (player.connected) {
-      newPlayers[id] = player.isInGame
+      players[id] = player.isInGame
         ? player
         : {
             ...player,
@@ -294,5 +308,12 @@ function getPlayersInGame(players: { [id: string]: state.Player }) {
     }
   }
 
-  return newPlayers;
+  let turnOrder = l1.turnOrder.slice();
+  turnOrder.push(turnOrder.shift()!);
+  turnOrder = turnOrder.filter(id => id in players);
+
+  return {
+    players,
+    turnOrder
+  };
 }
