@@ -228,13 +228,21 @@ export namespace rules {
       case 'draw4':
       case 'draw':
         return l1.ruleState.count <= 1
-          ? { ruleState: { type: 'normal' }, currentPlayer: getNextTurn(l1) }
+          ? {
+              ruleState: { type: 'normal' },
+              currentPlayer: getNextTurn(l1),
+              turnCount: l1.turnCount + 1
+            }
           : { ruleState: { type: 'draw', count: l1.ruleState.count - 1 } };
       case 'normal':
       case 'maybePlay':
         return cardMatches(card, l1.topCard) || l1.rules.drawTillYouPlay
           ? { ruleState: { type: 'maybePlay' } }
-          : { ruleState: { type: 'normal' }, currentPlayer: getNextTurn(l1) };
+          : {
+              ruleState: { type: 'normal' },
+              currentPlayer: getNextTurn(l1),
+              turnCount: l1.turnCount + 1
+            };
     }
   }
 
@@ -251,28 +259,33 @@ export namespace rules {
       case 'draw2':
         return {
           ruleState: { type: 'draw2', count: count + 2 },
-          currentPlayer: getNextTurn(l1)
+          currentPlayer: getNextTurn(l1),
+          turnCount: l1.turnCount + 1
         };
       case 'draw4':
         return {
           ruleState: { type: 'draw4', count: count + 4 },
-          currentPlayer: getNextTurn(l1)
+          currentPlayer: getNextTurn(l1),
+          turnCount: l1.turnCount + 1
         };
       case 'reverse':
         return {
           ruleState: { type: 'normal' },
           direction: getReverseDirection(l1),
-          currentPlayer: getNextTurnReverse(l1)
+          currentPlayer: getNextTurnReverse(l1),
+          turnCount: l1.turnCount + 1
         };
       case 'skip':
         return {
           ruleState: { type: 'normal' },
-          currentPlayer: getSkipTurn(l1)
+          currentPlayer: getSkipTurn(l1),
+          turnCount: l1.turnCount + 1
         };
       default:
         return {
           ruleState: { type: 'normal' },
-          currentPlayer: getNextTurn(l1)
+          currentPlayer: getNextTurn(l1),
+          turnCount: l1.turnCount + 1
         };
     }
   }

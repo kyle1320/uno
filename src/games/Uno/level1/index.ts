@@ -169,24 +169,35 @@ export namespace state {
   export interface State {
     status: GameStatus;
     direction: 'CW' | 'CCW';
-    startTime: number;
-    currentPlayer: number;
     ruleState: RuleState;
-    rules: Rules;
+
+    players: { [id: string]: Player };
+    turnOrder: string[];
+    currentPlayer: number;
     topCard: Card | null;
     lastPlayBy: string | null;
     upStackSize: number;
     downStackSize: number;
-    turnOrder: string[];
-    players: { [id: string]: Player };
+
+    rules: Rules;
+
+    startTime: number;
+    turnCount: number;
   }
 
   export const initial: State = {
     status: GameStatus.Pregame,
     direction: 'CW',
-    startTime: -1,
-    currentPlayer: -1,
     ruleState: { type: 'normal' },
+
+    players: {},
+    turnOrder: [],
+    currentPlayer: -1,
+    topCard: null,
+    lastPlayBy: null,
+    upStackSize: 108,
+    downStackSize: 0,
+
     rules: {
       stackDraw2: false,
       stackDraw4: false,
@@ -197,12 +208,9 @@ export namespace state {
       penaltyCardCount: 4,
       aiCount: 0
     },
-    topCard: null,
-    lastPlayBy: null,
-    upStackSize: 108,
-    downStackSize: 0,
-    turnOrder: [],
-    players: {}
+
+    startTime: -1,
+    turnCount: 0
   };
 }
 
@@ -285,7 +293,8 @@ export function reduce(_state: state.State, action: actions.All): state.State {
         lastPlayBy: null,
         direction: 'CW',
         currentPlayer: -1,
-        ...removeInactivePlayers(_state),
+        turnCount: 0,
+        ...removeInactivePlayers(_state, true),
         ...action.payload
       };
     default:
@@ -293,7 +302,7 @@ export function reduce(_state: state.State, action: actions.All): state.State {
   }
 }
 
-function removeInactivePlayers(l1: state.State) {
+function removeInactivePlayers(l1: state.State, rotate = false) {
   const players: typeof l1.players = {};
 
   for (const id in l1.players) {
@@ -309,7 +318,7 @@ function removeInactivePlayers(l1: state.State) {
   }
 
   let turnOrder = l1.turnOrder.slice();
-  turnOrder.push(turnOrder.shift()!);
+  if (rotate) turnOrder.push(turnOrder.shift()!);
   turnOrder = turnOrder.filter(id => id in players);
 
   return {
