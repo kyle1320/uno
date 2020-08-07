@@ -38,14 +38,26 @@ export default class UnoAIClient implements IClient<UnoSpec> {
 
   public send(msg: ClientCoreActions<UnoSpec>): void {
     const l1 = this.server.getL1ClientState(this.id);
+    if (this.oldL1State && l1.turnCount === this.oldL1State.turnCount) {
+      return;
+    }
+    this.oldL1State = l1;
 
     if (rules.canCalloutUno(l1, this.id)) {
-      delay(Math.random() * Math.random() * 3000).then(() =>
-        this.sendServer(Req.actions.calloutUno())
-      );
+      delay(Math.random() * 4000).then(() => {
+        const newL1 = this.server.getL1ClientState(this.id);
+
+        // ignore callouts from previous turns
+        if (newL1.turnCount !== l1.turnCount) return;
+
+        // don't call yourself out :facepalm:
+        if (l1.lastPlayBy !== this.id) {
+          this.sendServer(Req.actions.calloutUno());
+        }
+      });
     }
 
-    if (this.isTurn(l1) && !this.isTurn(this.oldL1State)) {
+    if (this.isTurn(l1)) {
       this.takeTurn();
     }
 
@@ -80,7 +92,7 @@ export default class UnoAIClient implements IClient<UnoSpec> {
 
     if (this.turnInProgress) return;
 
-    await delay(Math.random() * 200 + 500);
+    await delay(Math.random() * 600 + 600);
     this.turnInProgress = true;
     await play();
     this.turnInProgress = false;
@@ -89,12 +101,12 @@ export default class UnoAIClient implements IClient<UnoSpec> {
   private async playCard(card: Card, l2: L2.state.State) {
     if (l2.hand.length === 2) {
       // don't wait for this -- it will race against the next timeout
-      delay(Math.random() * Math.random() * 2000).then(() =>
+      delay(Math.random() ** 5 * 5000).then(() =>
         this.sendServer(Req.actions.callUno())
       );
     }
 
-    await delay(Math.random() * 500 + 500);
+    await delay(Math.random() * 600 + 600);
 
     if (card.value === 'draw4' || card.value === 'wild') {
       const color = getPreferredColor(l2);
