@@ -94,7 +94,7 @@ export default class UnoAIClient implements IClient<UnoSpec> {
 
     if (this.turnInProgress) return;
 
-    await delay(Math.random() * 600 + 600);
+    await delay(Math.random() * 300 + 700);
     this.turnInProgress = true;
     await play();
     this.turnInProgress = false;
@@ -108,7 +108,7 @@ export default class UnoAIClient implements IClient<UnoSpec> {
       );
     }
 
-    await delay(Math.random() * 600 + 600);
+    await delay(Math.random() * 300 + 700);
 
     if (card.value === 'draw4' || card.value === 'wild') {
       const color = getPreferredColor(l2);
