@@ -241,7 +241,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
   public join(client: IClient<G>) {
     this.clients.push(client);
     this.uniqueClients.add(client.id);
-    if (this.deleteTimeout) {
+    if (this.deleteTimeout && client.isHuman) {
       clearTimeout(this.deleteTimeout);
       this.deleteTimeout = null;
     }
@@ -253,8 +253,8 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
       this.uniqueClients.delete(client.id);
       this.handleMessage(client, CoreActions.disconnected());
     }
-    if (this.clients.length === 0 && !this.deleteTimeout) {
-      this.deleteTimeout = setTimeout(this.delete, 5000);
+    if (!this.clients.some(c => c.isHuman) && !this.deleteTimeout) {
+      this.deleteTimeout = setTimeout(this.delete, 60000);
     }
   }
 

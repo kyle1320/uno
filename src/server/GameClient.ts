@@ -10,11 +10,14 @@ import {
 
 export interface IClient<G extends GameSpec> {
   readonly id: string;
+  readonly isHuman: boolean;
   send(msg: ClientCoreActions<G>): void;
   sync(): void;
 }
 
 export class GameClient<G extends GameSpec> implements IClient<G> {
+  public readonly isHuman = true;
+
   private hasReceivedInitialState = false;
 
   public constructor(

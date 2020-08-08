@@ -23,6 +23,8 @@ function getPreferredColor(l2: L2.state.State) {
 
 export default class UnoAIClient implements IClient<UnoSpec> {
   public readonly id: string;
+  public readonly isHuman = false;
+
   private turnInProgress = false;
   private oldL1State: L1.state.State | null = null;
 
