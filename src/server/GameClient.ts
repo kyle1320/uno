@@ -1,4 +1,5 @@
 import WebSocket from 'ws';
+import * as appInsights from 'applicationinsights';
 
 import { ServerGame } from './ServerGame';
 import {
@@ -34,9 +35,34 @@ export class GameClient<G extends GameSpec> implements IClient<G> {
         console.log(e);
         this.send(CoreActions.error(e));
       }
+
+      appInsights.defaultClient?.trackEvent({
+        name: 'WS Request',
+        properties: {
+          kind: action.kind,
+          type: action.type,
+          clientId: this.id
+        }
+      });
     };
-    socket.onclose = () => room.leave(this);
+    socket.onclose = () => {
+      room.leave(this);
+
+      appInsights.defaultClient?.trackEvent({
+        name: 'WS Close',
+        properties: {
+          clientId: this.id
+        }
+      });
+    };
     room.join(this);
+
+    appInsights.defaultClient?.trackEvent({
+      name: 'WS Open',
+      properties: {
+        clientId: this.id
+      }
+    });
 
     this.sync();
   }
