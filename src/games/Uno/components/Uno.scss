@@ -147,12 +147,12 @@ button {
     }
 
     .room-name {
-      & > :not(:last-child) {
+      &> :not(:last-child) {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
       }
 
-      & > :not(:first-child) {
+      &> :not(:first-child) {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
       }
@@ -221,7 +221,7 @@ button {
     display: none;
   }
 
-  .menu-container.open + & {
+  .menu-container.open+& {
     padding-left: 295px;
   }
 }

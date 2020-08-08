@@ -22,18 +22,29 @@ type StandingsInfo = {
 }[];
 type StandingsProps = {
   standings: StandingsInfo;
+  resetScores: () => void;
 };
-const Standings = connect((state: state.ClientSide<UnoSpec>) => ({
-  standings: state.l1.turnOrder
-    .map((id, i) => ({
-      ...state.l1.players[id],
-      index: i
-    }))
-    .sort((a, b) => b.score - a.score || b.index - a.index)
-}))(function (props: StandingsProps) {
+const Standings = connect(
+  (state: state.ClientSide<UnoSpec>) => ({
+    standings: state.l1.turnOrder
+      .map((id, i) => ({
+        ...state.l1.players[id],
+        index: i
+      }))
+      .sort((a, b) => b.score - a.score || b.index - a.index)
+  }),
+  (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
+    resetScores: () => dispatch(Req.actions.resetScores())
+  })
+)(function (props: StandingsProps) {
   return (
     <>
-      <h3>Standings</h3>
+      <div className="section-header">
+        <h3>Standings</h3>
+        <button className="secondary" onClick={props.resetScores}>
+          Reset
+        </button>
+      </div>
       <table>
         <tbody>
           {props.standings.map(s => (
@@ -65,7 +76,9 @@ const Rules = connect(
 )(function (props: RulesProps) {
   return (
     <>
-      <h3>Rules</h3>
+      <div className="section-header">
+        <h3>Rules</h3>
+      </div>
       <div className="row">
         <label className="row">
           <input
@@ -208,7 +221,9 @@ export function Menu(props: IProps) {
           </div>
         </div>
         <div className="scrolling">
-          <h3>Options</h3>
+          <div className="section-header">
+            <h3>Options</h3>
+          </div>
           <label className="row">
             Name{' '}
             <input

@@ -52,6 +52,16 @@ export namespace actions {
     };
   }
 
+  export const RESET_SCORES = 'RESET_SCORES';
+  export type ResetScoresAction = actionTypes.Req<typeof RESET_SCORES>;
+  export function resetScores(id: string = ''): ResetScoresAction {
+    return {
+      kind: 'Req',
+      type: RESET_SCORES,
+      id
+    };
+  }
+
   export const RESET_GAME = 'RESET_GAME';
   export type ResetGameAction = actionTypes.Req<typeof RESET_GAME>;
   export function resetGame(id: string = ''): ResetGameAction {
@@ -86,6 +96,7 @@ export namespace actions {
     | DrawCardAction
     | UpdateRulesAction
     | PlayCardAction
+    | ResetScoresAction
     | ResetGameAction
     | CallUnoAction
     | CalloutUnoAction;

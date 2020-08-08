@@ -40,6 +40,15 @@ export namespace actions {
     };
   }
 
+  export const RESET_SCORES = 'RESET_SCORES';
+  export type ResetScoresAction = actionTypes.L1<typeof RESET_SCORES>;
+  export function resetScores(): ResetScoresAction {
+    return {
+      kind: 'L1',
+      type: RESET_SCORES
+    };
+  }
+
   export const RESET_GAME = 'RESET_GAME';
   export type ResetGamePayload = {
     topCard: Card | null;
@@ -123,6 +132,7 @@ export namespace actions {
     | UpdateAction
     | UpdateRulesAction
     | AddPlayerAction
+    | ResetScoresAction
     | UpdatePlayerAction
     | ResetGameAction
     | PlayerWinAction
@@ -235,6 +245,11 @@ export function reduce(_state: state.State, action: actions.All): state.State {
           [action.payload.id]: action.payload
         }
       };
+    case actions.RESET_SCORES:
+      return {
+        ..._state,
+        ...resetPlayerScores(_state)
+      };
     case actions.PLAYER_WIN:
       const player = _state.players[action.id];
       return {
@@ -324,5 +339,21 @@ function removeInactivePlayers(l1: state.State, rotate = false) {
   return {
     players,
     turnOrder
+  };
+}
+
+function resetPlayerScores(l1: state.State) {
+  const players: typeof l1.players = {};
+
+  for (const id in l1.players) {
+    players[id] = {
+      ...l1.players[id],
+      score: 0,
+      gamesWon: 0
+    };
+  }
+
+  return {
+    players
   };
 }

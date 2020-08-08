@@ -219,6 +219,9 @@ export class UnoServer extends ServerGame<UnoSpec> {
           if (card) this.dispatch(L0.actions.playCard(card, action.id));
         }
         break;
+      case Req.actions.RESET_SCORES:
+        this.dispatch(L1.actions.resetScores());
+        break;
       case Req.actions.RESET_GAME:
         this.dispatch(L0.actions.resetGame());
         break;

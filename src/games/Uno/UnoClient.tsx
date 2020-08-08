@@ -82,6 +82,9 @@ export class UnoClient extends ClientGame<UnoSpec> {
           )
         );
         break;
+      case L1.actions.RESET_SCORES:
+        this.dispatch(L4.actions.pushToast(`Players scores have been reset`));
+        break;
       case L1.actions.UPDATE_RULES:
         for (const k in action.payload) {
           const key = k as keyof L1.state.Rules;

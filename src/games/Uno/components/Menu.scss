@@ -54,13 +54,28 @@
     background-color: #a0a0a0;
   }
 
-  h3 {
+  .section-header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
     margin: 0 0 8px;
     padding-bottom: 4px;
     border-bottom: 1px solid #a0a0a0;
 
     &:not(:first-of-type) {
       margin-top: 12px;
+    }
+
+    h3 {
+      margin: 0;
+      padding: 0;
+    }
+
+    button {
+      font-size: .9em;
+      padding: 4px 8px;
+      margin: 0;
     }
   }
 
