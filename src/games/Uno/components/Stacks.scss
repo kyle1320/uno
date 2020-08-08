@@ -32,6 +32,20 @@
     border-radius: 5px;
   }
 
+  .hint-text {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-style: italic;
+    font-weight: bold;
+    line-height: 1;
+    text-align: center;
+    text-shadow: black 0 0 2px;
+  }
+
   .direction {
     opacity: 0.7;
 

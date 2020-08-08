@@ -12,7 +12,6 @@ import { faHandPointUp } from '@fortawesome/free-solid-svg-icons';
 
 interface IProps {
   gameStatus: L1.state.GameStatus;
-  ruleState: L1.state.RuleState;
   yourTurn: boolean;
   canCallUno: boolean;
   canCalloutUno: boolean;
@@ -35,23 +34,7 @@ export function Info(props: IProps) {
     case L1.state.GameStatus.Started:
       return (
         <div className="info">
-          <span>
-            {(() => {
-              if (!props.yourTurn) return null;
-              switch (props.ruleState.type) {
-                case 'draw2':
-                case 'draw4':
-                case 'draw':
-                  if (!props.canPlayAny)
-                    return `Draw ${props.ruleState.count} card${
-                      props.ruleState.count === 1 ? '' : 's'
-                    }`;
-                // fallthrough
-                default:
-                  return 'Your Turn';
-              }
-            })()}
-          </span>
+          <span>{props.yourTurn && 'Your Turn'}</span>
           <div className="buttons">
             <button onClick={props.callUno} disabled={!props.canCallUno}>
               Call Uno!
@@ -75,7 +58,6 @@ export function Info(props: IProps) {
 export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
     gameStatus: state.l1.status,
-    ruleState: state.l1.ruleState,
     yourTurn: clientSelectors.isYourTurn(state),
     canCallUno: clientSelectors.canCallUno(state),
     canCalloutUno: clientSelectors.canCalloutUno(state),

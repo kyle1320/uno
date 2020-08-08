@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
-import { UnoSpec, Req } from '..';
+import { UnoSpec, L1, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
 import { Card as CardType, clientSelectors } from '../common';
 import { Card } from './Card';
@@ -16,6 +16,7 @@ interface IProps {
   placement: number | null;
   canDraw: boolean;
   mustDraw: boolean;
+  drawNumber: number | null;
   upStackSize: number;
   direction: 'CW' | 'CCW';
 
@@ -85,10 +86,24 @@ export function Stacks(props: IProps) {
           value="back"
           className={!props.canDraw ? 'disabled' : ''}
         />
+        <div className="hint-text">
+          {props.mustDraw && props.drawNumber && 'Draw ' + props.drawNumber}
+        </div>
         <div className="counter">{props.upStackSize}</div>
       </div>
     </div>
   );
+}
+
+function drawNumber(state: L1.state.RuleState) {
+  switch (state.type) {
+    case 'draw':
+    case 'draw2':
+    case 'draw4':
+      return state.count;
+    default:
+      return null;
+  }
 }
 
 export default connect(
@@ -106,6 +121,7 @@ export default connect(
     })(),
     canDraw: clientSelectors.canDraw(state),
     mustDraw: clientSelectors.mustDraw(state),
+    drawNumber: drawNumber(state.l1.ruleState),
     upStackSize: state.l1.upStackSize,
     direction: state.l1.direction
   }),
