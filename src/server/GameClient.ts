@@ -27,26 +27,37 @@ export class GameClient<G extends GameSpec> implements IClient<G> {
     private readonly room: ServerGame<G>
   ) {
     socket.onmessage = e => {
-      const action = JSON.parse(e.data as string) as ServerCoreActions<G>;
+      let action: ServerCoreActions<G> | null = null;
 
       try {
+        action = JSON.parse(e.data as string) as ServerCoreActions<G>;
         this.room.handleMessage(this, action);
       } catch (e) {
-        console.log(e);
+        appInsights.defaultClient?.trackException({
+          exception: e
+        });
         this.send(CoreActions.error(e));
       }
 
-      appInsights.defaultClient?.trackEvent({
-        name: 'WS Request',
-        properties: {
-          kind: action.kind,
-          type: action.type,
-          clientId: this.id
-        }
-      });
+      action &&
+        appInsights.defaultClient?.trackEvent({
+          name: 'WS Request',
+          properties: {
+            kind: action.kind,
+            type: action.type,
+            clientId: this.id
+          }
+        });
     };
     socket.onclose = () => {
-      room.leave(this);
+      try {
+        room.leave(this);
+      } catch (e) {
+        appInsights.defaultClient?.trackException({
+          exception: e
+        });
+        this.send(CoreActions.error(e));
+      }
 
       appInsights.defaultClient?.trackEvent({
         name: 'WS Close',
@@ -55,7 +66,15 @@ export class GameClient<G extends GameSpec> implements IClient<G> {
         }
       });
     };
-    room.join(this);
+
+    try {
+      room.join(this);
+    } catch (e) {
+      appInsights.defaultClient?.trackException({
+        exception: e
+      });
+      this.send(CoreActions.error(e));
+    }
 
     appInsights.defaultClient?.trackEvent({
       name: 'WS Open',
