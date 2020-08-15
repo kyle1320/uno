@@ -106,6 +106,14 @@ export class UnoClient extends ClientGame<UnoSpec> {
                 return 'Uno Penalty Cards';
               case 'aiCount':
                 return 'AI Players';
+              case 'initialCards':
+                return 'Starting Cards';
+              case 'canJoinMidGame':
+                return 'Joining Mid-Game';
+              case 'deckCount':
+                return 'Number of Decks';
+              default:
+                return key;
             }
           })();
           const value = (() => {

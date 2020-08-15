@@ -150,6 +150,9 @@ export namespace state {
     battleRoyale: boolean;
     penaltyCardCount: number;
     aiCount: number;
+    canJoinMidGame: boolean;
+    initialCards: number;
+    deckCount: number;
   }
 
   export interface Player {
@@ -216,7 +219,10 @@ export namespace state {
       drawTillYouPlay: false,
       battleRoyale: false,
       penaltyCardCount: 4,
-      aiCount: 0
+      aiCount: 0,
+      canJoinMidGame: false,
+      initialCards: 7,
+      deckCount: 1
     },
 
     startTime: -1,

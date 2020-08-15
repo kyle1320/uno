@@ -150,6 +150,53 @@ const Rules = connect(
         Battle Royale
       </label>
       <label className="row">
+        <input
+          type="checkbox"
+          checked={props.canJoinMidGame}
+          onChange={React.useCallback(
+            e => props.update({ canJoinMidGame: e.target.checked }),
+            [props.update]
+          )}
+        />
+        Allow Joining Mid-Game
+      </label>
+      <label className="row">
+        Starting Cards:
+        <select
+          value={props.initialCards}
+          onChange={React.useCallback(
+            e => props.update({ initialCards: +e.target.value }),
+            [props.update]
+          )}>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+        </select>
+      </label>
+      <label className="row">
+        Number of Decks:
+        <select
+          value={props.deckCount}
+          onChange={React.useCallback(
+            e => props.update({ deckCount: +e.target.value }),
+            [props.update]
+          )}>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </label>
+      <label className="row">
         Uno Penalty Cards:
         <select
           value={props.penaltyCardCount}

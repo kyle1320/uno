@@ -416,3 +416,7 @@ export function shuffled(arr: readonly Card[]): Card[] {
   shuffle(copy);
   return copy;
 }
+
+export function repeat<T>(arr: readonly T[], times: number): T[] {
+  return [].concat(...new Array(times).fill(arr));
+}

@@ -84,9 +84,15 @@ export class UnoServer extends ServerGame<UnoSpec> {
             startTime: Date.now()
           })
         );
-        for (const id of this.getL1State().turnOrder) {
+        const l1 = this.getL1State();
+        for (const id of l1.turnOrder) {
           this.dispatch(L2.actions.resetGame(id));
-          this.dispatch(L2.actions.drawCards(this.drawCards(id, 7) || [], id));
+          this.dispatch(
+            L2.actions.drawCards(
+              this.drawCards(id, l1.rules.initialCards) || [],
+              id
+            )
+          );
         }
         topCard &&
           this.dispatch(
@@ -207,6 +213,18 @@ export class UnoServer extends ServerGame<UnoSpec> {
             Math.max(1, action.payload.penaltyCardCount!)
           );
         }
+        if ('initialCards' in action.payload) {
+          action.payload.initialCards = Math.min(
+            20,
+            Math.max(2, action.payload.initialCards!)
+          );
+        }
+        if ('deckCount' in action.payload) {
+          action.payload.deckCount = Math.min(
+            5,
+            Math.max(1, action.payload.deckCount!)
+          );
+        }
         this.dispatch(L1.actions.updateRules(action.payload));
         break;
       case Req.actions.PLAY_CARD:
@@ -223,7 +241,9 @@ export class UnoServer extends ServerGame<UnoSpec> {
         this.dispatch(L1.actions.resetScores());
         break;
       case Req.actions.RESET_GAME:
-        this.dispatch(L0.actions.resetGame());
+        this.dispatch(
+          L0.actions.resetGame({ deckCount: state.l1.rules.deckCount })
+        );
         break;
       case Req.actions.CALL_UNO:
         if (serverSelectors.canCallUno(state, action.id)) {
@@ -270,13 +290,27 @@ export class UnoServer extends ServerGame<UnoSpec> {
               name: this.store.getState().l3[action.id].name,
               cards: 0,
               isInGame:
-                this.getL1State().status !== L1.state.GameStatus.Started,
+                state.rules.canJoinMidGame ||
+                state.status !== L1.state.GameStatus.Started,
               didCallUno: false,
               connected: true,
               score: 0,
               gamesWon: 0
             })
           );
+
+          // Deal an initial hand if they are joining mid-game
+          if (
+            state.status === L1.state.GameStatus.Started &&
+            state.rules.canJoinMidGame
+          ) {
+            this.dispatch(
+              L2.actions.drawCards(
+                this.drawCards(action.id, state.rules.initialCards) || [],
+                action.id
+              )
+            );
+          }
         }
         break;
     }
