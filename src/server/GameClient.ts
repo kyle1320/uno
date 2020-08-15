@@ -29,6 +29,7 @@ export class GameClient<G extends GameSpec> implements IClient<G> {
     socket.onmessage = e => {
       let action: ServerCoreActions<G> | null = null;
 
+      const start = Date.now();
       try {
         action = JSON.parse(e.data as string) as ServerCoreActions<G>;
         this.room.handleMessage(this, action);
@@ -38,6 +39,12 @@ export class GameClient<G extends GameSpec> implements IClient<G> {
         });
         this.send(CoreActions.error(e));
       }
+      const duration = Date.now() - start;
+
+      appInsights.defaultClient?.trackMetric({
+        name: 'WS Request Duration',
+        value: duration
+      });
 
       action &&
         appInsights.defaultClient?.trackEvent({
@@ -46,6 +53,9 @@ export class GameClient<G extends GameSpec> implements IClient<G> {
             kind: action.kind,
             type: action.type,
             clientId: this.id
+          },
+          measurements: {
+            duration
           }
         });
     };
