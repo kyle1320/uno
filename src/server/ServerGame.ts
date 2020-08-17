@@ -194,6 +194,10 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
     this.deleteCallbacks.forEach(cb => cb());
   };
 
+  protected onMarkForDeletion() {
+    // can be overridden by subclasses
+  }
+
   // TODO: make the typings here allow omitting unused parts of state
   protected abstract createInitialState(): state.ServerSide<G>;
   protected abstract createInitialClientState(
@@ -254,6 +258,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
       this.handleMessage(client, CoreActions.disconnected());
     }
     if (!this.clients.some(c => c.isHuman) && !this.deleteTimeout) {
+      this.onMarkForDeletion();
       this.deleteTimeout = setTimeout(this.delete, 60000);
     }
   }

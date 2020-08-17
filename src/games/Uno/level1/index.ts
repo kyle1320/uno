@@ -150,7 +150,7 @@ export namespace state {
     battleRoyale: boolean;
     penaltyCardCount: number;
     aiCount: number;
-    canJoinMidGame: boolean;
+    lobbyMode: boolean;
     initialCards: number;
     deckCount: number;
   }
@@ -191,6 +191,7 @@ export namespace state {
     lastPlayBy: string | null;
     upStackSize: number;
     downStackSize: number;
+    turnTimeout: number;
 
     rules: Rules;
 
@@ -211,6 +212,9 @@ export namespace state {
     upStackSize: 108,
     downStackSize: 0,
 
+    // Used in lobby mode. Contains the time when the current player will time out
+    turnTimeout: -1,
+
     rules: {
       stackDraw2: false,
       stackDraw4: false,
@@ -220,7 +224,7 @@ export namespace state {
       battleRoyale: false,
       penaltyCardCount: 4,
       aiCount: 0,
-      canJoinMidGame: false,
+      lobbyMode: false,
       initialCards: 7,
       deckCount: 1
     },

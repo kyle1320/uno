@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-
-import { UnoSpec, L1, L3, L4, Req } from '..';
-import { state, ClientGameActions } from '../../../types';
-import { clientSelectors } from '../common';
-
-import './Info.scss';
 import { Dispatch } from 'redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointUp } from '@fortawesome/free-solid-svg-icons';
+
+import { UnoSpec, L1, Req } from '..';
+import { state, ClientGameActions } from '../../../types';
+import { clientSelectors } from '../common';
+import TurnTimer from './TurnTimer';
+
+import './Info.scss';
 
 interface IProps {
   gameStatus: L1.state.GameStatus;
@@ -16,6 +17,7 @@ interface IProps {
   canCallUno: boolean;
   canCalloutUno: boolean;
   canPlayAny: boolean;
+  showTurnTimer: boolean;
 
   resetGame: () => void;
   callUno: () => void;
@@ -28,20 +30,31 @@ export function Info(props: IProps) {
       return (
         <div className="info">
           <span>Start a New Game to Play</span>
-          <button onClick={props.resetGame}>New Game</button>
+          <div className="buttons">
+            <button onClick={props.resetGame}>New Game</button>
+          </div>
         </div>
       );
     case L1.state.GameStatus.Started:
       return (
         <div className="info">
           <span>{props.yourTurn && 'Your Turn'}</span>
+          {props.showTurnTimer && props.yourTurn && (
+            <div className="turn-timer">
+              <TurnTimer />
+            </div>
+          )}
           <div className="buttons">
-            <button onClick={props.callUno} disabled={!props.canCallUno}>
-              Call Uno!
-            </button>
-            <button onClick={props.calloutUno} disabled={!props.canCalloutUno}>
-              <FontAwesomeIcon icon={faHandPointUp} /> Call Out
-            </button>
+            <div className="stack">
+              <button onClick={props.callUno} disabled={!props.canCallUno}>
+                Call Uno!
+              </button>
+              <button
+                onClick={props.calloutUno}
+                disabled={!props.canCalloutUno}>
+                <FontAwesomeIcon icon={faHandPointUp} /> Call Out
+              </button>
+            </div>
           </div>
         </div>
       );
@@ -49,7 +62,9 @@ export function Info(props: IProps) {
       return (
         <div className="info">
           <span>Game Over</span>
-          <button onClick={props.resetGame}>New Game</button>
+          <div className="buttons">
+            <button onClick={props.resetGame}>New Game</button>
+          </div>
         </div>
       );
   }
@@ -61,7 +76,8 @@ export default connect(
     yourTurn: clientSelectors.isYourTurn(state),
     canCallUno: clientSelectors.canCallUno(state),
     canCalloutUno: clientSelectors.canCalloutUno(state),
-    canPlayAny: clientSelectors.canPlayAny(state)
+    canPlayAny: clientSelectors.canPlayAny(state),
+    showTurnTimer: clientSelectors.turnTimerActive(state)
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     resetGame: () => dispatch(Req.actions.resetGame()),

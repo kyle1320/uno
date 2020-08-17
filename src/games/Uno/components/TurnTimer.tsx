@@ -5,11 +5,11 @@ import { UnoSpec } from '..';
 import { state } from '../../../types';
 
 interface IProps {
-  gameStartTime: number;
+  turnEndTime: number;
 }
 
 function getTimeString(millis: number) {
-  millis = Math.floor(millis / 1000);
+  millis = Math.ceil(millis / 1000);
   const s = millis % 60;
   const m = Math.floor(millis / 60);
 
@@ -17,12 +17,12 @@ function getTimeString(millis: number) {
 }
 
 export default connect((state: state.ClientSide<UnoSpec>) => ({
-  gameStartTime: state.l1.startTime - state.timeOffset
+  turnEndTime: state.l1.turnTimeout - state.timeOffset
 }))(function (props: IProps) {
   const [o, refresh] = React.useReducer(() => ({}), {});
   const duration = React.useMemo(
-    () => Math.max(0, Date.now() - props.gameStartTime),
-    [props.gameStartTime, o]
+    () => Math.max(0, props.turnEndTime - Date.now()),
+    [props.turnEndTime, o]
   );
   React.useEffect(function () {
     let timer: NodeJS.Timer | null = null;
@@ -31,7 +31,7 @@ export default connect((state: state.ClientSide<UnoSpec>) => ({
       timer = setTimeout(() => {
         refresh();
         tick();
-      }, 1001 - ((Date.now() - props.gameStartTime) % 1000));
+      }, 1 + ((Date.now() - props.turnEndTime) % 1000));
     }
 
     tick();

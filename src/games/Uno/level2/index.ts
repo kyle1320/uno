@@ -26,6 +26,20 @@ export namespace actions {
     };
   }
 
+  export const FORFEIT_DRAW = 'FORFEIT_DRAW';
+  export type ForfeitDrawAction = actionTypes.L2<typeof FORFEIT_DRAW, Card>;
+  export function forfeitDraw(
+    payload: Card,
+    id: string = ''
+  ): ForfeitDrawAction {
+    return {
+      kind: 'L2',
+      type: FORFEIT_DRAW,
+      payload,
+      id
+    };
+  }
+
   export const PLAY_CARD = 'PLAY_CARD';
   export type PlayCardAction = actionTypes.L2<typeof PLAY_CARD, number>;
   export function playCard(cardId: number, id: string = ''): PlayCardAction {
@@ -50,6 +64,7 @@ export namespace actions {
   export type All =
     | DrawCardsAction
     | DrawCardAction
+    | ForfeitDrawAction
     | PlayCardAction
     | ResetGameAction;
 }
@@ -73,6 +88,7 @@ export function reduce(state: state.State, action: actions.All): state.State {
     case actions.DRAW_CARDS:
       return { ...state, hand: [...state.hand, ...action.payload] };
     case actions.DRAW_CARD:
+    case actions.FORFEIT_DRAW:
       return {
         ...state,
         hand: [...state.hand, action.payload],

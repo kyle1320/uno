@@ -152,13 +152,13 @@ const Rules = connect(
       <label className="row">
         <input
           type="checkbox"
-          checked={props.canJoinMidGame}
+          checked={props.lobbyMode}
           onChange={React.useCallback(
-            e => props.update({ canJoinMidGame: e.target.checked }),
+            e => props.update({ lobbyMode: e.target.checked }),
             [props.update]
           )}
         />
-        Allow Joining Mid-Game
+        Lobby Mode
       </label>
       <label className="row">
         Starting Cards:

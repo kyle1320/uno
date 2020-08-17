@@ -4,8 +4,53 @@ import { Card, shuffled, Color, serverSelectors, rules } from './common';
 import { CoreActions, state } from '../../types';
 import UnoAIClient from './UnoAIClient';
 
+class Timer {
+  private timeout: NodeJS.Timer | null = null;
+  private date: number | null = null;
+  private callback: (() => void) | null = null;
+
+  public set(date: number | null, cb: (() => void) | null = null) {
+    this.callback = cb;
+
+    if (this.date !== date) {
+      this.date = date;
+      this.tick();
+    }
+  }
+
+  public cancel() {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+      this.timeout = null;
+    }
+    this.date = null;
+    this.callback = null;
+  }
+
+  private tick = () => {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+      this.timeout = null;
+    }
+
+    if (this.date == null) {
+      return;
+    }
+
+    const now = Date.now();
+    if (now >= this.date) {
+      this.callback?.();
+      this.date = null;
+      this.callback = null;
+    } else {
+      this.timeout = setTimeout(this.tick, this.date - now);
+    }
+  };
+}
+
 export class UnoServer extends ServerGame<UnoSpec> {
   private bots: UnoAIClient[] = [];
+  private turnTimer = new Timer();
 
   createInitialState() {
     return {
@@ -42,6 +87,10 @@ export class UnoServer extends ServerGame<UnoSpec> {
 
   public getL2ClientState(id: string) {
     return this.getL2State(id);
+  }
+
+  protected onMarkForDeletion() {
+    this.turnTimer.cancel();
   }
 
   processL0(action: L0.actions.All) {
@@ -117,6 +166,20 @@ export class UnoServer extends ServerGame<UnoSpec> {
             this.join(client);
           }
         }
+
+        if ('lobbyMode' in action.payload) {
+          if (action.payload.lobbyMode) {
+            this.resetTurnTimer();
+          } else {
+            this.turnTimer.cancel();
+          }
+        }
+        break;
+      case L1.actions.RESET_GAME:
+        this.resetTurnTimer();
+        break;
+      case L1.actions.GAME_OVER:
+        this.turnTimer.cancel();
         break;
     }
   }
@@ -142,6 +205,14 @@ export class UnoServer extends ServerGame<UnoSpec> {
             rules.getStateAfterDraw(action.payload.id, state.l1)
           )
         );
+        break;
+      case L2.actions.FORFEIT_DRAW:
+        this.dispatch(
+          L1.actions.updatePlayer(action.id, {
+            cards: state.l2[action.id].hand.length
+          })
+        );
+        this.dispatch(L1.actions.update(rules.getStateAfterForfeit(state.l1)));
         break;
       case L2.actions.PLAY_CARD:
         const cards = state.l2[action.id].hand.length;
@@ -193,6 +264,31 @@ export class UnoServer extends ServerGame<UnoSpec> {
     }
   }
 
+  private resetTurnTimer() {
+    const state = this.store.getState();
+
+    if (!serverSelectors.turnTimerActive(state)) {
+      return;
+    }
+
+    const time = Date.now() + 15000;
+    this.dispatch(
+      L1.actions.update({
+        turnTimeout: time
+      })
+    );
+
+    this.turnTimer.set(time, () => {
+      const id = serverSelectors.currentPlayer(this.store.getState());
+      // TODO: make this use drawCards() to draw multiple at once
+      do {
+        const cards = this.drawCards(id);
+        if (cards) this.dispatch(L2.actions.forfeitDraw(cards[0], id));
+      } while (this.getL1State().ruleState.type === 'draw');
+      this.resetTurnTimer();
+    });
+  }
+
   processRequest(action: Req.actions.All) {
     const state = this.store.getState();
 
@@ -204,6 +300,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
             const cards = this.drawCards(action.id);
             if (cards) this.dispatch(L2.actions.drawCard(cards[0], action.id));
           } while (this.getL1State().ruleState.type === 'draw');
+          this.resetTurnTimer();
         }
         break;
       case Req.actions.UPDATE_RULES:
@@ -235,6 +332,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
             action.payload.color
           );
           if (card) this.dispatch(L0.actions.playCard(card, action.id));
+          this.resetTurnTimer();
         }
         break;
       case Req.actions.RESET_SCORES:
@@ -272,17 +370,25 @@ export class UnoServer extends ServerGame<UnoSpec> {
   }
 
   processCore(action: CoreActions<UnoSpec>) {
-    const state = this.getL1State();
+    const state = this.store.getState();
 
     switch (action.type) {
       case CoreActions.DISCONNECTED:
         this.dispatch(L1.actions.updatePlayer(action.id, { connected: false }));
         break;
       case CoreActions.CONNECTED:
-        if (action.id in state.players) {
+        if (action.id in state.l1.players) {
           this.dispatch(
             L1.actions.updatePlayer(action.id, { connected: true })
           );
+
+          // if it's our turn and we have a turn timer, reset it
+          if (
+            serverSelectors.turnTimerActive(state) &&
+            serverSelectors.currentPlayer(state) === action.id
+          ) {
+            this.resetTurnTimer();
+          }
         } else {
           this.dispatch(
             L1.actions.addPlayer({
@@ -290,8 +396,8 @@ export class UnoServer extends ServerGame<UnoSpec> {
               name: this.store.getState().l3[action.id].name,
               cards: 0,
               isInGame:
-                state.rules.canJoinMidGame ||
-                state.status !== L1.state.GameStatus.Started,
+                state.l1.rules.lobbyMode ||
+                state.l1.status !== L1.state.GameStatus.Started,
               didCallUno: false,
               connected: true,
               score: 0,
@@ -299,14 +405,14 @@ export class UnoServer extends ServerGame<UnoSpec> {
             })
           );
 
-          // Deal an initial hand if they are joining mid-game
+          // Deal an initial hand if they are joining mid-game in lobby mode
           if (
-            state.status === L1.state.GameStatus.Started &&
-            state.rules.canJoinMidGame
+            state.l1.status === L1.state.GameStatus.Started &&
+            state.l1.rules.lobbyMode
           ) {
             this.dispatch(
               L2.actions.drawCards(
-                this.drawCards(action.id, state.rules.initialCards) || [],
+                this.drawCards(action.id, state.l1.rules.initialCards) || [],
                 action.id
               )
             );

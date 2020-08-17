@@ -17,9 +17,18 @@
   padding: 0 15px;
   min-height: 40px;
 
+  &>* {
+    flex: 1 0 0;
+  }
+
+  .turn-timer {
+    flex-grow: 0;
+  }
+
   span {
     margin-right: auto;
     line-height: 28px;
+    white-space: nowrap;
   }
 
   button {
@@ -35,8 +44,15 @@
 
   .buttons {
     display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  .stack {
+    display: flex;
     flex-flow: column-reverse nowrap;
-    align-items: stretch;
+    justify-content: flex-end;
 
     @media (min-width: 480px) {
       flex-direction: row;

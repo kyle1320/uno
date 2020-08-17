@@ -88,7 +88,7 @@ export class UnoClient extends ClientGame<UnoSpec> {
       case L1.actions.UPDATE_RULES:
         for (const k in action.payload) {
           const key = k as keyof L1.state.Rules;
-          const name = (() => {
+          const name = ((): string => {
             switch (key) {
               case 'stackDraw2':
                 return 'Stack Draw 2s';
@@ -108,12 +108,10 @@ export class UnoClient extends ClientGame<UnoSpec> {
                 return 'AI Players';
               case 'initialCards':
                 return 'Starting Cards';
-              case 'canJoinMidGame':
-                return 'Joining Mid-Game';
+              case 'lobbyMode':
+                return 'Lobby Mode';
               case 'deckCount':
                 return 'Number of Decks';
-              default:
-                return key;
             }
           })();
           const value = (() => {

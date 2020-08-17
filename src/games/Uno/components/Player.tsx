@@ -9,12 +9,14 @@ import { UnoSpec, L1 } from '..';
 import { state } from '../../../types';
 import Card from './Card';
 import { clientSelectors } from '../common';
+import TurnTimer from './TurnTimer';
 
 import './Player.scss';
 
 type IProps = {
   placement: number;
   isTurn: boolean;
+  showTurnTimer: boolean;
 } & L1.state.Player;
 
 function isSingleEmoji(s: string) {
@@ -46,18 +48,23 @@ export function Player(props: IProps) {
 
   return (
     <div
-      className="player-container"
+      className={`player-container${props.isTurn ? ' active' : ''}`}
       style={{
         top: `calc(60% + ${y}vh)`,
         left: `calc(50% + ${x}vw)`
       }}>
+      <div className="arrow">
+        <FontAwesomeIcon icon={faArrowDown} />
+      </div>
+      {props.isTurn && props.showTurnTimer && (
+        <div className="turn-timer">
+          <TurnTimer />
+        </div>
+      )}
       <div
         className={`player${props.isTurn ? ' active' : ''}${
           props.isInGame ? '' : ' inactive'
         }${props.connected ? '' : ' disconnected'}`}>
-        <div className="arrow">
-          <FontAwesomeIcon icon={faArrowDown} />
-        </div>
         <div
           className={`player-name${isSingleEmoji(props.name) ? ' large' : ''}`}>
           {props.name}
@@ -93,6 +100,7 @@ export function Player(props: IProps) {
 export default connect(
   (state: state.ClientSide<UnoSpec>, props: { id: string }) => ({
     ...state.l1.players[props.id],
-    isTurn: clientSelectors.currentPlayer(state) === props.id
+    isTurn: clientSelectors.currentPlayer(state) === props.id,
+    showTurnTimer: clientSelectors.turnTimerActive(state)
   })
 )(Player);

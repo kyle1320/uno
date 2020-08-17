@@ -64,6 +64,10 @@ export namespace clientSelectors {
   export function canCalloutUno(state: state.ClientSide<UnoSpec>) {
     return rules.canCalloutUno(state.l1, state.l2.id);
   }
+
+  export function turnTimerActive(state: state.ClientSide<UnoSpec>) {
+    return rules.turnTimerActive(state.l1);
+  }
 }
 
 export namespace serverSelectors {
@@ -110,6 +114,10 @@ export namespace serverSelectors {
       }
     }
     return score;
+  }
+
+  export function turnTimerActive(state: state.ServerSide<UnoSpec>) {
+    return rules.turnTimerActive(state.l1);
   }
 }
 
@@ -290,6 +298,31 @@ export namespace rules {
     }
   }
 
+  // the player forfeits their turn (by timing out)
+  export function getStateAfterForfeit(
+    l1: L1.state.State
+  ): Partial<L1.state.State> {
+    switch (l1.ruleState.type) {
+      case 'draw2':
+      case 'draw4':
+      case 'draw':
+        return l1.ruleState.count <= 1
+          ? {
+              ruleState: { type: 'normal' },
+              currentPlayer: getNextTurn(l1),
+              turnCount: l1.turnCount + 1
+            }
+          : { ruleState: { type: 'draw', count: l1.ruleState.count - 1 } };
+      case 'normal':
+      case 'maybePlay':
+        return {
+          ruleState: { type: 'normal' },
+          currentPlayer: getNextTurn(l1),
+          turnCount: l1.turnCount + 1
+        };
+    }
+  }
+
   export function canCallUno(l1: L1.state.State, id: string) {
     const player = l1.players[id];
     return player && player.isInGame && !player.didCallUno;
@@ -334,6 +367,10 @@ export namespace rules {
       case 'draw4':
         return 50;
     }
+  }
+
+  export function turnTimerActive(l1: L1.state.State) {
+    return l1.rules.lobbyMode && l1.status === L1.state.GameStatus.Started;
   }
 }
 
