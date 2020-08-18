@@ -34,6 +34,15 @@ export namespace actions {
     };
   }
 
+  export const ADD_DECK = 'ADD_DECK';
+  export type AddDeckAction = actionTypes.L0<typeof ADD_DECK>;
+  export function addDeck(): AddDeckAction {
+    return {
+      kind: 'L0',
+      type: ADD_DECK
+    };
+  }
+
   export const RESET_GAME = 'RESET_GAME';
   export type ResetGamePayload = {
     deckCount: number;
@@ -52,6 +61,7 @@ export namespace actions {
 
   export type All =
     | ShuffleAction
+    | AddDeckAction
     | DrawCardsAction
     | PlayCardAction
     | ResetGameAction;
@@ -79,6 +89,11 @@ export function reduce(state: state.State, action: actions.All): state.State {
           ...shuffled(state.downStack.slice(0, state.downStack.length - 1)),
           ...state.upStack
         ]
+      };
+    case actions.ADD_DECK:
+      return {
+        ...state,
+        upStack: [...shuffled(baseDeck), ...state.upStack]
       };
     case actions.DRAW_CARDS:
       return {

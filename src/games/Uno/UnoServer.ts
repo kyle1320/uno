@@ -448,7 +448,13 @@ export class UnoServer extends ServerGame<UnoSpec> {
     const upStack = state.l0.upStack;
     const cards = upStack.slice(upStack.length - count);
 
-    if (cards.length < count) return null;
+    if (cards.length < count) {
+      if (state.l1.rules.lobbyMode) {
+        this.dispatch(L0.actions.addDeck());
+      } else {
+        return null;
+      }
+    }
 
     this.dispatch(L0.actions.drawCards(count, id));
 
