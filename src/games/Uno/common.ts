@@ -185,17 +185,22 @@ export namespace rules {
     return play.color === current.color || play.value === current.value;
   }
 
+  function shouldPlay(l1: L1.state.State, id: string): boolean {
+    const player = l1.players[id];
+    return player.isInGame && !(l1.rules.lobbyMode && !player.connected);
+  }
+
   function getTurnAtDistance(l1: L1.state.State, dist: number) {
     let index = l1.currentPlayer + l1.turnOrder.length;
     for (var i = 0; dist !== 0 && i < l1.turnOrder.length; i++) {
       if (dist > 0) {
         index++;
-        if (l1.players[l1.turnOrder[index % l1.turnOrder.length]].isInGame) {
+        if (shouldPlay(l1, l1.turnOrder[index % l1.turnOrder.length])) {
           dist--;
         }
       } else {
         index--;
-        if (l1.players[l1.turnOrder[index % l1.turnOrder.length]].isInGame) {
+        if (shouldPlay(l1, l1.turnOrder[index % l1.turnOrder.length])) {
           dist++;
         }
       }
@@ -216,7 +221,7 @@ export namespace rules {
   }
 
   export function getNextTurnReverse(l1: L1.state.State) {
-    if (l1.turnOrder.filter(id => l1.players[id].isInGame).length == 2) {
+    if (l1.turnOrder.filter(id => shouldPlay(l1, id)).length == 2) {
       return getSkipTurn(l1);
     }
 
