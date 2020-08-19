@@ -104,11 +104,12 @@ export class GameClient<G extends GameSpec> implements IClient<G> {
     // don't send any action until the initial state has been received.
     // this way the client isn't updating outdated state.
     if (this.hasReceivedInitialState) {
+      (msg as any)._time = Date.now();
       this.socket.send(JSON.stringify(msg));
     }
   }
 
   public sync() {
-    this.send(CoreActions.sync(Date.now()));
+    this.send(CoreActions.sync());
   }
 }

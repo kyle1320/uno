@@ -117,12 +117,11 @@ export namespace CoreActions {
   }
 
   export const SYNC = 'SYNC';
-  export type SyncAction = actions.Core<typeof SYNC, number>;
-  export function sync(timestamp: number): SyncAction {
+  export type SyncAction = actions.Core<typeof SYNC>;
+  export function sync(): SyncAction {
     return {
       kind: 'Core',
-      type: SYNC,
-      payload: timestamp
+      type: SYNC
     };
   }
 

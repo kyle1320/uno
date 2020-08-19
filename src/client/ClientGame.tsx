@@ -60,6 +60,11 @@ export abstract class ClientGame<
         state: state.ClientSide<G> = null!,
         action: ClientCoreActions<G>
       ): state.ClientSide<G> => {
+        const time = (action as any)._time;
+        if (time && typeof time === 'number') {
+          state = { ...state, timeOffset: time - Date.now() };
+        }
+
         switch (action.kind) {
           case 'L1':
             return { ...state, l1: this.reduceL1(state.l1, action) };
@@ -167,8 +172,6 @@ export abstract class ClientGame<
         return { ...state, connected: false };
       case CoreActions.ERROR:
         return { ...state, error: action.payload };
-      case CoreActions.SYNC:
-        return { ...state, timeOffset: Date.now() - action.payload };
       default:
         return state;
     }
