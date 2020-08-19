@@ -39,9 +39,10 @@ class Timer {
 
     const now = Date.now();
     if (now >= this.date) {
-      this.callback?.();
+      const cb = this.callback;
       this.date = null;
       this.callback = null;
+      cb?.();
     } else {
       this.timeout = setTimeout(this.tick, this.date - now);
     }
