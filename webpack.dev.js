@@ -22,8 +22,7 @@ const client = {
   entry: './src/client/index.tsx',
   devtool: 'inline-source-map',
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.s?css$/,
         use: [
           MiniCssExtractPlugin.loader,
@@ -31,7 +30,10 @@ const client = {
           "sass-loader"
         ]
       },
-      { test: /\.tsx?$/, use: 'ts-loader' },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader'
+      },
       {
         test: /\.(png|jpg)$/,
         loader: 'url-loader'
@@ -46,7 +48,6 @@ const client = {
       filename: 'index.html',
       templateContent: template
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: "[id].css"
@@ -64,22 +65,19 @@ const server = {
   entry: './src/server/index.ts',
   devtool: 'inline-source-map',
   module: {
-    rules: [
-      { test: /\.ts$/, use: 'ts-loader' }
-    ]
+    rules: [{
+      test: /\.ts$/,
+      use: 'ts-loader'
+    }]
+  },
+  node: {
+    __dirname: false
   },
   target: 'node',
   resolve: {
     extensions: [".ts", ".tsx", ".js"]
   },
   externals: [nodeExternals()],
-  plugins: [
-    new webpack.BannerPlugin({
-      banner: 'require("source-map-support").install();',
-      raw: true,
-      entryOnly: false
-    })
-  ],
   output: {
     filename: 'server.js',
     path: path.resolve(__dirname, 'dist'),

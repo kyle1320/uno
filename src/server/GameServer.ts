@@ -73,10 +73,10 @@ export class GameServer<G extends GameSpec> {
       next();
     });
 
-    app.use(Express.static('public'));
+    app.use(Express.static(path.resolve(__dirname, 'public')));
     app.post('/newroom', (_, res) => res.end(this.getRandomRoom()));
     app.use('*', (req, res) => {
-      res.sendFile(path.resolve('./public/index.html'));
+      res.sendFile(path.resolve(__dirname, 'public/index.html'));
     });
   }
 
