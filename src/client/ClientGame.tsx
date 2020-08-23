@@ -117,6 +117,9 @@ export abstract class ClientGame<
             } else if (action.type === CoreActions.MULTI_ACTION) {
               batch(() => {
                 for (const act of action.payload) {
+                  if (isFromServer(action)) {
+                    tagFromServer(act);
+                  }
                   this.store.dispatch(act);
                 }
               });
