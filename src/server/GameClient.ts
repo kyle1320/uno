@@ -14,6 +14,7 @@ export interface IClient<G extends GameSpec> {
   readonly isHuman: boolean;
   send(msg: ClientCoreActions<G>): void;
   sync(): void;
+  close(): void;
 }
 
 export class GameClient<G extends GameSpec> implements IClient<G> {
@@ -111,5 +112,9 @@ export class GameClient<G extends GameSpec> implements IClient<G> {
 
   public sync() {
     this.send(CoreActions.sync());
+  }
+
+  public close() {
+    this.socket.close();
   }
 }

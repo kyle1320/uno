@@ -191,6 +191,10 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
 
   private delete = () => {
     this.deleteTimeout = null;
+    for (const client of this.clients) {
+      client.close();
+    }
+    this.clients = [];
     this.deleteCallbacks.forEach(cb => cb());
   };
 

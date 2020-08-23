@@ -28,6 +28,9 @@ export default class UnoAIClient implements IClient<UnoSpec> {
   private turnInProgress = false;
   private oldL1State: L1.state.State | null = null;
 
+  // watchdog to be sure that the AI doesn't get stuck by missing its turn
+  private watchdog: NodeJS.Timer;
+
   public constructor(
     private readonly server: UnoServer,
     public readonly n: number
@@ -36,6 +39,7 @@ export default class UnoAIClient implements IClient<UnoSpec> {
     this.sendServer(
       CoreActions.clientJoin([L3.actions.setName('AI ' + (n + 1))])
     );
+    this.watchdog = setInterval(this.takeTurn, 15000);
   }
 
   public send(msg: ClientCoreActions<UnoSpec>): void {
@@ -68,7 +72,14 @@ export default class UnoAIClient implements IClient<UnoSpec> {
 
   public sync(): void {}
 
-  private async takeTurn() {
+  public close() {
+    clearInterval(this.watchdog);
+  }
+
+  private takeTurn = async () => {
+    const l1 = this.server.getL1ClientState(this.id);
+    if (!this.isTurn(l1)) return;
+
     const play = async () => {
       const l1 = this.server.getL1ClientState(this.id);
       const l2 = this.server.getL2ClientState(this.id);
@@ -94,11 +105,11 @@ export default class UnoAIClient implements IClient<UnoSpec> {
 
     if (this.turnInProgress) return;
 
-    await delay(Math.random() * 300 + 700);
     this.turnInProgress = true;
+    await delay(Math.random() * 300 + 700);
     await play();
     this.turnInProgress = false;
-  }
+  };
 
   private async playCard(card: Card, l2: L2.state.State) {
     if (l2.hand.length === 2) {
