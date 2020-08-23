@@ -18,7 +18,9 @@ function getPreferredColor(l2: L2.state.State) {
   const colors = [...counts.keys()].sort(
     (a, b) => counts.get(b)! - counts.get(a)!
   );
-  return colors[0];
+
+  // default to red
+  return colors[0] || 'red';
 }
 
 export default class UnoAIClient implements IClient<UnoSpec> {
