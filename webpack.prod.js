@@ -102,6 +102,9 @@ const server = {
       }
     ]
   },
+  node: {
+    __dirname: false
+  },
   target: 'node',
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
