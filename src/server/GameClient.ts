@@ -46,19 +46,6 @@ export class GameClient<G extends GameSpec> implements IClient<G> {
         name: 'WS Request Duration',
         value: duration
       });
-
-      action &&
-        appInsights.defaultClient?.trackEvent({
-          name: 'WS Request',
-          properties: {
-            kind: action.kind,
-            type: action.type,
-            clientId: this.id
-          },
-          measurements: {
-            duration
-          }
-        });
     };
     socket.onclose = () => {
       try {

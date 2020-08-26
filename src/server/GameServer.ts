@@ -31,7 +31,7 @@ export class GameServer<G extends GameSpec> {
   private server: http.Server;
   private rooms: { [name: string]: ServerGame<G> };
 
-  public constructor(game: new () => ServerGame<G>) {
+  public constructor(game: new (roomName: string) => ServerGame<G>) {
     this.rooms = {};
 
     const app = Express();
@@ -52,7 +52,7 @@ export class GameServer<G extends GameSpec> {
       const privateId = (req as any)._clientid as string;
 
       if (!(room in this.rooms)) {
-        const g = new game();
+        const g = new game(room);
         g.onDelete(() => delete this.rooms[room]);
         this.rooms[room] = g;
       }

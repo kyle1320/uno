@@ -1,4 +1,5 @@
 import { Store, createStore, applyMiddleware } from 'redux';
+import * as appInsights from 'applicationinsights';
 
 import { IClient } from './GameClient';
 import {
@@ -38,7 +39,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
   private deleteCallbacks: (() => void)[] = [];
   private deleteTimeout: NodeJS.Timer | null = null;
 
-  public constructor() {
+  public constructor(private roomName: string) {
     let depth = 0;
     const actions: Map<IClient<G>, ServerSentActions<G>[]> = new Map();
 
@@ -237,6 +238,16 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
       default:
         return;
     }
+    appInsights.defaultClient?.trackEvent({
+      name: 'WS Request',
+      properties: {
+        kind: action.kind,
+        type: action.type,
+        payload: 'payload' in action ? action.payload : '',
+        clientId: client.id,
+        room: this.roomName
+      }
+    });
   }
 
   protected processL0(action: L0Actions<G>) {}
