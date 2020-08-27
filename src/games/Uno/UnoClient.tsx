@@ -40,22 +40,38 @@ export class UnoClient extends ClientGame<UnoSpec> {
   protected reduceL4 = L4.reduce;
 
   protected processL1(action: L1.actions.All) {
-    const state = this.getL1State();
+    const state = this.getState();
     switch (action.type) {
       case L1.actions.UPDATE_PLAYER:
         if (action.payload.didCallUno) {
           this.dispatch(
-            L4.actions.pushToast(`${state.players[action.id].name} called Uno!`)
+            L4.actions.pushToast(
+              `${state.l1.players[action.id].name} called Uno!`
+            )
           );
         }
         break;
       case L1.actions.PLAYER_WIN:
+        if (action.id === state.l2.id) {
+          this.dispatch(
+            L4.actions.update({
+              didWin: true
+            })
+          );
+        }
         this.dispatch(
           L4.actions.pushToast(
-            `${state.players[action.id].name} went out with ${
+            `${state.l1.players[action.id].name} went out with ${
               action.payload
             } points!`
           )
+        );
+        break;
+      case L1.actions.RESET_GAME:
+        this.dispatch(
+          L4.actions.update({
+            didWin: false
+          })
         );
         break;
       case L1.actions.GAME_OVER:
@@ -75,9 +91,9 @@ export class UnoClient extends ClientGame<UnoSpec> {
       case L1.actions.CALLOUT:
         this.dispatch(
           L4.actions.pushToast(
-            `${state.players[action.payload.callerId].name} called out ` +
+            `${state.l1.players[action.payload.callerId].name} called out ` +
               `${
-                state.players[action.payload.targetId].name
+                state.l1.players[action.payload.targetId].name
               } on not saying Uno!`
           )
         );

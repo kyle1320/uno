@@ -204,12 +204,24 @@ export abstract class ClientGame<
 
   protected abstract getRootElement(): React.ReactElement;
 
+  protected getState(): state.ClientSide<G> {
+    return this.store.getState();
+  }
+
   protected getL1State(): state.L1<G> {
-    return this.store.getState().l1;
+    return this.getState().l1;
+  }
+
+  protected getL2State(): state.L2<G> {
+    return this.getState().l2;
+  }
+
+  protected getL3State(): state.L3<G> {
+    return this.getState().l3;
   }
 
   protected getL4State(): state.L4<G> {
-    return this.store.getState().l4;
+    return this.getState().l4;
   }
 
   protected dispatch(action: ClientGameActions<G>) {

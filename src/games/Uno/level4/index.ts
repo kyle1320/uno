@@ -63,13 +63,15 @@ export namespace state {
   export interface State {
     settings: Settings;
     toasts: string[];
+    didWin: boolean;
   }
 
   export const initial: State = {
     settings: {
       sortCards: false
     },
-    toasts: []
+    toasts: [],
+    didWin: false
   };
 }
 

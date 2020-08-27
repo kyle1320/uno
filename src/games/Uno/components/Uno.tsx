@@ -8,13 +8,15 @@ import Menu from './Menu';
 import Players from './Players';
 import Stacks from './Stacks';
 import Info from './Info';
+import Toasts from './Toasts';
+import Fireworks from './Fireworks';
 
 import './Uno.scss';
-import Toasts from './Toasts';
 
 interface Props {
   connected: boolean;
   error: any;
+  didWin: boolean;
 }
 
 class Uno extends React.PureComponent<Props> {
@@ -34,6 +36,7 @@ class Uno extends React.PureComponent<Props> {
           <Stacks />
           <Players />
           <Info />
+          <Fireworks show={this.props.didWin} />
         </div>
         <div className="hand">
           <CardWheel />
@@ -45,5 +48,6 @@ class Uno extends React.PureComponent<Props> {
 
 export default connect((state: state.ClientSide<UnoSpec>) => ({
   connected: state.connected,
-  error: state.error
+  error: state.error,
+  didWin: state.l4.didWin
 }))(Uno);

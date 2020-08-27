@@ -42,6 +42,7 @@
     "css-loader": "^4.2.1",
     "emoji-regex": "^9.0.0",
     "favicons-webpack-plugin": "^4.2.0",
+    "fireworks-canvas": "^2.5.0",
     "html-webpack-plugin": "^4.3.0",
     "mini-css-extract-plugin": "^0.10.0",
     "nodemon": "^2.0.4",
