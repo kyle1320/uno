@@ -379,12 +379,15 @@ export namespace rules {
   }
 }
 
-export const baseDeck: readonly Card[] = (function () {
+let _globalCardId = 0;
+export function getNewDeck() {
   const deck: Card[] = [];
+  let cardId = 0;
 
-  let _cardId = 0;
-  function getId() {
-    return _cardId++;
+  const remainder = _globalCardId % 108;
+  if (remainder !== 0) {
+    // this shouldn't happen, but just in case
+    _globalCardId += 108 - remainder;
   }
 
   for (const color of ['red', 'yellow', 'green', 'blue'] as const) {
@@ -415,7 +418,7 @@ export const baseDeck: readonly Card[] = (function () {
       'draw2',
       'draw2'
     ] as const) {
-      deck.push({ color, value, id: getId() });
+      deck.push({ color, value, id: _globalCardId++ });
     }
   }
 
@@ -429,14 +432,15 @@ export const baseDeck: readonly Card[] = (function () {
     'draw4',
     'draw4'
   ] as const) {
-    deck.push({ color: 'black', value, id: getId() });
+    deck.push({ color: 'black', value, id: _globalCardId++ });
   }
 
   return deck;
-})();
+}
+const baseDeck: readonly Card[] = getNewDeck();
 
 export function getCardFromId(id: number): Card | null {
-  return baseDeck[id] || null;
+  return baseDeck[id % 108] || null;
 }
 
 function shuffle(arr: unknown[]) {
@@ -459,6 +463,18 @@ export function shuffled(arr: readonly Card[]): Card[] {
   return copy;
 }
 
-export function repeat<T>(arr: readonly T[], times: number): T[] {
-  return [].concat(...new Array(times).fill(arr));
+export function repeat<T>(
+  arr: readonly T[] | (() => readonly T[]),
+  times: number
+): T[] {
+  let arrays;
+  if (typeof arr === 'function') {
+    arrays = [];
+    for (let i = 0; i < times; i++) {
+      arrays.push(arr());
+    }
+  } else {
+    arrays = new Array(times).fill(arr);
+  }
+  return [].concat(...arrays);
 }

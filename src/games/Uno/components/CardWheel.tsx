@@ -22,6 +22,45 @@ interface IState {
   colorChooserId: number | null;
 }
 
+function toNum(value: any, def: number) {
+  const num = +value;
+  if (num !== num) return def;
+  return num;
+}
+function order(card: CardType) {
+  const color = (() => {
+    switch (card.color) {
+      case 'red':
+        return 0;
+      case 'yellow':
+        return 1;
+      case 'green':
+        return 2;
+      case 'blue':
+        return 3;
+      default:
+        return 4;
+    }
+  })();
+  const value = (() => {
+    switch (card.value) {
+      case 'reverse':
+        return 10;
+      case 'skip':
+        return 11;
+      case 'draw2':
+        return 12;
+      case 'wild':
+        return 13;
+      case 'draw4':
+        return 14;
+      default:
+        return toNum(card.value, 15);
+    }
+  })();
+  return color * 16 + value;
+}
+
 export class CardWheel extends React.PureComponent<IProps, IState> {
   private container: React.RefObject<HTMLDivElement>;
 
@@ -98,7 +137,7 @@ export class CardWheel extends React.PureComponent<IProps, IState> {
 
   render() {
     const cards = this.props.sort
-      ? this.props.cards.slice().sort((a, b) => a.id - b.id)
+      ? this.props.cards.slice().sort((a, b) => order(a) - order(b))
       : this.props.cards;
     return (
       <div className={`card-wheel${this.props.yourTurn ? ' active' : ''}`}>

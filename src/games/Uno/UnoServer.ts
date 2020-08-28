@@ -55,10 +55,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
 
   createInitialState() {
     return {
-      l0: {
-        ...L0.state.initial,
-        upStack: shuffled(L0.state.initial.upStack)
-      },
+      l0: L0.state.initial(),
       l1: L1.state.initial,
       l2: {},
       l3: {}
