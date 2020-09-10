@@ -8,6 +8,7 @@
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
+  align-items: center;
   text-align: center;
   background-color: rgba(0, 0, 0, 0.7);
 
@@ -16,7 +17,16 @@
   font-weight: bold;
 
   svg {
+    min-height: 400px;
     height: 50%;
+  }
+
+  @media only screen and (min-width: 600px) and (max-height: 560px) {
+    flex-flow: row nowrap;
+
+    svg {
+      height: 90%;
+    }
   }
 }
 
