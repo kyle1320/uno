@@ -36,8 +36,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
 
   protected store: Store<state.ServerSide<G>, ServerCoreActions<G>>;
 
-  private deleteCallbacks: (() => void)[] = [];
-  private deleteTimeout: NodeJS.Timer | null = null;
+  private deleteAfter: null | number = null;
 
   public constructor(private roomName: string) {
     let depth = 0;
@@ -186,18 +185,19 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
     setInterval(() => this.clients.forEach(c => c.sync()), 30000);
   }
 
-  public onDelete(cb: () => void) {
-    this.deleteCallbacks.push(cb);
+  public shouldDelete(): boolean {
+    if (this.deleteAfter) {
+      return Date.now() > this.deleteAfter;
+    }
+    return false;
   }
 
-  private delete = () => {
-    this.deleteTimeout = null;
+  public delete() {
     for (const client of this.clients) {
       client.close();
     }
     this.clients = [];
-    this.deleteCallbacks.forEach(cb => cb());
-  };
+  }
 
   protected onMarkForDeletion() {
     // can be overridden by subclasses
@@ -260,9 +260,8 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
   public join(client: IClient<G>) {
     this.clients.push(client);
     this.uniqueClients.add(client.id);
-    if (this.deleteTimeout && client.isHuman) {
-      clearTimeout(this.deleteTimeout);
-      this.deleteTimeout = null;
+    if (this.deleteAfter && client.isHuman) {
+      this.deleteAfter = null;
     }
   }
 
@@ -272,9 +271,9 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
       this.uniqueClients.delete(client.id);
       this.handleMessage(client, CoreActions.disconnected());
     }
-    if (!this.clients.some(c => c.isHuman) && !this.deleteTimeout) {
+    if (!this.clients.some(c => c.isHuman) && !this.deleteAfter) {
       this.onMarkForDeletion();
-      this.deleteTimeout = setTimeout(this.delete, 60000);
+      this.deleteAfter = Date.now() + 24 * 60 * 60 * 1000;
     }
   }
 

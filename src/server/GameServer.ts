@@ -53,7 +53,6 @@ export class GameServer<G extends GameSpec> {
 
       if (!(room in this.rooms)) {
         const g = new game(room);
-        g.onDelete(() => delete this.rooms[room]);
         this.rooms[room] = g;
       }
 
@@ -78,6 +77,15 @@ export class GameServer<G extends GameSpec> {
     app.use('*', (req, res) => {
       res.sendFile(path.resolve(__dirname, 'public/index.html'));
     });
+
+    setInterval(() => {
+      for (const key in this.rooms) {
+        if (this.rooms[key].shouldDelete()) {
+          this.rooms[key].delete();
+          delete this.rooms[key];
+        }
+      }
+    }, 6 * 60 * 60 * 1000);
   }
 
   public start() {
