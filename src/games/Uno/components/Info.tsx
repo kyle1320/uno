@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHandPointUp } from '@fortawesome/free-solid-svg-icons';
+import { faHandPointUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 import { UnoSpec, L1, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
@@ -29,7 +29,7 @@ export function Info(props: IProps) {
     case L1.state.GameStatus.Pregame:
       return (
         <div className="info">
-          <span>Start a New Game to Play</span>
+          <span className="info-text">Start a New Game to Play</span>
           <div className="buttons">
             <button onClick={props.resetGame}>New Game</button>
           </div>
@@ -38,10 +38,13 @@ export function Info(props: IProps) {
     case L1.state.GameStatus.Started:
       return (
         <div className="info">
-          <span>{props.yourTurn && 'Your Turn'}</span>
-          {props.showTurnTimer && props.yourTurn && (
-            <div className="turn-timer">
-              <TurnTimer />
+          <span className="info-text">{props.yourTurn && 'Your Turn'}</span>
+          {props.yourTurn && (
+            <div className="center">
+              <div className="arrow">
+                <FontAwesomeIcon icon={faArrowDown} />
+              </div>
+              {props.showTurnTimer && <TurnTimer />}
             </div>
           )}
           <div className="buttons">
@@ -61,7 +64,7 @@ export function Info(props: IProps) {
     case L1.state.GameStatus.Finished:
       return (
         <div className="info">
-          <span>Game Over</span>
+          <span className="info-text">Game Over</span>
           <div className="buttons">
             <button onClick={props.resetGame}>New Game</button>
           </div>

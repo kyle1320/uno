@@ -21,11 +21,15 @@
     flex: 1 0 0;
   }
 
-  .turn-timer {
+  .center {
     flex-grow: 0;
   }
 
-  span {
+  .arrow {
+    font-size: 20px;
+  }
+
+  .info-text {
     margin-right: auto;
     line-height: 28px;
     white-space: nowrap;
