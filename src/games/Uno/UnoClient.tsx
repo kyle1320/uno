@@ -63,7 +63,7 @@ export class UnoClient extends ClientGame<UnoSpec> {
           L4.actions.pushToast(
             `${state.l1.players[action.id].name} went out with ${
               action.payload
-            } points!`
+            } point${action.payload === 1 ? '' : 's'}!`
           )
         );
         break;
