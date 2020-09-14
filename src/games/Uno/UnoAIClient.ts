@@ -46,7 +46,15 @@ export default class UnoAIClient implements IClient<UnoSpec> {
 
   public send(msg: ClientCoreActions<UnoSpec>): void {
     const l1 = this.server.getL1ClientState(this.id);
-    if (this.oldL1State && l1.turnCount === this.oldL1State.turnCount) {
+    const didReset =
+      msg.type === L1.actions.RESET_GAME ||
+      (msg.type === CoreActions.MULTI_ACTION &&
+        msg.payload.some(m => m.type === L1.actions.RESET_GAME));
+    if (
+      !didReset &&
+      this.oldL1State &&
+      l1.turnCount === this.oldL1State.turnCount
+    ) {
       return;
     }
     this.oldL1State = l1;
