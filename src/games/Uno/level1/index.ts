@@ -155,6 +155,11 @@ export namespace state {
     deckCount: number;
   }
 
+  export interface Score {
+    score: number;
+    gamesWon: number;
+  }
+
   export interface Player {
     id: string;
     name: string;
@@ -162,8 +167,6 @@ export namespace state {
     isInGame: boolean;
     didCallUno: boolean;
     connected: boolean;
-    score: number;
-    gamesWon: number;
   }
 
   export type RuleState =
@@ -185,6 +188,9 @@ export namespace state {
     ruleState: RuleState;
 
     players: { [id: string]: Player };
+
+    // players don't appear in here until they've won a game
+    scores: { [id: string]: Score | undefined };
     turnOrder: string[];
     currentPlayer: number;
     topCard: Card | null;
@@ -205,6 +211,7 @@ export namespace state {
     ruleState: { type: 'normal' },
 
     players: {},
+    scores: {},
     turnOrder: [],
     currentPlayer: -1,
     topCard: null,
@@ -258,19 +265,25 @@ export function reduce(_state: state.State, action: actions.All): state.State {
     case actions.RESET_SCORES:
       return {
         ..._state,
-        ...resetPlayerScores(_state)
+        scores: {}
       };
     case actions.PLAYER_WIN:
       const player = _state.players[action.id];
+      const score = _state.scores[action.id] || { score: 0, gamesWon: 0 };
       return {
         ..._state,
         players: {
           ..._state.players,
           [action.id]: {
             ...player,
-            isInGame: false,
-            gamesWon: player.gamesWon + 1,
-            score: player.score + action.payload
+            isInGame: false
+          }
+        },
+        scores: {
+          ..._state.scores,
+          [action.id]: {
+            score: score.score + action.payload,
+            gamesWon: score.gamesWon + 1
           }
         }
       };
@@ -349,21 +362,5 @@ function removeInactivePlayers(l1: state.State, rotate = false) {
   return {
     players,
     turnOrder
-  };
-}
-
-function resetPlayerScores(l1: state.State) {
-  const players: typeof l1.players = {};
-
-  for (const id in l1.players) {
-    players[id] = {
-      ...l1.players[id],
-      score: 0,
-      gamesWon: 0
-    };
-  }
-
-  return {
-    players
   };
 }

@@ -397,9 +397,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
                 state.l1.rules.lobbyMode ||
                 state.l1.status !== L1.state.GameStatus.Started,
               didCallUno: false,
-              connected: true,
-              score: 0,
-              gamesWon: 0
+              connected: true
             })
           );
 

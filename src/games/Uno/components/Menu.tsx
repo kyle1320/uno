@@ -28,7 +28,9 @@ const Standings = connect(
   (state: state.ClientSide<UnoSpec>) => ({
     standings: state.l1.turnOrder
       .map((id, i) => ({
-        ...state.l1.players[id],
+        id,
+        name: state.l1.players[id].name,
+        ...(state.l1.scores[id] || { score: 0, gamesWon: 0 }),
         index: i
       }))
       .sort((a, b) => b.score - a.score || b.index - a.index)
