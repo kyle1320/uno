@@ -33,7 +33,10 @@ const Standings = connect(
         ...(state.l1.scores[id] || { score: 0, gamesWon: 0 }),
         index: i
       }))
-      .sort((a, b) => b.score - a.score || b.index - a.index)
+      .sort(
+        (a, b) =>
+          b.score - a.score || b.gamesWon - a.gamesWon || a.index - b.index
+      )
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     resetScores: () => dispatch(Req.actions.resetScores())
