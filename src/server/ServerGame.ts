@@ -203,6 +203,10 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
     // can be overridden by subclasses
   }
 
+  protected onUnmarkForDeletion() {
+    // can be overridden by subclasses
+  }
+
   // TODO: make the typings here allow omitting unused parts of state
   protected abstract createInitialState(): state.ServerSide<G>;
   protected abstract createInitialClientState(
@@ -262,18 +266,20 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
     this.uniqueClients.add(client.id);
     if (this.deleteAfter && client.isHuman) {
       this.deleteAfter = null;
+      this.onUnmarkForDeletion();
     }
   }
 
   public leave(client: IClient<G>) {
+    client.close();
     this.clients = this.clients.filter(x => x !== client);
     if (!this.clients.some(c => c.id === client.id)) {
       this.uniqueClients.delete(client.id);
       this.handleMessage(client, CoreActions.disconnected());
     }
     if (!this.clients.some(c => c.isHuman) && !this.deleteAfter) {
-      this.onMarkForDeletion();
       this.deleteAfter = Date.now() + 24 * 60 * 60 * 1000;
+      this.onMarkForDeletion();
     }
   }
 

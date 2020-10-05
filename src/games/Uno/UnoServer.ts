@@ -89,6 +89,22 @@ export class UnoServer extends ServerGame<UnoSpec> {
 
   protected onMarkForDeletion() {
     this.turnTimer.cancel();
+    this.updateBots(0);
+  }
+
+  protected onUnmarkForDeletion() {
+    this.updateBots();
+  }
+
+  private updateBots(count = this.getL1State().rules.aiCount) {
+    while (this.bots.length > count) {
+      this.leave(this.bots.pop()!);
+    }
+    while (this.bots.length < count) {
+      const client = new UnoAIClient(this, this.bots.length);
+      this.bots.push(client);
+      this.join(client);
+    }
   }
 
   processL0(action: L0.actions.All) {
@@ -155,14 +171,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
     switch (action.type) {
       case L1.actions.UPDATE_RULES:
         if ('aiCount' in action.payload) {
-          while (this.bots.length > action.payload.aiCount!) {
-            this.leave(this.bots.pop()!);
-          }
-          while (this.bots.length < action.payload.aiCount!) {
-            const client = new UnoAIClient(this, this.bots.length);
-            this.bots.push(client);
-            this.join(client);
-          }
+          this.updateBots();
         }
 
         if ('lobbyMode' in action.payload) {
