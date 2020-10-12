@@ -328,6 +328,7 @@ export function reduce(_state: state.State, action: actions.All): state.State {
       return {
         ..._state,
         status: state.GameStatus.Started,
+        ruleState: { type: 'normal' },
         lastPlayBy: null,
         direction: 'CW',
         currentPlayer: -1,
