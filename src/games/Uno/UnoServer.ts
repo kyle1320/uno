@@ -187,8 +187,22 @@ export class UnoServer extends ServerGame<UnoSpec> {
         break;
       case L1.actions.GAME_OVER:
         this.turnTimer.cancel();
+        this.dispatch(
+          L1.actions.update({
+            shownHands: this.getPlayerHands()
+          })
+        );
         break;
     }
+  }
+
+  private getPlayerHands() {
+    const state = this.store.getState().l2;
+    const res: { [id: string]: Card[] } = {};
+    for (const id in state) {
+      res[id] = state[id].hand;
+    }
+    return res;
   }
 
   processL2(action: L2.actions.All) {

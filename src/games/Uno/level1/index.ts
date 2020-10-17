@@ -188,6 +188,7 @@ export namespace state {
     ruleState: RuleState;
 
     players: { [id: string]: Player };
+    shownHands: { [id: string]: Card[] } | null;
 
     // players don't appear in here until they've won a game
     scores: { [id: string]: Score | undefined };
@@ -218,6 +219,7 @@ export namespace state {
     lastPlayBy: null,
     upStackSize: 108,
     downStackSize: 0,
+    shownHands: null,
 
     // Used in lobby mode. Contains the time when the current player will time out
     turnTimeout: -1,
@@ -333,6 +335,7 @@ export function reduce(_state: state.State, action: actions.All): state.State {
         direction: 'CW',
         currentPlayer: -1,
         turnCount: 0,
+        shownHands: null,
         ...removeInactivePlayers(_state, true),
         ...action.payload
       };

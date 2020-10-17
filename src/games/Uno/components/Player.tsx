@@ -8,7 +8,7 @@ import { faArrowDown, faUnlink } from '@fortawesome/free-solid-svg-icons';
 import { UnoSpec, L1 } from '..';
 import { state } from '../../../types';
 import Card from './Card';
-import { clientSelectors } from '../common';
+import { clientSelectors, Card as CardType } from '../common';
 import TurnTimer from './TurnTimer';
 
 import './Player.scss';
@@ -17,6 +17,7 @@ type IProps = {
   placement: number;
   isTurn: boolean;
   showTurnTimer: boolean;
+  hand?: CardType[];
 } & L1.state.Player;
 
 function isSingleEmoji(s: string) {
@@ -70,7 +71,14 @@ export function Player(props: IProps) {
           {props.name}
         </div>
         <TransitionGroup className="player-hand">
-          {new Array(props.cards).fill(null).map((_, i) => (
+          {(
+            props.hand ||
+            new Array<CardType>(props.cards).fill({
+              value: 'back' as any,
+              color: 'black',
+              id: -1
+            })
+          ).map((card, i) => (
             <CSSTransition
               key={i}
               classNames="card-slide"
@@ -79,8 +87,8 @@ export function Player(props: IProps) {
                 exit: 0
               }}>
               <div className="card-wrapper">
-                <Card value="back" color="black" />
-                {i === props.cards - 1 ? (
+                <Card value={card.value} color={card.color} />
+                {!props.hand && i === props.cards - 1 ? (
                   <div className="card-count">{props.cards}</div>
                 ) : null}
               </div>
@@ -101,6 +109,7 @@ export default connect(
   (state: state.ClientSide<UnoSpec>, props: { id: string }) => ({
     ...state.l1.players[props.id],
     isTurn: clientSelectors.currentPlayer(state) === props.id,
-    showTurnTimer: clientSelectors.turnTimerActive(state)
+    showTurnTimer: clientSelectors.turnTimerActive(state),
+    hand: state.l1.shownHands?.[props.id]
   })
 )(Player);
