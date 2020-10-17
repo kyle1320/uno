@@ -50,8 +50,7 @@ module.exports = function (env, argv) {
     entry: './src/client/index.tsx',
     devtool: isProduction ? 'source-map' : 'inline-source-map',
     module: {
-      rules: [
-        {
+      rules: [{
           test: /\.s?css$/,
           use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
         },
@@ -79,26 +78,24 @@ module.exports = function (env, argv) {
       }),
       isDevelopment && new CleanWebpackPlugin(),
       isProduction &&
-        new WebpackPwaManifest({
-          name: 'Uno',
-          theme_color: '#ED1C24',
-          background_color: '#ED1C24',
-          start_url: '/',
-          orientation: 'any',
-          display: 'fullscreen',
-          icons: [
-            {
-              src: path.resolve('./assets/icon.png'),
-              sizes: [96, 128, 192, 256, 384, 512],
-              destination: 'icons'
-            }
-          ]
-        }),
+      new WebpackPwaManifest({
+        name: 'Uno',
+        theme_color: '#ED1C24',
+        background_color: '#ED1C24',
+        start_url: '/',
+        orientation: 'any',
+        display: 'fullscreen',
+        icons: [{
+          src: path.resolve('./assets/icon.png'),
+          sizes: [96, 128, 192, 256, 384, 512],
+          destination: 'icons'
+        }]
+      }),
       isProduction &&
-        new RemoveServiceWorkerPlugin({
-          filename: 'service-worker.js'
-        }),
-      isProduction && new FaviconsWebpackPlugin('./assets/icon.svg')
+      new RemoveServiceWorkerPlugin({
+        filename: 'service-worker.js'
+      }),
+      isProduction && new FaviconsWebpackPlugin('./assets/icon.png')
     ].filter(Boolean),
     output: {
       filename: '[name].js',
@@ -112,12 +109,10 @@ module.exports = function (env, argv) {
     entry: './src/server/index.ts',
     devtool: isProduction ? 'source-map' : 'inline-source-map',
     module: {
-      rules: [
-        {
-          test: /\.ts$/,
-          use: 'ts-loader'
-        }
-      ]
+      rules: [{
+        test: /\.ts$/,
+        use: 'ts-loader'
+      }]
     },
     node: {
       __dirname: false
