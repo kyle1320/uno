@@ -153,6 +153,7 @@ export namespace state {
     lobbyMode: boolean;
     initialCards: number;
     deckCount: number;
+    jumpIn: boolean;
   }
 
   export interface Score {
@@ -235,7 +236,8 @@ export namespace state {
       aiCount: 0,
       lobbyMode: false,
       initialCards: 7,
-      deckCount: 1
+      deckCount: 1,
+      jumpIn: false
     },
 
     startTime: -1,

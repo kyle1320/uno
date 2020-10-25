@@ -146,6 +146,17 @@ const Rules = connect(
       <label className="row">
         <input
           type="checkbox"
+          checked={props.jumpIn}
+          onChange={React.useCallback(
+            e => props.update({ jumpIn: e.target.checked }),
+            [props.update]
+          )}
+        />
+        Jump-In
+      </label>
+      <label className="row">
+        <input
+          type="checkbox"
           checked={props.battleRoyale}
           onChange={React.useCallback(
             e => props.update({ battleRoyale: e.target.checked }),

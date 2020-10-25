@@ -160,7 +160,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
         topCard &&
           this.dispatch(
             L1.actions.update(
-              rules.getStateAfterPlay(topCard.id, this.getL1State())
+              rules.getStateAfterPlay(topCard.id, this.getL1State(), null)
             )
           );
         break;
@@ -267,7 +267,9 @@ export class UnoServer extends ServerGame<UnoSpec> {
           );
         else
           this.dispatch(
-            L1.actions.update(rules.getStateAfterPlay(action.payload, state.l1))
+            L1.actions.update(
+              rules.getStateAfterPlay(action.payload, state.l1, action.id)
+            )
           );
         break;
     }

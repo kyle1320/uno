@@ -34,27 +34,41 @@ export namespace clientSelectors {
     return state.l1.turnOrder[state.l1.currentPlayer];
   }
 
-  export function isYourTurn(state: state.ClientSide<UnoSpec>) {
+  export function inGame(state: state.ClientSide<UnoSpec>) {
     return (
       state.l1.status === L1.state.GameStatus.Started &&
-      currentPlayer(state) === state.l2.id
+      state.l1.players[state.l2.id].isInGame
     );
   }
 
+  export function isYourTurn(state: state.ClientSide<UnoSpec>) {
+    return currentPlayer(state) === state.l2.id;
+  }
+
   export function canDraw(state: state.ClientSide<UnoSpec>) {
-    return isYourTurn(state) && rules.canDraw(state.l1, state.l2);
+    return (
+      inGame(state) && rules.canDraw(state.l1, state.l2, isYourTurn(state))
+    );
   }
 
   export function canPlay(state: state.ClientSide<UnoSpec>, cardId: number) {
-    return isYourTurn(state) && rules.canPlay(cardId, state.l1, state.l2);
+    return (
+      inGame(state) &&
+      rules.canPlay(cardId, state.l1, state.l2, isYourTurn(state))
+    );
   }
 
   export function canPlayAny(state: state.ClientSide<UnoSpec>) {
-    return isYourTurn(state) && rules.canPlayAny(state.l1, state.l2);
+    return (
+      inGame(state) && rules.canPlayAny(state.l1, state.l2, isYourTurn(state))
+    );
   }
 
   export function mustDraw(state: state.ClientSide<UnoSpec>) {
-    return isYourTurn(state) && !rules.canPlayAny(state.l1, state.l2);
+    return (
+      isYourTurn(state) &&
+      !rules.canPlayAny(state.l1, state.l2, isYourTurn(state))
+    );
   }
 
   export function canCallUno(state: state.ClientSide<UnoSpec>) {
@@ -75,8 +89,19 @@ export namespace serverSelectors {
     return state.l1.turnOrder[state.l1.currentPlayer];
   }
 
+  export function inGame(state: state.ServerSide<UnoSpec>, id: string) {
+    return state.l1.players[id].isInGame;
+  }
+
+  export function isTurn(state: state.ServerSide<UnoSpec>, id: string) {
+    return currentPlayer(state) === id;
+  }
+
   export function canDraw(state: state.ServerSide<UnoSpec>, id: string) {
-    return currentPlayer(state) === id && rules.canDraw(state.l1, state.l2[id]);
+    return (
+      inGame(state, id) &&
+      rules.canDraw(state.l1, state.l2[id], isTurn(state, id))
+    );
   }
 
   export function canPlay(
@@ -85,24 +110,29 @@ export namespace serverSelectors {
     cardId: number
   ) {
     return (
-      currentPlayer(state) === clientId &&
-      rules.canPlay(cardId, state.l1, state.l2[clientId])
+      inGame(state, clientId) &&
+      rules.canPlay(
+        cardId,
+        state.l1,
+        state.l2[clientId],
+        isTurn(state, clientId)
+      )
     );
   }
 
   export function canCallUno(state: state.ServerSide<UnoSpec>, id: string) {
     const cards = state.l1.players[id].cards;
     return (
+      inGame(state, id) &&
       rules.canCallUno(state.l1, id) &&
       (cards === 1 ||
         (cards === 2 &&
-          currentPlayer(state) === id &&
-          rules.canPlayAny(state.l1, state.l2[id])))
+          rules.canPlayAny(state.l1, state.l2[id], isTurn(state, id))))
     );
   }
 
   export function canCalloutUno(state: state.ServerSide<UnoSpec>, id: string) {
-    return rules.canCalloutUno(state.l1, id);
+    return inGame(state, id) && rules.canCalloutUno(state.l1, id);
   }
 
   export function getScore(state: state.ServerSide<UnoSpec>) {
@@ -122,26 +152,39 @@ export namespace serverSelectors {
 }
 
 export namespace rules {
-  export function canDraw(l1: L1.state.State, l2: L2.state.State) {
+  export function canDraw(
+    l1: L1.state.State,
+    l2: L2.state.State,
+    isTurn: boolean
+  ) {
     if (l1.status !== 'started') return false;
+
+    if (!isTurn) return false;
 
     switch (l1.ruleState.type) {
       case 'normal':
-        return !l1.rules.drawTillYouPlay || !canPlayAny(l1, l2);
+        return !l1.rules.drawTillYouPlay || !canPlayAny(l1, l2, isTurn);
       case 'draw':
       case 'draw2':
       case 'draw4':
         return true;
       case 'maybePlay':
-        return l1.rules.drawTillYouPlay && !canPlay(l2.lastDrawnCard!, l1, l2);
+        return (
+          l1.rules.drawTillYouPlay &&
+          !canPlay(l2.lastDrawnCard!, l1, l2, isTurn)
+        );
     }
   }
 
-  export function canPlayAny(l1: L1.state.State, l2: L2.state.State) {
+  export function canPlayAny(
+    l1: L1.state.State,
+    l2: L2.state.State,
+    isTurn: boolean
+  ) {
     if (l1.status !== 'started') return false;
 
     for (const card of l2.hand) {
-      if (canPlay(card.id, l1, l2)) return true;
+      if (canPlay(card.id, l1, l2, isTurn)) return true;
     }
     return false;
   }
@@ -149,11 +192,26 @@ export namespace rules {
   export function canPlay(
     cardId: number,
     l1: L1.state.State,
-    l2: L2.state.State
+    l2: L2.state.State,
+    isTurn: boolean
   ) {
     if (l1.status !== 'started') return false;
 
     const card = getCardFromId(cardId);
+
+    if (!isTurn) {
+      if (l1.rules.jumpIn) {
+        return (
+          (l1.topCard &&
+            card &&
+            l1.topCard.color === card.color &&
+            l1.topCard.value === card.value) ||
+          false
+        );
+      } else {
+        return false;
+      }
+    }
 
     if (!card) return false;
 
@@ -261,43 +319,48 @@ export namespace rules {
 
   export function getStateAfterPlay(
     cardId: number,
-    l1: L1.state.State
+    l1: L1.state.State,
+    playerId: string | null
   ): Partial<L1.state.State> {
     const card = getCardFromId(cardId);
 
     if (!card) return {};
+
+    const tempL1 = playerId
+      ? { ...l1, currentPlayer: l1.turnOrder.indexOf(playerId) }
+      : l1;
 
     const count = 'count' in l1.ruleState ? l1.ruleState.count : 0;
     switch (card.value) {
       case 'draw2':
         return {
           ruleState: { type: 'draw2', count: count + 2 },
-          currentPlayer: getNextTurn(l1),
+          currentPlayer: getNextTurn(tempL1),
           turnCount: l1.turnCount + 1
         };
       case 'draw4':
         return {
           ruleState: { type: 'draw4', count: count + 4 },
-          currentPlayer: getNextTurn(l1),
+          currentPlayer: getNextTurn(tempL1),
           turnCount: l1.turnCount + 1
         };
       case 'reverse':
         return {
           ruleState: { type: 'normal' },
-          direction: getReverseDirection(l1),
-          currentPlayer: getNextTurnReverse(l1),
+          direction: getReverseDirection(tempL1),
+          currentPlayer: getNextTurnReverse(tempL1),
           turnCount: l1.turnCount + 1
         };
       case 'skip':
         return {
           ruleState: { type: 'normal' },
-          currentPlayer: getSkipTurn(l1),
+          currentPlayer: getSkipTurn(tempL1),
           turnCount: l1.turnCount + 1
         };
       default:
         return {
           ruleState: { type: 'normal' },
-          currentPlayer: getNextTurn(l1),
+          currentPlayer: getNextTurn(tempL1),
           turnCount: l1.turnCount + 1
         };
     }

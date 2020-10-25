@@ -73,9 +73,7 @@ export default class UnoAIClient implements IClient<UnoSpec> {
       });
     }
 
-    if (this.isTurn(l1)) {
-      this.takeTurn();
-    }
+    this.takeTurn();
 
     this.oldL1State = l1;
   }
@@ -88,29 +86,28 @@ export default class UnoAIClient implements IClient<UnoSpec> {
 
   private takeTurn = async () => {
     const l1 = this.server.getL1ClientState(this.id);
-    if (!this.isTurn(l1)) return;
 
     const play = async () => {
       const l1 = this.server.getL1ClientState(this.id);
       const l2 = this.server.getL2ClientState(this.id);
       let didPlay = false;
 
-      if (!this.isTurn(l1)) return;
-
       for (const card of l2.hand) {
-        if (rules.canPlay(card.id, l1, l2)) {
+        if (rules.canPlay(card.id, l1, l2, this.isTurn())) {
           await this.playCard(card, l2);
           didPlay = true;
           break;
         }
       }
 
-      if (!didPlay) {
-        await delay(Math.random() * 300 + 300);
-        this.sendServer(Req.actions.drawCard());
-      }
+      if (this.isTurn()) {
+        if (!didPlay) {
+          await delay(Math.random() * 300 + 300);
+          this.sendServer(Req.actions.drawCard());
+        }
 
-      await play();
+        await play();
+      }
     };
 
     if (this.turnInProgress) return;

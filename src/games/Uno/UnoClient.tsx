@@ -128,6 +128,8 @@ export class UnoClient extends ClientGame<UnoSpec> {
                 return 'Lobby Mode';
               case 'deckCount':
                 return 'Number of Decks';
+              case 'jumpIn':
+                return 'Jump-In';
             }
           })();
           const value = (() => {
