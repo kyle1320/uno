@@ -50,7 +50,7 @@ export function Info(props: IProps) {
           <div className="buttons">
             <div className="stack">
               <button onClick={props.callUno} disabled={!props.canCallUno}>
-                Call Uno!
+                Say Uno!
               </button>
               <button
                 onClick={props.calloutUno}
