@@ -312,11 +312,13 @@ export class UnoServer extends ServerGame<UnoSpec> {
 
     this.turnTimer.set(time, () => {
       const id = serverSelectors.currentPlayer(this.store.getState());
-      // TODO: make this use drawCards() to draw multiple at once
-      do {
-        const cards = this.drawCards(id);
-        if (cards) this.dispatch(L2.actions.forfeitDraw(cards[0], id));
-      } while (this.getL1State().ruleState.type === 'draw');
+      if (id) {
+        // TODO: make this use drawCards() to draw multiple at once
+        do {
+          const cards = this.drawCards(id);
+          if (cards) this.dispatch(L2.actions.forfeitDraw(cards[0], id));
+        } while (this.getL1State().ruleState.type === 'draw');
+      }
       this.resetTurnTimer();
     });
   }

@@ -194,7 +194,7 @@ export namespace state {
     // players don't appear in here until they've won a game
     scores: { [id: string]: Score | undefined };
     turnOrder: string[];
-    currentPlayer: number;
+    currentPlayer: string | null;
     topCard: Card | null;
     lastPlayBy: string | null;
     upStackSize: number;
@@ -215,7 +215,7 @@ export namespace state {
     players: {},
     scores: {},
     turnOrder: [],
-    currentPlayer: -1,
+    currentPlayer: null,
     topCard: null,
     lastPlayBy: null,
     upStackSize: 108,
@@ -335,7 +335,7 @@ export function reduce(_state: state.State, action: actions.All): state.State {
         ruleState: { type: 'normal' },
         lastPlayBy: null,
         direction: 'CW',
-        currentPlayer: -1,
+        currentPlayer: null,
         turnCount: 0,
         shownHands: null,
         ...removeInactivePlayers(_state, true),

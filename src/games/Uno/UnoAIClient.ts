@@ -145,6 +145,6 @@ export default class UnoAIClient implements IClient<UnoSpec> {
   ) {
     if (!l1) return false;
     if (l1.status !== L1.state.GameStatus.Started) return false;
-    return l1.turnOrder[l1.currentPlayer] === this.id;
+    return l1.currentPlayer === this.id;
   }
 }

@@ -35,7 +35,7 @@ export namespace clientSelectors {
   }
 
   export function currentPlayer(state: state.ClientSide<UnoSpec>) {
-    return state.l1.turnOrder[state.l1.currentPlayer];
+    return state.l1.currentPlayer;
   }
 
   export function inGame(state: state.ClientSide<UnoSpec>) {
@@ -90,7 +90,7 @@ export namespace clientSelectors {
 
 export namespace serverSelectors {
   export function currentPlayer(state: state.ServerSide<UnoSpec>) {
-    return state.l1.turnOrder[state.l1.currentPlayer];
+    return state.l1.currentPlayer;
   }
 
   export function inGame(state: state.ServerSide<UnoSpec>, id: string) {
@@ -253,7 +253,8 @@ export namespace rules {
   }
 
   function getTurnAtDistance(l1: L1.state.State, dist: number) {
-    let index = l1.currentPlayer + l1.turnOrder.length;
+    const currentIndex = l1.currentPlayer ? l1.turnOrder.indexOf(l1.currentPlayer) : -1;
+    let index = currentIndex + l1.turnOrder.length;
     for (var i = 0; dist !== 0 && i < l1.turnOrder.length; i++) {
       if (dist > 0) {
         index++;
@@ -267,7 +268,7 @@ export namespace rules {
         }
       }
     }
-    return index % l1.turnOrder.length;
+    return l1.turnOrder[index % l1.turnOrder.length] || null;
   }
 
   export function getNextTurn(l1: L1.state.State, direction = l1.direction) {
@@ -331,7 +332,7 @@ export namespace rules {
     if (!card) return {};
 
     const tempL1 = playerId
-      ? { ...l1, currentPlayer: l1.turnOrder.indexOf(playerId) }
+      ? { ...l1, currentPlayer: playerId }
       : l1;
 
     const count = 'count' in l1.ruleState ? l1.ruleState.count : 0;
