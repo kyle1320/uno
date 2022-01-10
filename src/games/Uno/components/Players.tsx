@@ -56,18 +56,26 @@ interface IProps {
 }
 
 export function Players(props: IProps) {
+  const allPlayers: Record<string, JSX.Element> = {};
+
+  props.relativeTurnOrder.forEach((id, i) => {
+    if (i === 0) {
+      return;
+    }
+
+    allPlayers[id] = <Player
+      key={id}
+      id={id}
+      placement={i / props.relativeTurnOrder.length}
+    />;
+  });
+
+  const sortedPlayers = props.relativeTurnOrder.slice(1).sort();
+
   return (
     <div className="players">
-      {props.relativeTurnOrder.length > 1 ? (
-        props.relativeTurnOrder.map((id, i) =>
-          i > 0 ? (
-            <Player
-              key={id}
-              id={id}
-              placement={i / props.relativeTurnOrder.length}
-            />
-          ) : null
-        )
+      {sortedPlayers.length > 0 ? (
+        sortedPlayers.map(id => allPlayers[id])
       ) : (
         <EmptyRoomHint />
       )}

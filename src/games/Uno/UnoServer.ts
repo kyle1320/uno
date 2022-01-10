@@ -1,6 +1,6 @@
 import { ServerGame } from '../../server/ServerGame';
 import { UnoSpec, L0, L1, L2, L3, Req } from '.';
-import { Card, shuffled, Color, serverSelectors, rules } from './common';
+import { Card, shuffledTurnOrder, Color, serverSelectors, rules } from './common';
 import { CoreActions, state } from '../../types';
 import UnoAIClient from './UnoAIClient';
 
@@ -139,16 +139,25 @@ export class UnoServer extends ServerGame<UnoSpec> {
         const topCard = state.downStack.length
           ? state.downStack[state.downStack.length - 1]
           : null;
-        this.dispatch(
-          L1.actions.resetGame({
-            topCard,
-            upStackSize: state.upStack.length,
-            downStackSize: state.downStack.length,
-            startTime: Date.now()
-          })
-        );
+          this.dispatch(
+            L1.actions.resetGame({
+              topCard,
+              upStackSize: state.upStack.length,
+              downStackSize: state.downStack.length,
+              startTime: Date.now()
+            })
+          );
+        
+        // Get L1 state after resetting as this will filter out inactive players
         const l1 = this.getL1State();
-        for (const id of l1.turnOrder) {
+        let turnOrder = l1.turnOrder;
+        
+        if (action.payload.shufflePlayers) {
+          turnOrder = shuffledTurnOrder(turnOrder);
+          this.dispatch(L1.actions.update({ turnOrder }));
+        }
+
+        for (const id of turnOrder) {
           this.dispatch(L2.actions.resetGame(id));
           this.dispatch(
             L2.actions.drawCards(
@@ -363,7 +372,10 @@ export class UnoServer extends ServerGame<UnoSpec> {
         break;
       case Req.actions.RESET_GAME:
         this.dispatch(
-          L0.actions.resetGame({ deckCount: state.l1.rules.deckCount })
+          L0.actions.resetGame({
+            shufflePlayers: action.payload.shufflePlayers,
+            deckCount: state.l1.rules.deckCount
+          })
         );
         break;
       case Req.actions.CALL_UNO:
@@ -388,6 +400,11 @@ export class UnoServer extends ServerGame<UnoSpec> {
             this.dispatch(L1.actions.callout(action.id, player.id));
           }
         }
+        break;
+      case Req.actions.SHUFFLE_PLAYERS:
+        this.dispatch(L1.actions.update({
+          turnOrder: shuffledTurnOrder(state.l1.turnOrder)
+        }));
         break;
     }
   }

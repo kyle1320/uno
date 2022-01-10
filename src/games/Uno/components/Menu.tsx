@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faAngleLeft, faRandom } from '@fortawesome/free-solid-svg-icons';
 
 import { UnoSpec, L1, L3, L4, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
@@ -12,6 +12,7 @@ import GameTimer from './GameTimer';
 
 import './Menu.scss';
 import RoomLink from './RoomLink';
+import { clientSelectors } from '../common';
 
 type StandingsInfo = {
   name: string;
@@ -253,9 +254,10 @@ interface IProps {
   name: string;
   sortCards: boolean;
   status: L1.state.GameStatus;
+  canShufflePlayers: boolean;
   setSortCards: (sortCards: boolean) => void;
   setName: (name: string) => void;
-  resetGame: () => void;
+  resetGame: (shuffle?: boolean) => void;
 }
 
 export function Menu(props: IProps) {
@@ -313,14 +315,26 @@ export function Menu(props: IProps) {
         </div>
         <div className="buttons">
           <FullscreenToggle className="secondary" />
-          <button
-            className="primary"
-            onClick={React.useCallback(() => {
-              props.resetGame();
-              toggle();
-            }, [props.resetGame, toggle])}>
-            New Game
-          </button>
+          <div className="split-button">
+            <button
+              className="primary"
+              onClick={React.useCallback(() => {
+                props.resetGame();
+                toggle();
+              }, [props.resetGame, toggle])}>
+              New Game
+            </button>
+            <button
+              className="secondary"
+              style={{ minWidth: "3em" }}
+              disabled={!props.canShufflePlayers}
+              onClick={React.useCallback(() => {
+                props.resetGame(true);
+                toggle();
+              }, [props.resetGame, toggle])}>
+              <FontAwesomeIcon icon={faRandom} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -331,12 +345,13 @@ export default connect(
   (state: state.ClientSide<UnoSpec>) => ({
     name: state.l3.name,
     sortCards: state.l4.settings.sortCards,
-    status: state.l1.status
+    status: state.l1.status,
+    canShufflePlayers: clientSelectors.canShufflePlayers(state)
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     setName: (name: string) => dispatch(L3.actions.setName(name)),
     setSortCards: (sortCards: boolean) =>
       dispatch(L4.actions.updateSettings({ sortCards })),
-    resetGame: () => dispatch(Req.actions.resetGame())
+    resetGame: (shuffle = false) => dispatch(Req.actions.resetGame(shuffle))
   })
 )(Menu);

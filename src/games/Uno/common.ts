@@ -30,6 +30,10 @@ export namespace clientSelectors {
     return [...turnOrder.slice(myIndex), ...turnOrder.slice(0, myIndex)];
   }
 
+  export function canShufflePlayers(state: state.ClientSide<UnoSpec>) {
+    return state.l1.turnOrder.length > 2;
+  }
+
   export function currentPlayer(state: state.ClientSide<UnoSpec>) {
     return state.l1.turnOrder[state.l1.currentPlayer];
   }
@@ -515,7 +519,28 @@ function shuffle(arr: unknown[]) {
   }
 }
 
-export function shuffled(arr: readonly Card[]): Card[] {
+/**
+ * Shuffles the given array so that the turn order is guaranteed to be different from player perspectives.
+ */
+export function shuffledTurnOrder<T>(arr: readonly T[]): T[] {
+  // no point in shuffling if there are < 3 players.
+  if (arr.length < 3) {
+    return arr.slice();
+  }
+
+  // The last player is the fixed point.
+  // We shuffle remaining players until they are different.
+  // This guarantees that someone won't go first two games in a row,
+  // since the last player was the previous first player.
+  const copy = arr.slice(0, arr.length - 1);
+  do {
+    shuffle(copy);
+  } while (copy.every((el, i) => el === arr[i]));
+  copy.push(arr[arr.length - 1]); // re-insert the fixed point
+  return copy;
+}
+
+export function shuffledDeck(arr: readonly Card[]): Card[] {
   const copy = arr.map(c => {
     if (c.value === 'draw4' || c.value === 'wild') {
       return { ...c, color: 'black' } as Card;

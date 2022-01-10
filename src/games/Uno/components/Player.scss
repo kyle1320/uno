@@ -9,6 +9,7 @@
     transform: translate(-50%, -50%);
     overflow: visible;
     max-width: 100px;
+    transition: top 0.5s, left 0.5s;
 
     .disconnected-icon {
       position: absolute;

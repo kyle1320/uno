@@ -1,5 +1,5 @@
 import { actions as actionTypes } from '../../../types';
-import { Card, shuffled, getNewDeck, repeat } from '../common';
+import { Card, shuffledDeck, getNewDeck, repeat } from '../common';
 
 export namespace actions {
   export const DRAW_CARDS = 'DRAW_CARDS';
@@ -45,6 +45,7 @@ export namespace actions {
 
   export const RESET_GAME = 'RESET_GAME';
   export type ResetGamePayload = {
+    shufflePlayers: boolean;
     deckCount: number;
   };
   export type ResetGameAction = actionTypes.L0<
@@ -75,7 +76,7 @@ export namespace state {
 
   export function initial(): State {
     return {
-      upStack: shuffled(getNewDeck()),
+      upStack: shuffledDeck(getNewDeck()),
       downStack: []
     };
   }
@@ -88,14 +89,14 @@ export function reduce(state: state.State, action: actions.All): state.State {
         ...state,
         downStack: state.downStack.slice(state.downStack.length - 1),
         upStack: [
-          ...shuffled(state.downStack.slice(0, state.downStack.length - 1)),
+          ...shuffledDeck(state.downStack.slice(0, state.downStack.length - 1)),
           ...state.upStack
         ]
       };
     case actions.ADD_DECK:
       return {
         ...state,
-        upStack: [...shuffled(getNewDeck()), ...state.upStack]
+        upStack: [...shuffledDeck(getNewDeck()), ...state.upStack]
       };
     case actions.DRAW_CARDS:
       return {
@@ -108,7 +109,7 @@ export function reduce(state: state.State, action: actions.All): state.State {
         downStack: [...state.downStack, action.payload]
       };
     case actions.RESET_GAME:
-      const newStack = shuffled(repeat(getNewDeck, action.payload.deckCount));
+      const newStack = shuffledDeck(repeat(getNewDeck, action.payload.deckCount));
       let firstCard = newStack.pop()!;
       while (firstCard.value === 'wild' || firstCard.value === 'draw4') {
         newStack.splice(

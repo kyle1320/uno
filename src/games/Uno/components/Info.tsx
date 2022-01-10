@@ -18,8 +18,10 @@ interface IProps {
   canCalloutUno: boolean;
   canPlayAny: boolean;
   showTurnTimer: boolean;
+  canShufflePlayers: boolean;
 
   resetGame: () => void;
+  shufflePlayers: () => void;
   callUno: () => void;
   calloutUno: () => void;
 }
@@ -31,7 +33,10 @@ export function Info(props: IProps) {
         <div className="info">
           <span className="info-text">Start a New Game to Play</span>
           <div className="buttons">
-            <button onClick={props.resetGame}>New Game</button>
+            <div className="stack">
+              <button onClick={props.resetGame}>New Game</button>
+              {props.canShufflePlayers && <button onClick={props.shufflePlayers}>Shuffle Players</button>}
+            </div>
           </div>
         </div>
       );
@@ -66,7 +71,10 @@ export function Info(props: IProps) {
         <div className="info">
           <span className="info-text">Game Over</span>
           <div className="buttons">
-            <button onClick={props.resetGame}>New Game</button>
+            <div className="stack">
+              <button onClick={props.resetGame}>New Game</button>
+              {props.canShufflePlayers && <button onClick={props.shufflePlayers}>Shuffle Players</button>}
+            </div>
           </div>
         </div>
       );
@@ -80,10 +88,12 @@ export default connect(
     canCallUno: clientSelectors.canCallUno(state),
     canCalloutUno: clientSelectors.canCalloutUno(state),
     canPlayAny: clientSelectors.canPlayAny(state),
-    showTurnTimer: clientSelectors.turnTimerActive(state)
+    showTurnTimer: clientSelectors.turnTimerActive(state),
+    canShufflePlayers: clientSelectors.canShufflePlayers(state)
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
-    resetGame: () => dispatch(Req.actions.resetGame()),
+    resetGame: () => dispatch(Req.actions.resetGame(false)),
+    shufflePlayers: () => dispatch(Req.actions.shufflePlayers()),
     callUno: () => dispatch(Req.actions.callUno()),
     calloutUno: () => dispatch(Req.actions.calloutUno())
   })

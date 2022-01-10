@@ -63,11 +63,15 @@ export namespace actions {
   }
 
   export const RESET_GAME = 'RESET_GAME';
-  export type ResetGameAction = actionTypes.Req<typeof RESET_GAME>;
-  export function resetGame(id: string = ''): ResetGameAction {
+  export type ResetGamePayload = {
+    shufflePlayers: boolean;
+  };
+  export type ResetGameAction = actionTypes.Req<typeof RESET_GAME, ResetGamePayload>;
+  export function resetGame(shufflePlayers: boolean, id: string = ''): ResetGameAction {
     return {
       kind: 'Req',
       type: RESET_GAME,
+      payload: { shufflePlayers },
       id
     };
   }
@@ -92,6 +96,16 @@ export namespace actions {
     };
   }
 
+  export const SHUFFLE_PLAYERS = 'SHUFFLE_PLAYERS';
+  export type ShufflePlayersAction = actionTypes.Req<typeof SHUFFLE_PLAYERS>;
+  export function shufflePlayers(id: string = ''): ShufflePlayersAction {
+    return {
+      kind: 'Req',
+      type: SHUFFLE_PLAYERS,
+      id
+    };
+  }
+
   export type All =
     | DrawCardAction
     | UpdateRulesAction
@@ -99,5 +113,6 @@ export namespace actions {
     | ResetScoresAction
     | ResetGameAction
     | CallUnoAction
-    | CalloutUnoAction;
+    | CalloutUnoAction
+    | ShufflePlayersAction;
 }
