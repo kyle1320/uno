@@ -13,7 +13,7 @@ module.exports = function (env, argv) {
   const mode = argv.mode || 'development';
   const isProduction = mode === 'production';
   const isDevelopment = mode === 'development';
-  const BUILD_NUMBER = (process.env.GITHUB_SHA || "").substring(0, 8);
+  const BUILD_NUMBER = (process.env.GITHUB_SHA || "").substring(0, 7);
 
   const template = `<!DOCTYPE html>
   <html>
