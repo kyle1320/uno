@@ -13,7 +13,8 @@ import {
   PickSubset,
   CoreActions,
   ClientSentActions,
-  ClientGameActions
+  ClientGameActions,
+  UNSUPPORTED_VERSION_ERROR
 } from '../types';
 
 function getWebSocketUrl(): string {
@@ -86,6 +87,14 @@ export abstract class ClientGame<
         ...(this.createInitialState() as any)
       },
       applyMiddleware(() => next => (action: ClientCoreActions<G>) => {
+        if (action.kind === "Core" && action.type === CoreActions.INITIAL_STATE) {
+          if (action.version !== BUILD_NUMBER) {
+            next(CoreActions.error(UNSUPPORTED_VERSION_ERROR));
+            setTimeout(() => location.reload(), 1000);
+            return;
+          }
+        }
+
         next(action);
         switch (action.kind) {
           case 'L1':

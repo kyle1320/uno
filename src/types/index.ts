@@ -105,14 +105,16 @@ export namespace CoreActions {
   export type InitialStateAction<G extends GameSpec> = actions.Core<
     typeof INITIAL_STATE,
     Partial<state.ClientSide<G>>
-  >;
+  > & { version: string };
   export function initialState<G extends GameSpec>(
-    payload: Partial<state.ClientSide<G>>
+    payload: Partial<state.ClientSide<G>>,
+    version: string
   ): InitialStateAction<G> {
     return {
       kind: 'Core',
       type: INITIAL_STATE,
-      payload
+      payload,
+      version
     };
   }
 
@@ -157,6 +159,8 @@ export namespace CoreActions {
     };
   }
 }
+
+export const UNSUPPORTED_VERSION_ERROR = "UNSUPPORTED_VERSION_ERROR";
 
 export type CoreActions<G extends GameSpec = GameSpec> =
   | CoreActions.InitialStateAction<G>

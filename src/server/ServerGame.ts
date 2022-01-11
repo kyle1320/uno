@@ -163,7 +163,7 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
                   l1: state.l1,
                   l2: state.l2[action.id],
                   l3: state.l3[action.id]
-                })
+                }, BUILD_NUMBER)
               );
             }
             this.processCore(action);

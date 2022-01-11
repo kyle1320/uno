@@ -1,5 +1,6 @@
 const path = require('path');
 
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -12,6 +13,7 @@ module.exports = function (env, argv) {
   const mode = argv.mode || 'development';
   const isProduction = mode === 'production';
   const isDevelopment = mode === 'development';
+  const BUILD_NUMBER = (process.env.GITHUB_SHA || "").substring(0, 8);
 
   const template = `<!DOCTYPE html>
   <html>
@@ -68,6 +70,9 @@ module.exports = function (env, argv) {
       extensions: ['.ts', '.tsx', '.js']
     },
     plugins: [
+      new webpack.DefinePlugin({
+        BUILD_NUMBER: JSON.stringify(BUILD_NUMBER)
+      }),
       new HtmlWebpackPlugin({
         filename: 'index.html',
         templateContent: template
@@ -121,6 +126,11 @@ module.exports = function (env, argv) {
     resolve: {
       extensions: ['.ts', '.tsx', '.js']
     },
+    plugins: [
+      new webpack.DefinePlugin({
+        BUILD_NUMBER: JSON.stringify(BUILD_NUMBER)
+      }),
+    ],
     externals: [nodeExternals()],
     output: {
       filename: 'server.js',

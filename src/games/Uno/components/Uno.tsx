@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { state } from '../../../types';
+import { state, UNSUPPORTED_VERSION_ERROR } from '../../../types';
 import { UnoSpec } from '..';
 import CardWheel from './CardWheel';
 import Menu from './Menu';
@@ -19,17 +19,29 @@ interface Props {
   didWin: boolean;
 }
 
+function getBannerMessage(connected: boolean, error: unknown) {
+  if (!connected) {
+    return 'Connecting...';
+  }
+
+  if (error === UNSUPPORTED_VERSION_ERROR) {
+    return 'Client is out of date. Refreshing...';
+  }
+
+  if (error) {
+    return 'An error occured. Try refreshing the page.';
+  }
+
+  return '';
+}
+
 class Uno extends React.PureComponent<Props> {
   render() {
     return (
       <div className="uno-game">
         <Menu />
         <div className="banner">
-          {!this.props.connected
-            ? 'Connecting...'
-            : this.props.error
-            ? 'An error occured. Try refreshing the page.'
-            : ''}
+          {getBannerMessage(this.props.connected, this.props.error)}
         </div>
         <div className="table">
           <Toasts />
