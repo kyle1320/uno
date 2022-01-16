@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faAngleLeft, faRandom } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faAngleLeft, faRandom, faComment } from '@fortawesome/free-solid-svg-icons';
 
 import { UnoSpec, L1, L3, L4, Req } from '..';
 import { state, ClientGameActions } from '../../../types';
@@ -255,6 +255,7 @@ interface IProps {
   sortCards: boolean;
   status: L1.state.GameStatus;
   canShufflePlayers: boolean;
+  surveyURL: string;
   setSortCards: (sortCards: boolean) => void;
   setName: (name: string) => void;
   resetGame: (shuffle?: boolean) => void;
@@ -312,6 +313,11 @@ export function Menu(props: IProps) {
           </label>
           <Rules />
           <Standings />
+          <div className="links">
+            {props.surveyURL ? <a href={props.surveyURL} target="_blank">
+            Give feedback&nbsp;&nbsp;<FontAwesomeIcon icon={faComment} />
+            </a> : null}
+          </div>
         </div>
         <div className="buttons">
           <FullscreenToggle className="secondary" />
@@ -346,7 +352,8 @@ export default connect(
     name: state.l3.name,
     sortCards: state.l4.settings.sortCards,
     status: state.l1.status,
-    canShufflePlayers: clientSelectors.canShufflePlayers(state)
+    canShufflePlayers: clientSelectors.canShufflePlayers(state),
+    surveyURL: state.l1.surveyURL
   }),
   (dispatch: Dispatch<ClientGameActions<UnoSpec>>) => ({
     setName: (name: string) => dispatch(L3.actions.setName(name)),

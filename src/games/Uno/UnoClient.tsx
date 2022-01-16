@@ -10,7 +10,7 @@ const PREFERENCES_STORAGE_KEY = 'localPreferences';
 export class UnoClient extends ClientGame<UnoSpec> {
   protected createInitialState() {
     return {
-      l1: L1.state.initial,
+      l1: L1.state.initial(),
       l2: L2.state.initial,
       l3: L3.state.initial,
       l4: L4.state.initial

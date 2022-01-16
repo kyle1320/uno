@@ -205,44 +205,51 @@ export namespace state {
 
     startTime: number;
     turnCount: number;
+
+    surveyURL: string;
   }
 
-  export const initial: State = {
-    status: GameStatus.Pregame,
-    direction: 'CW',
-    ruleState: { type: 'normal' },
+  export function initial(set: Partial<State> = {}): State {
+    return {
+      status: GameStatus.Pregame,
+      direction: 'CW',
+      ruleState: { type: 'normal' },
 
-    players: {},
-    scores: {},
-    turnOrder: [],
-    currentPlayer: null,
-    topCard: null,
-    lastPlayBy: null,
-    upStackSize: 108,
-    downStackSize: 0,
-    shownHands: null,
+      players: {},
+      scores: {},
+      turnOrder: [],
+      currentPlayer: null,
+      topCard: null,
+      lastPlayBy: null,
+      upStackSize: 108,
+      downStackSize: 0,
+      shownHands: null,
 
-    // Used in lobby mode. Contains the time when the current player will time out
-    turnTimeout: -1,
+      // Used in lobby mode. Contains the time when the current player will time out
+      turnTimeout: -1,
 
-    rules: {
-      stackDraw2: false,
-      stackDraw4: false,
-      stackDraw4OnDraw2: false,
-      stackDraw2OnDraw4: false,
-      drawTillYouPlay: false,
-      battleRoyale: false,
-      penaltyCardCount: 4,
-      aiCount: 0,
-      lobbyMode: false,
-      initialCards: 7,
-      deckCount: 1,
-      jumpIn: false
-    },
+      rules: {
+        stackDraw2: false,
+        stackDraw4: false,
+        stackDraw4OnDraw2: false,
+        stackDraw2OnDraw4: false,
+        drawTillYouPlay: false,
+        battleRoyale: false,
+        penaltyCardCount: 4,
+        aiCount: 0,
+        lobbyMode: false,
+        initialCards: 7,
+        deckCount: 1,
+        jumpIn: false
+      },
 
-    startTime: -1,
-    turnCount: 0
-  };
+      startTime: -1,
+      turnCount: 0,
+
+      surveyURL: '',
+      ...set
+    };
+  }
 }
 
 export function reduce(_state: state.State, action: actions.All): state.State {

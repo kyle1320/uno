@@ -73,13 +73,15 @@
     }
 
     button {
-      font-size: .9em;
+      font-size: 0.9em;
       padding: 4px 8px;
       margin: 0;
     }
   }
 
   .scrolling {
+    display: flex;
+    flex-flow: column nowrap;
     padding: 10px;
     flex-grow: 1;
     overflow-y: auto;
@@ -97,11 +99,23 @@
     white-space: nowrap;
   }
 
+  .links {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    margin-top: auto;
+    padding-top: 20px;
+    font-size: 12px;
+
+    i {
+      font-size: 14px;
+    }
+  }
+
   .buttons {
     display: flex;
     flex-flow: column nowrap;
     align-items: stretch;
-    margin-top: auto;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
     padding: 10px;
   }
@@ -129,16 +143,16 @@
       align-items: center;
       text-align: center;
 
-      &>* {
+      & > * {
         flex: 0 0 auto;
       }
 
-      &>:first-child {
+      & > :first-child {
         flex: 1 0 0;
         text-align: left;
       }
 
-      &>:last-child {
+      & > :last-child {
         flex: 1 0 0;
         text-align: right;
       }
@@ -154,7 +168,7 @@
     flex-flow: row nowrap;
     align-items: center;
 
-    &>.row:not(:first-child) {
+    & > .row:not(:first-child) {
       margin-left: 10px;
     }
   }

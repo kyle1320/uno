@@ -56,7 +56,9 @@ export class UnoServer extends ServerGame<UnoSpec> {
   createInitialState() {
     return {
       l0: L0.state.initial(),
-      l1: L1.state.initial,
+      l1: L1.state.initial({
+        surveyURL: process.env.UNO_SURVEY_URL || ''
+      }),
       l2: {},
       l3: {}
     };
