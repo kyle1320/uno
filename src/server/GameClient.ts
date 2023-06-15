@@ -36,7 +36,7 @@ export class GameClient<G extends GameSpec> implements IClient<G> {
         this.room.handleMessage(this, action);
       } catch (e) {
         appInsights.defaultClient?.trackException({
-          exception: e
+          exception: e as Error
         });
         this.send(CoreActions.error(e));
       }
@@ -52,7 +52,7 @@ export class GameClient<G extends GameSpec> implements IClient<G> {
         room.leave(this);
       } catch (e) {
         appInsights.defaultClient?.trackException({
-          exception: e
+          exception: e as Error
         });
         this.send(CoreActions.error(e));
       }
@@ -69,7 +69,7 @@ export class GameClient<G extends GameSpec> implements IClient<G> {
       room.join(this);
     } catch (e) {
       appInsights.defaultClient?.trackException({
-        exception: e
+        exception: e as Error
       });
       this.send(CoreActions.error(e));
     }
