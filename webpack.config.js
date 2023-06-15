@@ -21,27 +21,25 @@ module.exports = function (env, argv) {
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Play Uno</title>
-      ${
-        isProduction
-          ? `<!-- Google Tag Manager -->
+      ${isProduction
+      ? `<!-- Google Tag Manager -->
       <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
       new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
       j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','GTM-WNF7KL2');</script>
       <!-- End Google Tag Manager -->`
-          : ''
-      }
+      : ''
+    }
     </head>
     <body>
-      ${
-        isProduction
-          ? `<!-- Google Tag Manager (noscript) -->
+      ${isProduction
+      ? `<!-- Google Tag Manager (noscript) -->
       <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WNF7KL2"
       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <!-- End Google Tag Manager (noscript) -->`
-          : ''
-      }
+      : ''
+    }
 
       <div id="root"></div>
     </body>
@@ -53,17 +51,17 @@ module.exports = function (env, argv) {
     devtool: isProduction ? 'source-map' : 'inline-source-map',
     module: {
       rules: [{
-          test: /\.s?css$/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
-        },
-        {
-          test: /\.tsx?$/,
-          use: 'ts-loader'
-        },
-        {
-          test: /\.(png|jpg)$/,
-          loader: 'url-loader'
-        }
+        test: /\.s?css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader'
+      },
+      {
+        test: /\.(png|jpg)$/,
+        type: 'asset/resource'
+      }
       ]
     },
     resolve: {
