@@ -1,18 +1,30 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { History } from 'history';
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faDice } from '@fortawesome/free-solid-svg-icons';
+import { faDice } from '@fortawesome/free-solid-svg-icons';
+
+export const withNavigate = function <TProps>(Component: React.ComponentType<TProps & { navigate: NavigateFunction }>) {
+  return (props: TProps) => {
+    const navigate = useNavigate();
+
+    return (
+      <Component
+        {...props}
+        navigate={navigate}
+      />
+    );
+  };
+};
 
 interface IProps {
-  history: History;
+  navigate: NavigateFunction;
 }
 
 interface IState {
   roomName: string;
 }
 
-export default class Homepage extends React.Component<IProps, IState> {
+export class Homepage extends React.Component<IProps, IState> {
   public constructor(props: IProps) {
     super(props);
     this.state = { roomName: localStorage.getItem('savedRoomName') || '' };
@@ -23,7 +35,7 @@ export default class Homepage extends React.Component<IProps, IState> {
   };
 
   submit = (name = this.state.roomName) => {
-    this.props.history.push(`/${name}`);
+    this.props.navigate(`/${name}`);
   };
 
   buttonPress = () => this.submit();
@@ -73,3 +85,6 @@ export default class Homepage extends React.Component<IProps, IState> {
     );
   }
 }
+
+const HomepageWithNavigate = withNavigate<{}>(Homepage);
+export default HomepageWithNavigate
