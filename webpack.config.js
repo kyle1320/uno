@@ -6,7 +6,6 @@ const nodeExternals = require('webpack-node-externals');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var WebpackPwaManifest = require('webpack-pwa-manifest');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
-const RemoveServiceWorkerPlugin = require('webpack-remove-serviceworker-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
 
 module.exports = function (env, argv) {
@@ -93,10 +92,6 @@ module.exports = function (env, argv) {
           sizes: [96, 128, 192, 256, 384, 512],
           destination: 'icons'
         }]
-      }),
-      isProduction &&
-      new RemoveServiceWorkerPlugin({
-        filename: 'service-worker.js'
       }),
       isProduction && new FaviconsWebpackPlugin('./assets/icon.png')
     ].filter(Boolean),
