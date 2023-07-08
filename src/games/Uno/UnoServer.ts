@@ -141,19 +141,19 @@ export class UnoServer extends ServerGame<UnoSpec> {
         const topCard = state.downStack.length
           ? state.downStack[state.downStack.length - 1]
           : null;
-          this.dispatch(
-            L1.actions.resetGame({
-              topCard,
-              upStackSize: state.upStack.length,
-              downStackSize: state.downStack.length,
-              startTime: Date.now()
-            })
-          );
-        
+        this.dispatch(
+          L1.actions.resetGame({
+            topCard,
+            upStackSize: state.upStack.length,
+            downStackSize: state.downStack.length,
+            startTime: Date.now()
+          })
+        );
+
         // Get L1 state after resetting as this will filter out inactive players
         const l1 = this.getL1State();
         let turnOrder = l1.turnOrder;
-        
+
         if (action.payload.shufflePlayers) {
           turnOrder = shuffledTurnOrder(turnOrder);
           this.dispatch(L1.actions.update({ turnOrder }));
@@ -163,7 +163,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
           this.dispatch(L2.actions.resetGame(id));
           this.dispatch(
             L2.actions.drawCards(
-              this.drawCards(id, l1.rules.initialCards) || [],
+              this.drawCards(id, l1.rules.initialCards),
               id
             )
           );
@@ -317,8 +317,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
       if (id) {
         // TODO: make this use drawCards() to draw multiple at once
         do {
-          const cards = this.drawCards(id);
-          if (cards) this.dispatch(L2.actions.forfeitDraw(cards[0], id));
+          this.dispatch(L2.actions.forfeitDraw(this.drawCards(id)[0], id));
         } while (this.getL1State().ruleState.type === 'draw');
       }
       this.resetTurnTimer();
@@ -333,8 +332,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
         if (serverSelectors.canDraw(state, action.id)) {
           // TODO: make this use drawCards() to draw multiple at once
           do {
-            const cards = this.drawCards(action.id);
-            if (cards) this.dispatch(L2.actions.drawCard(cards[0], action.id));
+            this.dispatch(L2.actions.drawCard(this.drawCards(action.id)[0], action.id));
           } while (this.getL1State().ruleState.type === 'draw');
           this.resetTurnTimer();
         }
@@ -396,8 +394,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
           if (player && player.cards === 1 && !player.didCallUno) {
             this.dispatch(
               L2.actions.drawCards(
-                this.drawCards(player.id, state.l1.rules.penaltyCardCount) ||
-                  [],
+                this.drawCards(player.id, state.l1.rules.penaltyCardCount),
                 player.id
               )
             );
@@ -454,7 +451,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
           ) {
             this.dispatch(
               L2.actions.drawCards(
-                this.drawCards(action.id, state.l1.rules.initialCards) || [],
+                this.drawCards(action.id, state.l1.rules.initialCards),
                 action.id
               )
             );
@@ -487,16 +484,17 @@ export class UnoServer extends ServerGame<UnoSpec> {
       this.dispatch(L0.actions.shuffle());
       state = this.store.getState();
     }
-    const upStack = state.l0.upStack;
-    const cards = upStack.slice(upStack.length - count);
+    let upStack = state.l0.upStack;
 
-    if (cards.length < count) {
-      if (state.l1.rules.lobbyMode) {
-        this.dispatch(L0.actions.addDeck());
-      } else {
-        return null;
-      }
+    // Automatically add a temporary deck to prevent the game from being blocked.
+    if (upStack.length < count) {
+      this.dispatch(L0.actions.addDeck());
+      this.dispatch(L1.actions.notice(L1.actions.NoticeType.DECK_ADDED));
+      state = this.store.getState();
+      upStack = state.l0.upStack;
     }
+
+    const cards = upStack.slice(upStack.length - count);
 
     this.dispatch(L0.actions.drawCards(count, id));
 

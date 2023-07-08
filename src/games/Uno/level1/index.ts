@@ -85,6 +85,19 @@ export namespace actions {
     };
   }
 
+  export const NOTICE = 'NOTICE';
+  export enum NoticeType {
+    DECK_ADDED = 'DECK_ADDED'
+  };
+  export type NoticeAction = actionTypes.L1<typeof NOTICE, NoticeType>;
+  export function notice(type: NoticeType): NoticeAction {
+    return {
+      kind: 'L1',
+      type: NOTICE,
+      payload: type
+    };
+  }
+
   export const PLAYER_WIN = 'PLAYER_WIN';
   export type PlayerWinAction = actionTypes.L1<typeof PLAYER_WIN, number> & {
     id: string;
@@ -135,6 +148,7 @@ export namespace actions {
     | ResetScoresAction
     | UpdatePlayerAction
     | ResetGameAction
+    | NoticeAction
     | PlayerWinAction
     | GameOverAction
     | CalloutAction;
@@ -362,9 +376,9 @@ function removeInactivePlayers(l1: state.State, rotate = false) {
       players[id] = player.isInGame
         ? player
         : {
-            ...player,
-            isInGame: true
-          };
+          ...player,
+          isInGame: true
+        };
     }
   }
 

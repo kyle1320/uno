@@ -61,8 +61,7 @@ export class UnoClient extends ClientGame<UnoSpec> {
         }
         this.dispatch(
           L4.actions.pushToast(
-            `${state.l1.players[action.id].name} went out with ${
-              action.payload
+            `${state.l1.players[action.id].name} went out with ${action.payload
             } point${action.payload === 1 ? '' : 's'}!`
           )
         );
@@ -82,8 +81,7 @@ export class UnoClient extends ClientGame<UnoSpec> {
 
         this.dispatch(
           L4.actions.pushToast(
-            `Game over! The game lasted ${m} minute${
-              m === 1 ? '' : 's'
+            `Game over! The game lasted ${m} minute${m === 1 ? '' : 's'
             } and ${s} second${s === 1 ? '' : 's'}`
           )
         );
@@ -92,14 +90,19 @@ export class UnoClient extends ClientGame<UnoSpec> {
         this.dispatch(
           L4.actions.pushToast(
             `${state.l1.players[action.payload.callerId].name} called out ` +
-              `${
-                state.l1.players[action.payload.targetId].name
-              } on not saying Uno!`
+            `${state.l1.players[action.payload.targetId].name
+            } on not saying Uno!`
           )
         );
         break;
       case L1.actions.RESET_SCORES:
         this.dispatch(L4.actions.pushToast(`Players scores have been reset`));
+        break;
+      case L1.actions.NOTICE:
+        switch (action.payload) {
+          case L1.actions.NoticeType.DECK_ADDED:
+            this.dispatch(L4.actions.pushToast(`An additional deck has been added to allow the game to continue.`));
+        }
         break;
       case L1.actions.UPDATE_RULES:
         for (const k in action.payload) {
