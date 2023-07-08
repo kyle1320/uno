@@ -435,6 +435,7 @@ export class UnoServer extends ServerGame<UnoSpec> {
             L1.actions.addPlayer({
               id: action.id,
               name: this.store.getState().l3[action.id].name,
+              isAI: !this.getClient(action).isHuman,
               cards: 0,
               isInGame:
                 state.l1.rules.lobbyMode ||

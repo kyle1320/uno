@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import emojiRegex from 'emoji-regex';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown, faUnlink } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faUnlink, faRobot } from '@fortawesome/free-solid-svg-icons';
 
 import { UnoSpec, L1 } from '..';
 import { state } from '../../../types';
@@ -63,11 +63,11 @@ export function Player(props: IProps) {
         </div>
       )}
       <div
-        className={`player${props.isTurn ? ' active' : ''}${
-          props.isInGame ? '' : ' inactive'
-        }${props.connected ? '' : ' disconnected'}`}>
+        className={`player${props.isTurn ? ' active' : ''}${props.isInGame ? '' : ' inactive'
+          }${props.connected ? '' : ' disconnected'}`}>
         <div
           className={`player-name${isSingleEmoji(props.name) ? ' large' : ''}`}>
+          {props.isAI && <FontAwesomeIcon className="ai-badge" icon={faRobot} />}
           {props.name}
         </div>
         <TransitionGroup className="player-hand">

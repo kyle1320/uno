@@ -146,7 +146,9 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
             if (action.type === CoreActions.CLIENT_JOIN) {
               let state = this.store.getState();
 
-              this.store.dispatch(CoreActions.connected(action.id));
+              const connectedAction = CoreActions.connected(action.id);
+              tagWithClient(connectedAction, getClient(action));
+              this.store.dispatch(connectedAction);
 
               for (const act of action.payload) {
                 const client = getClient(action);
@@ -254,12 +256,12 @@ export abstract class ServerGame<G extends GameSpec = GameSpec> {
     });
   }
 
-  protected processL0(action: L0Actions<G>) {}
-  protected processL1(action: L1Actions<G>) {}
-  protected processL2(action: L2Actions<G>) {}
-  protected processL3(action: L3Actions<G>) {}
-  protected processRequest(action: ReqActions<G>) {}
-  protected processCore(action: CoreActions<G>) {}
+  protected processL0(action: L0Actions<G>) { }
+  protected processL1(action: L1Actions<G>) { }
+  protected processL2(action: L2Actions<G>) { }
+  protected processL3(action: L3Actions<G>) { }
+  protected processRequest(action: ReqActions<G>) { }
+  protected processCore(action: CoreActions<G>) { }
 
   public join(client: IClient<G>) {
     this.clients.push(client);

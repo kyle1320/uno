@@ -178,6 +178,7 @@ export namespace state {
   export interface Player {
     id: string;
     name: string;
+    isAI: boolean;
     cards: number;
     isInGame: boolean;
     didCallUno: boolean;
