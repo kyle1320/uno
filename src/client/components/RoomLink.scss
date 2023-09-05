@@ -1,0 +1,19 @@
+@import "./variables";
+
+.room-link {
+  color: $blue;
+  cursor: pointer;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+
+  svg {
+    margin-left: 3px;
+  }
+
+  &-content {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

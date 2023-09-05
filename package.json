@@ -14,6 +14,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@redux-mc/server": "^0.0.1-alpha.3",
+    "@redux-mc/util": "^0.0.1-alpha.3",
     "applicationinsights": "^2.7.0",
     "compression": "^1.7.4",
     "cookie": "^0.5.0",
@@ -26,13 +28,13 @@
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@types/compression": "^1.7.2",
-    "@types/cookie": "^0.5.1",
+    "@redux-mc/client": "^0.0.1-alpha.3",
+    "@types/compression": "^1.7.3",
+    "@types/cookie": "^0.5.2",
     "@types/express": "^4.17.17",
-    "@types/node": "^20.4.0",
+    "@types/node": "^20.5.9",
+    "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.6",
-    "@types/react-redux": "^7.1.25",
-    "@types/react-router-dom": "^5.3.3",
     "@types/react-transition-group": "^4.4.6",
     "@types/uuid": "^9.0.2",
     "@types/ws": "^8.5.5",
@@ -43,7 +45,7 @@
     "fireworks-canvas": "^2.6.2",
     "html-webpack-plugin": "^5.5.3",
     "mini-css-extract-plugin": "^2.7.6",
-    "nodemon": "^2.0.4",
+    "nodemon": "^3.0.1",
     "prettier": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -60,6 +62,6 @@
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4",
     "webpack-node-externals": "^3.0.0",
-    "webpack-pwa-manifest": "^4.3.0"
+    "webpack-pwa-manifest": "^4.0.0"
   }
 }

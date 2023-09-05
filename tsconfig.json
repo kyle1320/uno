@@ -1,17 +1,14 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "module": "ES6",
-    "target": "es5",
-    "jsx": "react",
+    "module": "NodeNext",
+    "target": "ES2019",
+    "jsx": "react-jsx",
     "strict": true,
-    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "downlevelIteration": true
+    "resolveJsonModule": true
   },
-  "include": [
-    "./src/**/*.tsx",
-    "./src/**/*.ts"
-  ]
+  "include": ["./src/**/*.tsx", "./src/**/*.ts"]
 }

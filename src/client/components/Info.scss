@@ -1,0 +1,65 @@
+@import "./variables";
+
+.info {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  font-weight: bold;
+  font-style: italic;
+  text-shadow: black 0 0 2px;
+  font-size: 14px;
+  z-index: 100;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 0 15px;
+  min-height: 40px;
+
+  & > * {
+    flex: 1 0 0;
+  }
+
+  .center {
+    flex-grow: 0;
+  }
+
+  .arrow {
+    font-size: 20px;
+  }
+
+  .info-text {
+    margin-right: auto;
+    line-height: 28px;
+    white-space: nowrap;
+  }
+
+  button {
+    background: none;
+    border: 1px solid $white;
+    color: $white;
+    font-weight: normal;
+
+    &:active {
+      background-color: rgba($white, 0.2);
+    }
+  }
+
+  .buttons {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  .stack {
+    display: flex;
+    flex-flow: column-reverse nowrap;
+    justify-content: flex-end;
+
+    @media (min-width: 480px) {
+      flex-direction: row;
+    }
+  }
+}

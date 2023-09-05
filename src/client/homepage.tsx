@@ -1,18 +1,13 @@
-import * as React from 'react';
-import { useNavigate, NavigateFunction } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDice } from '@fortawesome/free-solid-svg-icons';
+import * as React from "react";
+import { useNavigate, NavigateFunction } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDice } from "@fortawesome/free-solid-svg-icons";
 
 export const withNavigate = function <TProps>(Component: React.ComponentType<TProps & { navigate: NavigateFunction }>) {
   return (props: TProps) => {
     const navigate = useNavigate();
 
-    return (
-      <Component
-        {...props}
-        navigate={navigate}
-      />
-    );
+    return <Component {...props} navigate={navigate} />;
   };
 };
 
@@ -27,7 +22,7 @@ interface IState {
 export class Homepage extends React.Component<IProps, IState> {
   public constructor(props: IProps) {
     super(props);
-    this.state = { roomName: localStorage.getItem('savedRoomName') || '' };
+    this.state = { roomName: localStorage.getItem("savedRoomName") || "" };
   }
 
   setRoomName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +40,7 @@ export class Homepage extends React.Component<IProps, IState> {
   };
 
   randomize = async () => {
-    const res = await fetch('/newroom', { method: 'POST' });
+    const res = await fetch("/newroom", { method: "POST" });
     if (res.ok) {
       const roomName = await res.text();
       this.setState({ roomName });
@@ -73,10 +68,7 @@ export class Homepage extends React.Component<IProps, IState> {
             </button>
           </div>
           <div className="row submit">
-            <button
-              className="highlight homepage-go-btn"
-              onClick={this.buttonPress}
-              disabled={!this.state.roomName}>
+            <button className="highlight homepage-go-btn" onClick={this.buttonPress} disabled={!this.state.roomName}>
               Play
             </button>
           </div>
@@ -86,5 +78,5 @@ export class Homepage extends React.Component<IProps, IState> {
   }
 }
 
-const HomepageWithNavigate = withNavigate<{}>(Homepage);
-export default HomepageWithNavigate
+const HomepageWithNavigate = withNavigate(Homepage);
+export default HomepageWithNavigate;

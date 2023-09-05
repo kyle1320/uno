@@ -1,0 +1,216 @@
+@import "./variables";
+
+.menu-container {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  transition: background-color;
+  background-color: rgba(0, 0, 0, 0);
+  z-index: 1000;
+
+  &.open {
+    background-color: rgba(0, 0, 0, 0.3);
+    pointer-events: all;
+
+    & .menu {
+      transform: translateX(100%);
+    }
+
+    .line1 {
+      transform: translate(0, 8px) rotate(-45deg);
+    }
+
+    .line2 {
+      opacity: 0;
+    }
+
+    .line3 {
+      transform: translate(0, -8px) rotate(45deg);
+    }
+  }
+}
+
+.menu {
+  color: #333;
+  position: absolute;
+  right: 100%;
+  top: 0;
+  bottom: 0;
+  background-color: #eee;
+  transition: transform 0.5s;
+  pointer-events: all;
+  width: 250px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  font-size: 12px;
+
+  hr {
+    margin: 10px 0;
+    height: 1px;
+    background-color: #a0a0a0;
+  }
+
+  .section-header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #a0a0a0;
+
+    &:not(:first-of-type) {
+      margin-top: 12px;
+    }
+
+    h3 {
+      margin: 0;
+      padding: 0;
+    }
+
+    button {
+      font-size: 0.9em;
+      padding: 4px 8px;
+      margin: 0;
+    }
+  }
+
+  .scrolling {
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 10px;
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  .standing {
+    line-height: 1.5;
+  }
+
+  th {
+    text-align: right;
+  }
+
+  td {
+    white-space: nowrap;
+  }
+
+  .links {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    margin-top: auto;
+    padding-top: 20px;
+    font-size: 12px;
+
+    i {
+      font-size: 14px;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+  }
+
+  .header {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    padding: 5px 10px;
+
+    .home-link {
+      font-size: 18px;
+    }
+
+    .timer {
+      font-weight: bold;
+      padding: 0 5px;
+    }
+
+    .row {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+
+      & > * {
+        flex: 0 0 auto;
+      }
+
+      & > :first-child {
+        flex: 1 0 0;
+        text-align: left;
+      }
+
+      & > :last-child {
+        flex: 1 0 0;
+        text-align: right;
+      }
+
+      .room-link {
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .row {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+
+    & > .row:not(:first-child) {
+      margin-left: 10px;
+    }
+  }
+
+  input,
+  button {
+    background-color: $white;
+  }
+}
+
+.menu-icon {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  width: 45px;
+  height: 45px;
+
+  .line1,
+  .line2,
+  .line3 {
+    position: absolute;
+    background-color: $white;
+    height: 3px;
+    border-radius: 1.5px;
+    transition: all 0.5s;
+  }
+
+  .line1 {
+    top: 13px;
+    left: 11px;
+    right: 11px;
+  }
+
+  .line2 {
+    top: 21px;
+    left: 11px;
+    right: 11px;
+  }
+
+  .line3 {
+    top: 29px;
+    left: 11px;
+    right: 11px;
+  }
+}

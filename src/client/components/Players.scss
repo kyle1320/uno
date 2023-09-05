@@ -1,0 +1,36 @@
+@import "./variables";
+
+.no-players {
+  position: fixed;
+  top: 8vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90vw;
+  max-width: 300px;
+  text-align: center;
+  background-color: rgba(black, 0.4);
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  z-index: 200;
+
+  &-heading {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  &-subheading {
+    font-size: 12px;
+    margin-bottom: 3px;
+  }
+
+  .room-link {
+    font-size: 12px;
+  }
+
+  select {
+    padding: 2px 5px;
+  }
+}
