@@ -23,9 +23,7 @@ export class UnoServer extends ServerStore<Uno.Spec> {
   public override getInitialServerState() {
     return {
       L0: Uno.L0.initialState(),
-      L1: Uno.L1.initialState({
-        surveyURL: process.env.UNO_SURVEY_URL || ""
-      })
+      L1: Uno.L1.initialState()
     };
   }
   public override getInitialClientState(id: string, state: ServerStoreState<Uno.Spec>) {

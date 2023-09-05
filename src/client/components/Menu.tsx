@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { ClientAppAction, ClientStoreState } from "@redux-mc/util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faAngleLeft, faRandom, faComment } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 import * as Uno from "../../spec";
 import FullscreenToggle from "./FullscreenToggle";
@@ -202,7 +203,6 @@ interface IProps {
   sortCards: boolean;
   status: Uno.L1.GameStatus;
   canShufflePlayers: boolean;
-  surveyURL: string;
   setSortCards: (sortCards: boolean) => void;
   setName: (name: string) => void;
   resetGame: (shuffle?: boolean) => void;
@@ -246,12 +246,10 @@ export function Menu(props: IProps) {
           <Rules />
           <Standings />
           <div className="links">
-            {props.surveyURL ? (
-              <a href={props.surveyURL} target="_blank">
-                Give feedback&nbsp;&nbsp;
-                <FontAwesomeIcon icon={faComment} />
-              </a>
-            ) : null}
+            <a href="https://github.com/kyle1320/uno" target="_blank">
+              View on GitHub&nbsp;&nbsp;
+              <FontAwesomeIcon icon={faGithub} />
+            </a>
           </div>
         </div>
         <div className="buttons">
@@ -289,8 +287,7 @@ export default connect(
     name: state.L3.name,
     sortCards: state.L4.settings.sortCards,
     status: state.L1.status,
-    canShufflePlayers: Uno.clientSelectors.canShufflePlayers(state),
-    surveyURL: state.L1.surveyURL
+    canShufflePlayers: Uno.clientSelectors.canShufflePlayers(state)
   }),
   (dispatch: Dispatch<ClientAppAction<Uno.Spec>>) => ({
     setName: (name: string) => dispatch(Uno.L3.actions.setName(name)),

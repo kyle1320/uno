@@ -98,8 +98,6 @@ export interface State {
 
   startTime: number;
   turnCount: number;
-
-  surveyURL: string;
 }
 
 export function initialState(set: Partial<State> = {}): State {
@@ -139,7 +137,6 @@ export function initialState(set: Partial<State> = {}): State {
     startTime: -1,
     turnCount: 0,
 
-    surveyURL: "",
     ...set
   };
 }
