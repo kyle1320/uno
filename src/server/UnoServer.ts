@@ -1,12 +1,12 @@
-import { IClient, ServerStore } from "@redux-mc/server";
-import { ServerStoreState } from "@redux-mc/util";
+import { IClient, ServerStore } from "redux-mc/server";
+import { ServerStoreState } from "redux-mc/util";
 
 import * as Uno from "../spec";
 import UnoAIClient from "./UnoAIClient";
 import { Timer } from "./util";
 
 export class UnoServer extends ServerStore<Uno.Spec> {
-  public version = BUILD_NUMBER;
+  public version = Uno.version;
 
   private bots: UnoAIClient[] = [];
   private turnTimer = new Timer();
@@ -28,10 +28,7 @@ export class UnoServer extends ServerStore<Uno.Spec> {
   }
   public override getInitialClientState(id: string, state: ServerStoreState<Uno.Spec>) {
     return {
-      L2: {
-        ...Uno.L2.initialState,
-        id
-      },
+      L2: Uno.L2.initialState,
       L3: {
         ...Uno.L3.initialState,
         name: "Player " + (state.L1.turnOrder.length + 1)

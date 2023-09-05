@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { ClientAppAction, ClientStoreState } from "@redux-mc/util";
+import { ClientAppAction, ClientStoreState } from "redux-mc/util";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import * as Uno from "../../spec";

@@ -1,5 +1,5 @@
-import { BaseClient } from "@redux-mc/server";
-import { ClientAppAction } from "@redux-mc/util";
+import { BaseClient } from "redux-mc/server";
+import { ClientAppAction } from "redux-mc/util";
 
 import * as Uno from "../spec";
 import { UnoServer } from "./UnoServer";

@@ -1,4 +1,4 @@
-import { AllActions, createL3Action } from "@redux-mc/util";
+import { AllActions, createL3Action } from "redux-mc/util";
 
 export const actions = {
   setName: createL3Action("setName")<string>()

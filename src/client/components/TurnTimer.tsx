@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 
 import * as Uno from "../../spec";
-import { ClientStoreState } from "@redux-mc/util";
+import { ClientStoreState } from "redux-mc/util";
 
 interface IProps {
   turnEndTime: number;

@@ -1,5 +1,5 @@
-import { WebSocketClient } from "@redux-mc/server";
-import { Action } from "@redux-mc/util";
+import { WebSocketClient } from "redux-mc/server";
+import { Action } from "redux-mc/util";
 
 import * as appInsights from "applicationinsights";
 

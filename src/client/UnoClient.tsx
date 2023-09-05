@@ -1,4 +1,4 @@
-import { ClientStore, WebSocketConnection } from "@redux-mc/client";
+import { ClientStore, WebSocketConnection } from "redux-mc/client";
 
 import * as Uno from "../spec";
 
@@ -19,7 +19,7 @@ function getWebSocketUrl(roomName: string): string {
 }
 
 export class UnoClient extends ClientStore<Uno.Spec> {
-  public version = BUILD_NUMBER;
+  public version = Uno.version;
 
   public constructor(private readonly roomName: string) {
     super();

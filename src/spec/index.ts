@@ -1,4 +1,4 @@
-import { IApplicationSpec } from "@redux-mc/util";
+import { IApplicationSpec } from "redux-mc/util";
 
 import * as L0 from "./L0";
 import * as L1 from "./L1";
@@ -9,6 +9,7 @@ import * as Req from "./Req";
 
 export * from "./common";
 
+export const version = BUILD_NUMBER;
 export const VERSION_MISMATCH_ERROR = new Error("Version mismatch!");
 
 export interface Spec extends IApplicationSpec {

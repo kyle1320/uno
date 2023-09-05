@@ -1,4 +1,4 @@
-import { AllActions, createL4Action } from "@redux-mc/util";
+import { AllActions, createL4Action } from "redux-mc/util";
 
 export const actions = {
   update: createL4Action("update")<Partial<State>>(),

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { ClientStoreState } from "@redux-mc/util";
+import { ClientStoreState } from "redux-mc/util";
 
 import * as Uno from "../../spec";
 import Card from "./Card";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import emojiRegex from "emoji-regex";
-import { ClientStoreState } from "@redux-mc/util";
+import { ClientStoreState } from "redux-mc/util";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown, faUnlink, faRobot } from "@fortawesome/free-solid-svg-icons";

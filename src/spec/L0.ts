@@ -1,4 +1,4 @@
-import { AllActions, createL0Action } from "@redux-mc/util";
+import { AllActions, createL0Action } from "redux-mc/util";
 
 import { Card, shuffledDeck, getNewDeck, repeat } from "./common";
 

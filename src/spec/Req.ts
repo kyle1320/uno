@@ -1,4 +1,4 @@
-import { AllActions, createReqAction } from "@redux-mc/util";
+import { AllActions, createReqAction } from "redux-mc/util";
 import { Color } from "./common";
 import * as L1 from "./L1";
 

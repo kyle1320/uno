@@ -1,4 +1,4 @@
-import { AllActions, createL2Action } from "@redux-mc/util";
+import { AllActions, createL2Action } from "redux-mc/util";
 
 import { Card } from "./common";
 

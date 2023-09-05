@@ -11,7 +11,7 @@ import Toasts from "./Toasts";
 import Fireworks from "./Fireworks";
 
 import "./Uno.scss";
-import { ClientStoreState } from "@redux-mc/util";
+import { ClientStoreState } from "redux-mc/util";
 
 interface Props {
   connected: boolean;

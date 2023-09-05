@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 
-import { ClientStoreState, ServerStoreState } from "@redux-mc/util";
+import { ClientStoreState, ServerStoreState } from "redux-mc/util";
 
 import { Spec, L1, L2 } from ".";
 

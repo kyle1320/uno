@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { ClientAppAction, ClientStoreState } from "@redux-mc/util";
+import { ClientAppAction, ClientStoreState } from "redux-mc/util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandPointUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
