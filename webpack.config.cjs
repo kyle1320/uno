@@ -80,7 +80,7 @@ module.exports = function (env, argv) {
         templateContent: template
       }),
       new MiniCssExtractPlugin({
-        filename: "[name].css",
+        filename: "[name].[contenthash].css",
         chunkFilename: "[id].css"
       }),
       isDevelopment && new CleanWebpackPlugin(),
@@ -103,7 +103,7 @@ module.exports = function (env, argv) {
       isProduction && new FaviconsWebpackPlugin("./assets/icon.png")
     ].filter(Boolean),
     output: {
-      filename: "[name].js",
+      filename: "[name].[contenthash].js",
       path: path.resolve(__dirname, "dist/public"),
       publicPath: "/"
     }
