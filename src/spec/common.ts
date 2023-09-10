@@ -121,7 +121,6 @@ export namespace rules {
 
     switch (l1.ruleState.type) {
       case "normal":
-        return !l1.rules.drawTillYouPlay || !canPlayAny(l1, l2, isTurn);
       case "draw":
       case "draw2":
       case "draw4":
