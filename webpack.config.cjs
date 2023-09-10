@@ -8,12 +8,11 @@ const nodeExternals = require("webpack-node-externals");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var WebpackPwaManifest = require("webpack-pwa-manifest");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
 
 module.exports = function (env, argv) {
   const mode = argv.mode || "development";
   const isProduction = mode === "production";
-  const isDevelopment = mode === "development";
+  // const isDevelopment = mode === "development";
   const BUILD_NUMBER = (process.env.GITHUB_SHA || "").substring(0, 7);
 
   const template = `<!DOCTYPE html>
@@ -83,7 +82,6 @@ module.exports = function (env, argv) {
         filename: "[name].[contenthash].css",
         chunkFilename: "[id].css"
       }),
-      isDevelopment && new CleanWebpackPlugin(),
       isProduction &&
         new WebpackPwaManifest({
           name: "Uno",
@@ -105,7 +103,8 @@ module.exports = function (env, argv) {
     output: {
       filename: "[name].[contenthash].js",
       path: path.resolve(__dirname, "dist/public"),
-      publicPath: "/"
+      publicPath: "/",
+      clean: true
     }
   };
 
@@ -136,7 +135,8 @@ module.exports = function (env, argv) {
     externals: [nodeExternals()],
     output: {
       filename: "server.js",
-      path: path.resolve(__dirname, "dist")
+      path: path.resolve(__dirname, "dist"),
+      clean: true
     }
   };
 
