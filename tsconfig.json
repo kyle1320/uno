@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "module": "NodeNext",
+    "module": "ESNext",
     "target": "ES2019",
     "jsx": "react-jsx",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Bundler",
     "esModuleInterop": true,
     "resolveJsonModule": true
   },

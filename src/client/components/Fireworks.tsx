@@ -1,5 +1,5 @@
 import * as React from "react";
-import Fireworks from "fireworks-canvas";
+import { Fireworks } from "fireworks-js";
 
 import "./Fireworks.scss";
 
@@ -38,7 +38,14 @@ export default class FireworksComponent extends React.PureComponent<IProps, ISta
   private stop() {
     if (!this.state.fireworks) return;
 
-    this.state.fireworks.stop();
+    this.state.fireworks.waitStop(true).then(() => {
+      this.setState({ fireworks: null });
+      if (this.ref.current) {
+        while (this.ref.current.firstChild) {
+          this.ref.current.removeChild(this.ref.current.firstChild);
+        }
+      }
+    });
     this.setState({ timeout: null });
   }
 
@@ -49,16 +56,10 @@ export default class FireworksComponent extends React.PureComponent<IProps, ISta
       }
 
       const fireworks = new Fireworks(this.ref.current, {
-        maxRockets: 15,
-        rocketSpawnInterval: 120
-      });
-      fireworks.onFinish(() => {
-        this.setState({ fireworks: null });
-        if (this.ref.current) {
-          while (this.ref.current.firstChild) {
-            this.ref.current.removeChild(this.ref.current.firstChild);
-          }
-        }
+        acceleration: 1,
+        flickering: 0,
+        delay: { min: 15, max: 25 },
+        rocketsPoint: { min: 0, max: 100 }
       });
       this.setState({
         fireworks,
