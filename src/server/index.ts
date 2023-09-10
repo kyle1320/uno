@@ -1,29 +1,29 @@
-import * as http from 'http';
-import * as path from 'path';
-import * as url from 'url';
-import * as crypto from 'crypto';
+import * as http from "http";
+import * as path from "path";
+import * as url from "url";
+import * as crypto from "crypto";
 
-import Express from 'express';
-import WebSocket from 'ws';
-import * as cookie from 'cookie';
-import * as uuid from 'uuid';
-import compression from 'compression';
-import * as appInsights from 'applicationinsights';
+import Express from "express";
+import WebSocket from "ws";
+import * as cookie from "cookie";
+import * as uuid from "uuid";
+import compression from "compression";
+import * as appInsights from "applicationinsights";
 
-import { UnoServer } from './UnoServer';
-import nouns from './nounlist.json';
-import { UnoWebSocketClient } from './UnoWebSocketClient';
+import { UnoServer } from "./UnoServer";
+import nouns from "./nounlist.json";
+import { UnoWebSocketClient } from "./UnoWebSocketClient";
 
-const CLIENT_ID_COOKIE = 'clientid';
+const CLIENT_ID_COOKIE = "clientid";
 
 function getRoomName(roomUrl: string) {
-  const path = url.parse(roomUrl).pathname || '';
-  if (path.startsWith('/')) return path.substring(1);
+  const path = url.parse(roomUrl).pathname || "";
+  if (path.startsWith("/")) return path.substring(1);
   return path;
 }
 
 function getClientIdCookie(req: http.IncomingMessage) {
-  const parsed = cookie.parse(req.headers.cookie || '');
+  const parsed = cookie.parse(req.headers.cookie || "");
   return parsed[CLIENT_ID_COOKIE];
 }
 
@@ -38,17 +38,14 @@ export class RoomServer {
     this.server = http.createServer(app);
     const wss = new WebSocket.Server({ server: this.server });
 
-    wss.on('headers', (headers, req) => {
+    wss.on("headers", (headers, req) => {
       const id = getClientIdCookie(req) || uuid.v4();
-      headers.push(
-        'Set-Cookie: ' +
-          cookie.serialize(CLIENT_ID_COOKIE, id, { maxAge: 2592000 })
-      );
+      headers.push("Set-Cookie: " + cookie.serialize(CLIENT_ID_COOKIE, id, { maxAge: 2592000 }));
       (req as any)._clientid = id;
     });
 
-    wss.on('connection', (ws, req) => {
-      const room = getRoomName(req.url || '').toLowerCase();
+    wss.on("connection", (ws, req) => {
+      const room = getRoomName(req.url || "").toLowerCase();
       const privateId = (req as any)._clientid as string;
 
       if (!(room in this.rooms)) {
@@ -57,7 +54,7 @@ export class RoomServer {
       }
 
       // don't leak the private client id as it could be used by anyone
-      const publicId = crypto.createHash('md5').update(privateId).digest('hex');
+      const publicId = crypto.createHash("md5").update(privateId).digest("hex");
       new UnoWebSocketClient(ws as any, this.rooms[room], publicId);
     });
 
@@ -65,17 +62,14 @@ export class RoomServer {
 
     app.use((req, res, next) => {
       const id = getClientIdCookie(req) || uuid.v4();
-      res.setHeader(
-        'Set-Cookie',
-        cookie.serialize(CLIENT_ID_COOKIE, id, { maxAge: 2592000 })
-      );
+      res.setHeader("Set-Cookie", cookie.serialize(CLIENT_ID_COOKIE, id, { maxAge: 2592000 }));
       next();
     });
 
-    app.use(Express.static(path.resolve(__dirname, './public')));
-    app.post('/newroom', (_, res) => res.end(this.getRandomRoom()));
-    app.use('*', (req, res) => {
-      res.sendFile(path.resolve(__dirname, './public/index.html'));
+    app.use(Express.static(path.resolve(__dirname, "./public")));
+    app.post("/newroom", (_, res) => res.end(this.getRandomRoom()));
+    app.use("*", (req, res) => {
+      res.sendFile(path.resolve(__dirname, "./public/index.html"));
     });
 
     setInterval(
@@ -93,7 +87,7 @@ export class RoomServer {
 
   public start() {
     this.server.listen(process.env.PORT || 3000, () => {
-      console.log('Server started');
+      console.log("Server started");
     });
   }
 
@@ -106,7 +100,7 @@ export class RoomServer {
   }
 }
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   try {
     appInsights.setup().setSendLiveMetrics(true).start();
   } catch (e) {

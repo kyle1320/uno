@@ -4,7 +4,7 @@ import { Dispatch } from "redux";
 import { Link } from "react-router-dom";
 import { ClientAppAction, ClientStoreState } from "redux-mc/util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faAngleLeft, faRandom, faComment } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faAngleLeft, faRandom } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 import * as Uno from "../../spec";
