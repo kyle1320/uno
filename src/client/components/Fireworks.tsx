@@ -58,12 +58,12 @@ export default class FireworksComponent extends React.PureComponent<IProps, ISta
       const fireworks = new Fireworks(this.ref.current, {
         acceleration: 1,
         flickering: 0,
-        delay: { min: 15, max: 25 },
+        delay: { min: 20, max: 30 },
         rocketsPoint: { min: 0, max: 100 }
       });
       this.setState({
         fireworks,
-        timeout: setTimeout(() => this.stop(), 1200)
+        timeout: setTimeout(() => this.stop(), 1600)
       });
       fireworks.start();
     }
