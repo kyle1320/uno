@@ -1,38 +1,35 @@
 import * as React from "react";
 import { Provider } from "react-redux";
+import { useParams } from "react-router-dom";
 
 import { UnoClient } from "./UnoClient";
 import Uno from "./components/Uno";
 
-export class UnoRoot extends React.PureComponent {
-  private client: UnoClient;
+export function UnoRoot() {
+  const { roomName } = useParams();
 
-  constructor() {
-    super({});
+  if (!roomName) {
+    return null;
+  }
+  const client = React.useMemo(() => new UnoClient(roomName), [roomName]);
 
-    let roomName = window.location.pathname;
-    roomName = roomName.startsWith("/") ? roomName.substring(1) : roomName;
+  React.useEffect(() => {
     localStorage.setItem("savedRoomName", roomName);
+  }, [roomName]);
 
-    this.client = new UnoClient(roomName);
-    (window as any).uno = this.client;
-    this.client.connect();
-  }
+  React.useEffect(() => {
+    (window as any).uno = client;
+    client.connect();
 
-  componentWillUnmount() {
-    delete (window as any).uno;
-    this.client.dispose();
-  }
+    return () => {
+      delete (window as any).uno;
+      client.dispose();
+    };
+  }, [client]);
 
-  render() {
-    if (!this.client) {
-      return null;
-    }
-
-    return (
-      <Provider store={this.client.store}>
-        <Uno />
-      </Provider>
-    );
-  }
+  return (
+    <Provider store={client.store}>
+      <Uno />
+    </Provider>
+  );
 }
