@@ -1,5 +1,6 @@
 import { IClient, ServerStore } from "redux-mc/server";
-import { ServerStoreState } from "redux-mc/util";
+import { Action, ServerStoreState } from "redux-mc/util";
+import * as appInsights from "applicationinsights";
 
 import * as Uno from "../spec";
 import UnoAIClient from "./UnoAIClient";
@@ -18,6 +19,21 @@ export class UnoServer extends ServerStore<Uno.Spec> {
 
   public shouldDispose() {
     return this.disposeAfter != null && Date.now() >= this.disposeAfter;
+  }
+
+  public dispatchFromClient(action: Action, client: IClient): void {
+    appInsights.defaultClient?.trackEvent({
+      name: "WS Request",
+      properties: {
+        kind: action.kind,
+        type: action.type,
+        payload: "payload" in action ? action.payload : "",
+        clientId: client.id,
+        room: this.roomName
+      }
+    });
+
+    super.dispatchFromClient(action, client);
   }
 
   public override getInitialServerState() {

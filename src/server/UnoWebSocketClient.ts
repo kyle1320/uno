@@ -1,6 +1,4 @@
 import { WebSocketClient } from "redux-mc/server";
-import { Action } from "redux-mc/util";
-
 import * as appInsights from "applicationinsights";
 
 import * as Uno from "../spec";
@@ -12,21 +10,6 @@ export class UnoWebSocketClient extends WebSocketClient<Uno.Spec> {
   public constructor(socket: WebSocket, store: UnoServer, id: string) {
     super(socket, store, id);
     this.roomName = store.roomName;
-  }
-
-  protected override dispatch(action: Action) {
-    appInsights.defaultClient?.trackEvent({
-      name: "WS Request",
-      properties: {
-        kind: action.kind,
-        type: action.type,
-        payload: "payload" in action ? action.payload : "",
-        clientId: this.id,
-        room: this.roomName
-      }
-    });
-
-    super.dispatch(action);
   }
 
   protected override sendError(error: unknown): void {
