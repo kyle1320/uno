@@ -108,6 +108,17 @@
 
     &.large {
       font-size: 56px;
+      white-space: nowrap;
+    }
+
+    &.medium {
+      font-size: 48px;
+      white-space: nowrap;
+    }
+
+    &.small {
+      font-size: 32px;
+      white-space: nowrap;
     }
   }
 

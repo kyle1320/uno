@@ -19,9 +19,26 @@ type IProps = {
   hand?: Uno.Card[];
 } & Uno.L1.Player;
 
-function isSingleEmoji(s: string) {
-  const match = s.match(emojiRegex());
-  return match && match[0] === s;
+function getNameClassForEmoji(s: string) {
+  const re = emojiRegex();
+
+  const allMatches: string[] = [];
+  let match: RegExpMatchArray | null = null;
+  while ((match = re.exec(s)) !== null && allMatches.length < 3) {
+    allMatches.push(match[0]);
+  }
+
+  if (s === allMatches.join("")) {
+    if (allMatches.length === 1) {
+      return "large";
+    } else if (allMatches.length === 2) {
+      return "medium";
+    } else if (allMatches.length === 3) {
+      return "small";
+    }
+  }
+
+  return "";
 }
 
 export function calculatePosition(percent: number, width = 35, height = 30): [number, number] {
@@ -63,7 +80,7 @@ export function Player(props: IProps) {
           props.connected ? "" : " disconnected"
         }`}
       >
-        <div className={`player-name${isSingleEmoji(props.name) ? " large" : ""}`}>
+        <div className={`player-name ${getNameClassForEmoji(props.name)}`}>
           {props.isAI && <FontAwesomeIcon className="ai-badge" icon={faRobot} />}
           {props.name}
         </div>
