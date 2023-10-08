@@ -105,20 +105,18 @@
     line-height: 1.1;
     text-shadow: black 0 0 2px;
     text-overflow: ellipsis;
+    white-space: nowrap;
 
     &.large {
       font-size: 56px;
-      white-space: nowrap;
     }
 
     &.medium {
-      font-size: 48px;
-      white-space: nowrap;
+      font-size: 36px;
     }
 
     &.small {
-      font-size: 32px;
-      white-space: nowrap;
+      font-size: 24px;
     }
   }
 
