@@ -14,6 +14,8 @@ jobs:
     environment:
       name: production
       url: https://uno.kyles.games/
+    permissions:
+      id-token: write #This is required for requesting the JWT
 
     steps:
       - uses: actions/checkout@master
@@ -21,7 +23,7 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: "20.x"
 
       - name: npm install and build
         run: |
@@ -29,8 +31,16 @@ jobs:
           npm run build
           npm prune --omit=dev
 
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_1B151B95F71B4B04A36ED89B7877BD0E }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_23A39B4BE31B4F62A6E5B176E6997AF3 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_16465F1ACE0D4FABB122E9730F0E4A0B }}
+
       - name: "Deploy to Azure Web App"
         uses: azure/webapps-deploy@v2
         with:
           app-name: "kc-uno"
-          publish-profile: ${{ secrets.azureWebAppPublishProfile }}
+          slot-name: "Production"
+          package: .
