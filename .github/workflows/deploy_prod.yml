@@ -43,4 +43,3 @@ jobs:
         with:
           app-name: "kc-uno"
           slot-name: "Production"
-          package: .
