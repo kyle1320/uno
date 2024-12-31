@@ -199,7 +199,8 @@ export class UnoServer extends ServerStore<Uno.Spec> {
         if (gameOver)
           this.dispatch(
             Uno.L1.actions.gameOver({
-              duration: Date.now() - l1.startTime
+              duration: Date.now() - l1.startTime,
+              turnCount: l1.turnCount
             })
           );
         else this.dispatch(Uno.L1.actions.update(Uno.rules.getStateAfterPlay(action.payload, l1, id)));

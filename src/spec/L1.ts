@@ -21,6 +21,7 @@ export const actions = {
   }>(),
   gameOver: createL1Action("gameOver")<{
     duration: number;
+    turnCount: number;
   }>(),
   callout: createL1Action("callout")<{
     callerId: string;

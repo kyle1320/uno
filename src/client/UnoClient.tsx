@@ -96,13 +96,14 @@ export class UnoClient extends ClientStore<Uno.Spec> {
         break;
       case Uno.L1.actions.gameOver.type: {
         let duration = action.payload.duration;
+        const turnCount = action.payload.turnCount;
         duration = Math.floor(duration / 1000);
         const s = duration % 60;
         const m = Math.floor(duration / 60);
 
         this.dispatch(
           Uno.L4.actions.pushToast(
-            `Game over! The game lasted ${m} minute${m === 1 ? "" : "s"} and ${s} second${s === 1 ? "" : "s"}`
+            `Game over! The game lasted for ${m}m${s}s and took ${turnCount} turn${turnCount === 1 ? "" : "s"}!`
           )
         );
         break;
