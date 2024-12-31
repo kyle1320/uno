@@ -87,6 +87,7 @@ export function Player(props: IProps) {
           ? {
               position: "fixed",
               transition: "none",
+              zIndex: 300,
               top: `${props.fixedPos[1]}px`,
               left: `${props.fixedPos[0]}px`
             }

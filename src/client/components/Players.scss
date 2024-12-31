@@ -34,3 +34,9 @@
     padding: 2px 5px;
   }
 }
+
+.players.draggable {
+  .player-container {
+    cursor: grab;
+  }
+}

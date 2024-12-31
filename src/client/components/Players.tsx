@@ -142,8 +142,8 @@ export function Players(props: IProps) {
       // This is closely tied to the positioning logic in Player.tsx.
       // TODO: consolidate this logic into one place.
       const { top, left, width, height } = table.getBoundingClientRect();
-      const relX = dragInfo.pos[0] - (left + width * 0.5);
-      const relY = dragInfo.pos[1] - (top + height * 0.6);
+      const relX = dragInfo.pos[0] - dragInfo.relX - (left + width * 0.5);
+      const relY = dragInfo.pos[1] - dragInfo.relY - (top + height * 0.6);
       const pctX = (relX * 100) / window.innerWidth;
       const pctY = (relY * 100) / window.innerHeight;
       const pos = calculatePositionInverse(pctX, pctY);
@@ -186,7 +186,7 @@ export function Players(props: IProps) {
   const sortedPlayers = turnOrder.slice(1).sort();
 
   return (
-    <div className="players">
+    <div className={`players${props.canMovePlayers ? " draggable" : ""}`}>
       {sortedPlayers.length > 0 ? sortedPlayers.map((id) => allPlayers[id]) : <EmptyRoomHint />}
     </div>
   );
