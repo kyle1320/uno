@@ -17,10 +17,9 @@ interface IProps {
   canCalloutUno: boolean;
   canPlayAny: boolean;
   showTurnTimer: boolean;
-  canShufflePlayers: boolean;
+  canMovePlayers: boolean;
 
   resetGame: () => void;
-  shufflePlayers: () => void;
   callUno: () => void;
   calloutUno: () => void;
 }
@@ -32,10 +31,7 @@ export function Info(props: IProps) {
         <div className="info">
           <span className="info-text">Start a New Game to Play</span>
           <div className="buttons">
-            <div className="stack">
-              <button onClick={props.resetGame}>New Game</button>
-              {props.canShufflePlayers && <button onClick={props.shufflePlayers}>Shuffle Players</button>}
-            </div>
+            <button onClick={props.resetGame}>New Game</button>
           </div>
         </div>
       );
@@ -68,10 +64,7 @@ export function Info(props: IProps) {
         <div className="info">
           <span className="info-text">Game Over</span>
           <div className="buttons">
-            <div className="stack">
-              <button onClick={props.resetGame}>New Game</button>
-              {props.canShufflePlayers && <button onClick={props.shufflePlayers}>Shuffle Players</button>}
-            </div>
+            <button onClick={props.resetGame}>New Game</button>
           </div>
         </div>
       );
@@ -86,11 +79,10 @@ export default connect(
     canCalloutUno: Uno.clientSelectors.canCalloutUno(state),
     canPlayAny: Uno.clientSelectors.canPlayAny(state),
     showTurnTimer: Uno.clientSelectors.turnTimerActive(state),
-    canShufflePlayers: Uno.clientSelectors.canShufflePlayers(state)
+    canMovePlayers: Uno.rules.canMovePlayers(state.L1)
   }),
   (dispatch: Dispatch<ClientAppAction<Uno.Spec>>) => ({
     resetGame: () => dispatch(Uno.Req.actions.resetGame({ shufflePlayers: false })),
-    shufflePlayers: () => dispatch(Uno.Req.actions.shufflePlayers()),
     callUno: () => dispatch(Uno.Req.actions.callUno()),
     calloutUno: () => dispatch(Uno.Req.actions.calloutUno())
   })

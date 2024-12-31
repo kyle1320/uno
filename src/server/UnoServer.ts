@@ -209,6 +209,8 @@ export class UnoServer extends ServerStore<Uno.Spec> {
   }
 
   public override handleL3(action: Uno.L3.Action, id: string) {
+    const state = this.getState();
+
     switch (action.type) {
       case Uno.L3.actions.setName.type:
         this.dispatch(
@@ -217,6 +219,30 @@ export class UnoServer extends ServerStore<Uno.Spec> {
             name: action.payload
           })
         );
+        break;
+      case Uno.L3.actions.requestTurnOrder.type:
+        if (action.payload) {
+          if (Uno.rules.canMovePlayers(state.L1)) {
+            const order = action.payload;
+            const players = state.L1.turnOrder.length;
+            const requestedSet = new Set(action.payload);
+            if (
+              order.length === players &&
+              requestedSet.size === players &&
+              state.L1.turnOrder.every((id) => requestedSet.has(id))
+            ) {
+              // Make sure the last player in the order stays fixed.
+              const lastPlayer = order.indexOf(state.L1.turnOrder[players - 1]);
+              this.dispatch(
+                Uno.L1.actions.update({
+                  turnOrder: [...order.slice(lastPlayer + 1), ...order.slice(0, lastPlayer + 1)]
+                })
+              );
+            }
+          }
+          // Reset the client request.
+          this.dispatch(Uno.L3.actions.requestTurnOrder(null), id);
+        }
         break;
     }
   }
@@ -286,13 +312,6 @@ export class UnoServer extends ServerStore<Uno.Spec> {
             );
           }
         }
-        break;
-      case Uno.Req.actions.shufflePlayers.type:
-        this.dispatch(
-          Uno.L1.actions.update({
-            turnOrder: Uno.shuffledTurnOrder(state.L1.turnOrder)
-          })
-        );
         break;
     }
   }

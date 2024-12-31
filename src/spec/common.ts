@@ -3,6 +3,7 @@
 import { ClientStoreState, ServerStoreState } from "redux-mc/util";
 
 import { Spec, L1, L2 } from ".";
+import { GameStatus } from "./L1";
 
 export type Color = "red" | "green" | "blue" | "yellow";
 export interface Card {
@@ -13,13 +14,9 @@ export interface Card {
 
 export namespace clientSelectors {
   export function relativeTurnOrder(state: ClientStoreState<Spec>) {
-    const turnOrder = state.L1.turnOrder;
+    const turnOrder = state.L3.requestedTurnOrder || state.L1.turnOrder;
     const myIndex = turnOrder.indexOf(state.meta.id);
     return [...turnOrder.slice(myIndex), ...turnOrder.slice(0, myIndex)];
-  }
-
-  export function canShufflePlayers(state: ClientStoreState<Spec>) {
-    return state.L1.turnOrder.length > 2;
   }
 
   export function currentPlayer(state: ClientStoreState<Spec>) {
@@ -367,6 +364,10 @@ export namespace rules {
 
   export function turnTimerActive(l1: L1.State) {
     return l1.rules.lobbyMode && l1.status === L1.GameStatus.Started;
+  }
+
+  export function canMovePlayers(l1: L1.State) {
+    return l1.turnOrder.length > 2 && l1.status !== GameStatus.Started;
   }
 }
 

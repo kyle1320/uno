@@ -202,7 +202,7 @@ interface IProps {
   name: string;
   sortCards: boolean;
   status: Uno.L1.GameStatus;
-  canShufflePlayers: boolean;
+  canMovePlayers: boolean;
   setSortCards: (sortCards: boolean) => void;
   setName: (name: string) => void;
   resetGame: (shuffle?: boolean) => void;
@@ -267,7 +267,7 @@ export function Menu(props: IProps) {
             <button
               className="secondary"
               style={{ minWidth: "3em" }}
-              disabled={!props.canShufflePlayers}
+              disabled={!props.canMovePlayers}
               onClick={React.useCallback(() => {
                 props.resetGame(true);
                 toggle();
@@ -287,7 +287,7 @@ export default connect(
     name: state.L3.name,
     sortCards: state.L4.settings.sortCards,
     status: state.L1.status,
-    canShufflePlayers: Uno.clientSelectors.canShufflePlayers(state)
+    canMovePlayers: Uno.rules.canMovePlayers(state.L1)
   }),
   (dispatch: Dispatch<ClientAppAction<Uno.Spec>>) => ({
     setName: (name: string) => dispatch(Uno.L3.actions.setName(name)),

@@ -14,7 +14,6 @@ export const actions = {
     shufflePlayers: boolean;
   }>(),
   callUno: createReqAction("callUno")<void>(),
-  calloutUno: createReqAction("calloutUno")<void>(),
-  shufflePlayers: createReqAction("shufflePlayers")<void>()
+  calloutUno: createReqAction("calloutUno")<void>()
 };
 export type Action = AllActions<typeof actions>;

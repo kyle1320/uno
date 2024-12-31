@@ -17,6 +17,7 @@ type IProps = {
   isTurn: boolean;
   showTurnTimer: boolean;
   hand?: Uno.Card[];
+  fixedPos?: [number, number];
 } & Uno.L1.Player;
 
 function getNameClassForEmoji(s: string) {
@@ -43,7 +44,7 @@ function getNameClassForEmoji(s: string) {
 
 export function calculatePosition(percent: number, width = 35, height = 30): [number, number] {
   percent *= 100;
-  if (percent === 0 || percent === 100) return [0, height];
+  if (percent <= 0 || percent >= 100) return [0, height];
   if (percent < 20) {
     return [-width, -(percent - 20) * (height / 20)];
   } else if (percent < 80) {
@@ -56,16 +57,44 @@ export function calculatePosition(percent: number, width = 35, height = 30): [nu
   }
 }
 
+export function calculatePositionInverse(x: number, y: number, width = 35, height = 30) {
+  if (y > height) {
+    y = height;
+  }
+  let pos = 0;
+  if (y >= 0) {
+    if (x > 0) {
+      pos = 80 + (y / height) * 20;
+    } else {
+      pos = 20 - (y / height) * 20;
+    }
+  } else {
+    const angle = Math.atan2(-y / height, -x / width);
+    pos = (angle * 60) / Math.PI + 20;
+  }
+  return pos;
+}
+
 export function Player(props: IProps) {
   const [x, y] = calculatePosition(props.placement);
 
   return (
     <div
       className={`player-container${props.isTurn ? " active" : ""}`}
-      style={{
-        top: `calc(60% + ${y}vh)`,
-        left: `calc(50% + ${x}vw)`
-      }}
+      data-player-id={props.id}
+      style={
+        props.fixedPos
+          ? {
+              position: "fixed",
+              transition: "none",
+              top: `${props.fixedPos[1]}px`,
+              left: `${props.fixedPos[0]}px`
+            }
+          : {
+              top: `calc(60% + ${y}vh)`,
+              left: `calc(50% + ${x}vw)`
+            }
+      }
     >
       <div className="arrow">
         <FontAwesomeIcon icon={faArrowDown} />
